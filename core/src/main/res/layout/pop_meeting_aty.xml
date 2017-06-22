@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/bg_meeting_aty"
+    android:padding="2dp"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txt_tab_meeting"
+            android:background="@drawable/bg_meeting_aty_tab"
+            android:textColor="@drawable/txt_meeting_aty_tab"
+            android:gravity="center"
+            android:text="@string/ngr_search_meeting"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="44dp" />
+
+        <TextView
+            android:id="@+id/txt_tab_aty"
+            android:background="@drawable/bg_meeting_aty_tab"
+            android:textColor="@drawable/txt_meeting_aty_tab"
+            android:gravity="center"
+            android:text="@string/ngr_search_activity"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="44dp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:layout_marginLeft="@dimen/ngr_normal"
+        android:layout_marginRight="@dimen/ngr_normal"
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

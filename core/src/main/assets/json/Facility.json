@@ -1,0 +1,123 @@
+[
+	{
+		"name":"空铺",
+		"categoryId": 23006000
+	},
+	{
+		"name":"便利店",
+		"categoryId": 13151000
+	},
+
+	{
+		"name":"餐饮区",
+		"categoryId": 11000000
+	},
+
+	{
+		"name":"商务中心",
+		"categoryId": 23011000
+	},
+
+	{
+		"name":"安保处",
+		"categoryId": 23035000
+	},
+
+	{
+		"name":"检票口",
+		"categoryId": 22040000
+	},
+
+	{
+		"name":"服务台",
+		"categoryId": 23018000
+	},
+
+	{
+		"name":"空铺",
+		"categoryId": 23006000
+	},
+	{
+		"name":"办公室",
+		"categoryId": 23027000
+	},
+	{
+		"name":"会议室",
+		"categoryId": 23001000
+	},
+	{
+		"name":"仓库",
+		"categoryId": 23051000
+	},
+	{
+		"name":"查询机",
+		"categoryId": 24113000
+	},
+	{
+		"name":"ATM",
+		"categoryId": 24112000
+	},
+	{
+		"name":"公用电话",
+		"categoryId": 24120000
+	},
+	{
+		"name":"饮水处",
+		"categoryId": 23040000
+	},
+
+	{
+		"name":"洗手间",
+		"categoryId": 23024000
+	},
+
+	{
+		"name":"男洗手间",
+		"categoryId": 23024000
+	},
+
+	{
+		"name":"女洗手间",
+		"categoryId": 23025000
+	},
+
+	{
+		"name":"残障洗手间",
+		"categoryId": 23059000
+	},
+
+	{
+		"name":"楼梯",
+		"categoryId": 24097000
+	},
+
+	{
+		"name":"扶梯",
+		"categoryId": 24093000
+	},
+
+	{
+		"name":"建筑物正门",
+		"categoryId": 23043000
+	},
+
+	{
+		"name":"出入口",
+		"categoryId": 23041000
+	},
+
+	{
+		"name":"辅助设施",
+		"categoryId": 23999000
+	},
+
+	{
+		"name":"停车场",
+		"categoryId": 17004000
+	},
+
+	{
+		"name":"电梯",
+		"categoryId": 24091000
+	}
+]

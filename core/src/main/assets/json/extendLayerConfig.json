@@ -1,0 +1,37 @@
+{
+  "extendLayer": [
+    {
+      "featureLayerName": "testWtm22",
+      "features": [
+        {
+          "floorId": 1048860,
+          "key": "category",
+          "value": "23003000"
+        },
+        {
+          "key": "id",
+          "value": "1170481"
+        }
+      ]
+    },
+    {
+      "featureLayerName": "testWtm",
+      "features": [
+        {
+          "key": "id",
+          "value": "1170412"
+        }
+      ]
+    }
+  ],
+  "changeColorPois": [
+    {
+      "id": 1048916,
+      "color": "0xffff0000"
+    },
+    {
+      "id": 1048918,
+      "color": "0xff00ff00"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    def globalConfiguration = rootProject.extensions.getByName("ext")
+
+    compileSdkVersion globalConfiguration.getAt("androidCompileSdkVersion")
+    buildToolsVersion globalConfiguration.getAt("androidBuildToolsVersion")
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+
+    defaultConfig {
+        minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
+        targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
+        multiDexEnabled true
+        buildConfigField "boolean", "useSVA", "false"//是否使用SVA定位
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    lintOptions {
+        quiet true
+        abortOnError false
+        ignoreWarnings true
+        disable 'InvalidPackage'  // Some libraries have issues with this
+        disable 'OldTargetApi'
+        // Due to Robolectric that modifies the manifest when running tests
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            shrinkResources false
+            //debug使用指路机的key
+            buildConfigField "boolean", "isOpenLightActivity", "false"//是否使用点亮活动
+            buildConfigField "boolean", "isOpenPushActivity", "false"//是否使用推送活动
+            buildConfigField "boolean", "openTestData", "true"//是否使用一些测试数据
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            //buildConfigField "Boolean", "DEBUG", "false"
+            minifyEnabled false
+            shrinkResources false
+            //release 使用展图的key
+            buildConfigField "boolean", "isOpenLightActivity", "false"//是否使用点亮活动
+            buildConfigField "boolean", "isOpenPushActivity", "false"//是否使用推送活动
+            buildConfigField "boolean", "openTestData", "false"//是否使用一些测试数据
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    provided fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile project(':h2')
+
+    def dependencies = rootProject.ext.libDependencies
+    annotationProcessor dependencies.daggerCompiler
+    provided dependencies.dagger2
+    compile dependencies.v7
+    provided dependencies.v4
+    provided dependencies.recyclerView
+    provided dependencies.multidex
+    provided dependencies.javaxAnnotation
+    provided dependencies.glide
+    provided dependencies.rxJava
+    provided dependencies.rxAndroid
+    provided dependencies.retrofit
+    provided dependencies.retrofitRx
+    provided dependencies.retrofitConverter_gson
+    provided dependencies.rxbinding
+    provided dependencies.nineoldandroids
+
+    provided ('com.github.niorgai:StatusBarCompat:2.1.2', {
+        exclude group: 'com.android.support'
+    })
+}

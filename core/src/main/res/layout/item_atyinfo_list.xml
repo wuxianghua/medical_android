@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="44dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:src="@mipmap/ico_sea_marker"
+        android:layout_width="18dp"
+        android:layout_height="18dp"/>
+
+    <LinearLayout
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="名字"
+            android:id="@+id/tv_itemName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#565c60"
+            android:textSize="13sp" />
+
+        <TextView
+            android:visibility="gone"
+            android:text="时间"
+            android:id="@+id/tv_itemTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#b4b7b9"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:text="门牌号"
+        android:id="@+id/tv_itemAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textColor="@color/txt9"
+        android:textSize="12sp" />
+</RelativeLayout>

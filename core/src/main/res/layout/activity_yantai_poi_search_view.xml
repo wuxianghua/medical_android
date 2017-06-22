@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/ngr_normal"
+    android:paddingRight="@dimen/ngr_normal"
+    tools:context="com.palmap.exhibition.view.impl.PoiSearchViewActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/bg_round_white">
+
+        <ImageView
+            android:id="@+id/img_ico_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="@dimen/ngr_small"
+            android:layout_marginLeft="@dimen/ngr_normal"
+            android:layout_marginTop="@dimen/ngr_small"
+            android:src="@mipmap/yantai_ico_search" />
+
+        <EditText
+            android:id="@+id/edit_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/ngr_large"
+            android:layout_toLeftOf="@+id/img_clear"
+            android:layout_toRightOf="@+id/img_ico_search"
+            android:background="@null"
+            android:completionThreshold="1"
+            android:hint="请输入想去的店铺名称"
+            android:imeActionLabel="搜索"
+            android:imeOptions="actionSearch"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textColorHint="#b4b7b9"
+            android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/img_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/ngr_small"
+            android:layout_toLeftOf="@+id/tv_cancel"
+            android:onClick="clearClick"
+            android:src="@mipmap/ico_search_delete"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:onClick="cancelClick"
+            android:padding="@dimen/ngr_large"
+            android:text="取消"
+            android:textColor="#b4b7b9" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/ngr_small"
+            android:layout_marginTop="@dimen/ngr_small"
+            android:layout_toLeftOf="@+id/tv_cancel"
+            android:background="#b4b7b9" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/ngr_normal"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/layout_quickSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_round_white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="4">
+
+                <LinearLayout
+                    android:id="@+id/layout_diningRoom"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="主题餐厅"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_clothingShoesBag"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_2" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="服装鞋包"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_jewelryMakeup"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="珠宝化妆"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_outdoorSports"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_4" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="运动户外"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="4">
+
+                <LinearLayout
+                    android:id="@+id/layout_homeDigital"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="家电数码"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_stationery"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_6" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="文化用品"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_recreation"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_7" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="娱乐休闲"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layout_cinema"
+                    android:layout_width="0dp"
+                    android:layout_height="93dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:onClick="quickSearchClick"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@mipmap/btn_search_8" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/ngr_small"
+                        android:text="CGV影院"
+                        android:textColor="#565c60"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_search_result"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ListView
+                android:id="@+id/list_poiSearch"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/bg_round_white"
+                android:divider="#000"
+                android:dividerHeight="1px"
+                android:footerDividersEnabled="false"
+                android:headerDividersEnabled="false"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp" />
+
+            <TextView
+                android:id="@+id/empty_list_poiSearch"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_round_white"
+                android:gravity="center"
+                android:paddingLeft="25dp"
+                android:text="很抱歉,没找到这个地方哦,换个地方试试吧!"
+                android:textSize="11sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

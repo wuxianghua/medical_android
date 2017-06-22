@@ -1,0 +1,87 @@
+ext {
+    //Android
+    androidBuildToolsVersion = "25.0.0"
+    androidMinSdkVersion = 14
+    androidTargetSdkVersion = 21
+    androidCompileSdkVersion = 23
+    androidVersionCode = 1
+
+    //Libraries
+    daggerVersion = '2.0.2'
+    butterKnifeVersion = '8.4.0'
+    recyclerViewVersion = '23.1.0'
+
+    cardviewVersion = '25.0.0'
+
+    nineoldandroidsVersion = '2.4.0'
+
+    rxJavaVersion = '1.1.3'
+    rxAndroidVersion = '1.1.0'
+    rxbindingVersion = '0.4.0'
+
+    javaxAnnotationVersion = '1.0'
+    gsonVersion = '2.3'
+    okHttpVersion = '2.5.0'
+    androidAnnotationsVersion = '21.0.3'
+    glideVersion = '3.6.1'
+    multidexVersion = '1.0.1'
+    stethoVersion = '1.3.1'
+    stetho_okHttpVersion = '1.3.1'
+    stetho_jsVersion = '1.3.1'
+    stetho_urlconnection = '1.3.1'
+    GSONVersion = '2.5'
+    leakcanaryVersion = '1.3.1'
+
+//    retrofitVersion = '1.9.0'
+    retrofitVersion = '2.1.0'
+    retrofitLogVersion = '2.7.0'
+    retrofitRxVersion = '2.1.0'
+    retrofitConverter_gsonVersion = '2.1.0'
+    support_v7 = '23.1.0'
+    support_v4 = '23.1.0'
+    guavaVersion = '19.0'
+
+    //Testing
+    robolectricVersion = '3.0'
+    jUnitVersion = '4.12'
+    assertJVersion = '1.7.1'
+    mockitoVersion = '1.9.5'
+    dexmakerVersion = '1.0'
+    espressoVersion = '2.0'
+    testingSupportLibVersion = '0.1'
+
+    appDependencies = [
+            leakcanaryDebug  : "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}",
+            leakcanaryRelease: "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}",
+    ]
+
+    libDependencies = [
+            glide                 : "com.github.bumptech.glide:glide:${glideVersion}",
+            multidex              : "com.android.support:multidex:${multidexVersion}",
+            daggerCompiler        : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger2               : "com.google.dagger:dagger:${daggerVersion}",
+            butterKnife           : "com.jakewharton:butterknife:${butterKnifeVersion}",
+            recyclerView          : "com.android.support:recyclerview-v7:${recyclerViewVersion}",
+
+            rxJava                : "io.reactivex:rxjava:${rxJavaVersion}",
+            rxAndroid             : "io.reactivex:rxandroid:${rxAndroidVersion}",
+            rxbinding             : "com.jakewharton.rxbinding:rxbinding:${rxbindingVersion}",
+
+            javaxAnnotation       : "javax.annotation:jsr250-api:${javaxAnnotationVersion}",
+            retrofit              : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            v4                    : "com.android.support:support-v4:${support_v4}",
+            v7                    : "com.android.support:appcompat-v7:${support_v7}",
+            cardView              : "com.android.support:cardview-v7:${cardviewVersion}",
+            nineoldandroids       : "com.nineoldandroids:library:${nineoldandroidsVersion}",
+            stetho                : "com.facebook.stetho:stetho:${stethoVersion}",
+            stetho_okHttp         : "com.facebook.stetho:stetho-okhttp:${stetho_okHttpVersion}",
+            stetho_js             : "com.facebook.stetho:stetho-js-rhino:${stetho_jsVersion}",
+            stetho_urlconnection  : "com.facebook.stetho:stetho-urlconnection:${stetho_jsVersion}",
+            guava                 : "com.google.guava:guava:${guavaVersion}",
+            retrofitLog           : "com.squareup.okhttp:logging-interceptor:${retrofitLogVersion}",
+            retrofitRx            : "com.squareup.retrofit2:adapter-rxjava:${retrofitRxVersion}",
+            retrofitConverter_gson: "com.squareup.retrofit2:converter-gson:${retrofitConverter_gsonVersion}",
+            gson                  : "com.google.code.gson:gson:${GSONVersion}",
+    ]
+
+}

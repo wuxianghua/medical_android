@@ -1,0 +1,27 @@
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+
+    <dimen name="action_bar_height">55dp</dimen>
+
+    <dimen name="nrg_big">30dp</dimen>
+    <dimen name="ngr_Twenty">20dp</dimen>
+    <dimen name="ngr_large">15dp</dimen>
+    <dimen name="ngr_normal">10dp</dimen>
+    <dimen name="ngr_small">5dp</dimen>
+
+    <dimen name="ngr_floorTextSize">17sp</dimen>
+
+    <dimen name="ngr_titleTextSize">20sp</dimen>
+
+    <dimen name="uiSize">36dp</dimen>
+
+    <dimen name="poiInfiTextSize_big">17sp</dimen>
+    <dimen name="poiInfiTextSize_normal">13sp</dimen>
+
+
+    <dimen name="slidingmenu_offset">150dp</dimen>
+    <dimen name="shadow_width">0.5dp</dimen>
+
+</resources>

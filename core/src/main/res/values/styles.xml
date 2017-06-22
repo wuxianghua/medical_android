@@ -1,0 +1,73 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="ngr_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/ngr_colorPrimary</item>
+        <item name="colorPrimaryDark">@color/ngr_colorPrimaryDark</item>
+        <item name="colorAccent">@color/ngr_colorAccent</item>
+        <item name="toolbarStyle">@style/toolBar</item>
+        <item name="drawerArrowStyle">@style/myDrawerArrowStyle</item>
+    </style>
+
+    <style name="SwipeBackLayout">
+        <item name="edge_size">50dip</item>
+        <item name="shadow_left">@drawable/shadow_left</item>
+        <item name="shadow_right">@drawable/shadow_right</item>
+        <item name="shadow_bottom">@drawable/shadow_bottom</item>
+    </style>
+
+    <style name="FinishTheme" parent="ngr_AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="YanTaiPoiSearchTheme" parent="FinishTheme">
+        <item name="android:windowBackground">@color/yt_search_bg</item>
+    </style>
+
+    <style name="AppMenuTheme" parent="ngr_AppTheme">
+        <!-- 作为QQ样式边侧滑打开抽屉时候整个窗体背景图-->
+        <!--<item name="android:windowBackground">@mipmap/bg_menu</item>-->
+    </style>
+
+    <style name="toolBar" parent="Widget.AppCompat.Toolbar">
+        <!-- 设置该属性解决空白部分-->
+        <item name="contentInsetStart">0dp</item>
+    </style>
+
+    <style name="popwin_anim_style">
+        <item name="android:windowEnterAnimation">@anim/pop_show</item>
+        <item name="android:windowExitAnimation">@anim/pop_hide</item>
+    </style>
+
+
+
+    <style name="myDrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
+    </style>
+
+
+    <style name="routeInfoLableStyle" parent="ngr_AppTheme">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">#666666</item>
+    </style>
+
+    <style name="routeInfoTextStyle" parent="ngr_AppTheme">
+        <item name="android:textSize">10sp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#999999</item>
+        <item name="android:gravity">right</item>
+    </style>
+
+
+    <style name="dialog_task" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:background">@null</item>
+    </style>
+
+</resources>

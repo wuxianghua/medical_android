@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.palmap.exhibition">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <service android:name="com.palmaplus.nagrand.position.ble.BeaconService" />
+
+        <activity
+            android:name=".view.impl.PoiInfoViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FinishTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="expo.palmap.cn"
+                    android:pathPrefix="/launcher/openPoiInfo"
+                    android:scheme="exbt" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.impl.PoiInfoWebViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FinishTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="expo.palmap.cn"
+                    android:pathPrefix="/launcher/openPoiInfoWeb"
+                    android:scheme="exbt" />
+            </intent-filter>
+        </activity>
+
+        <!-- 微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+            <intent-filter>
+                <data android:scheme="tencent100371282" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.impl.PalmapViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ngr_AppTheme"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".view.impl.PoiSearchViewActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/YanTaiPoiSearchTheme"
+            android:windowSoftInputMode="adjustPan|stateVisible" />
+        <activity android:name=".view.impl.CouponListViewActivity"></activity>
+        <activity android:name=".view.impl.CouponDetailsViewActivity"></activity>
+
+        <service
+            android:name=".service.LampSiteLocationService"
+            android:exported="false"/>
+    </application>
+
+</manifest>

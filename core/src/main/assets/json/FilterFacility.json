@@ -1,0 +1,32 @@
+[
+  {
+    "name": "escalator",
+    "categoryids": [
+      24093000
+    ]
+  },
+  {
+    "name": "pay",
+    "categoryids": [
+      23060000,
+      22005000
+    ]
+  },
+  {
+    "name": "toilets",
+    "categoryids": [
+      23059000,
+      23024000,
+      23063000,
+      23025000
+    ]
+  },
+  {
+    "name": "entrance",
+    "categoryids": [
+      23041000,
+      23043000,
+      22006000
+    ]
+  }
+]

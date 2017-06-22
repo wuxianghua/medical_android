@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="定位方式设置">
+        <ListPreference
+            android:dialogTitle="选择定位方式"
+            android:entries="@array/locationTypeEntries"
+            android:entryValues="@array/locationTypeEntryValues"
+            android:key="@string/ngr_locationTypeKey"
+            android:defaultValue="1"
+            android:title="选择定位方式" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="语言设置">
+        <ListPreference
+            android:dialogTitle="选择语言语言"
+            android:entries="@array/languageEntries"
+            android:entryValues="@array/languageEntryValues"
+            android:key="@string/ngr_languageKey"
+            android:defaultValue="1"
+            android:title="选择语言语言" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="地图配色">
+        <ListPreference
+            android:dialogTitle="选择地图配色"
+            android:entries="@array/mapStyleEntries"
+            android:entryValues="@array/mapStyleEntryValues"
+            android:key="@string/ngr_mapStyleKey"
+            android:defaultValue="999"
+            android:title="选择地图配色" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
