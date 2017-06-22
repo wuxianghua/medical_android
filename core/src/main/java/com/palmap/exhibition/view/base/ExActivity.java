@@ -62,7 +62,10 @@ public abstract class ExActivity<P extends Presenter> extends BaseActivity {
     }
 
     public AndroidApplication getAndroidApplication() {
-        return (AndroidApplication) getApplication();
+        if (getApplication() instanceof AndroidApplication) {
+            return (AndroidApplication) getApplication();
+        }
+        return AndroidApplication.getInstance();
     }
 
     public Navigator getNavigator() {
