@@ -24,4 +24,7 @@
     <dimen name="slidingmenu_offset">150dp</dimen>
     <dimen name="shadow_width">0.5dp</dimen>
 
+    <dimen name="margin_large">15dp</dimen>
+    <dimen name="layout_slarge">20dp</dimen>
+
 </resources>

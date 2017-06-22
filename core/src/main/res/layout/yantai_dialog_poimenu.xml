@@ -21,7 +21,7 @@
             android:layout_height="36dp"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:src="@drawable/btn_tab_camera"
+            android:src="@mipmap/btn_tab_camera"
             android:textColor="#565c60"
             android:textSize="18sp"/>
 
@@ -108,7 +108,7 @@
                 android:layout_width="74dp"
                 android:layout_height="28dp"
                 android:layout_margin="@dimen/margin_large"
-                android:background="@drawable/btn_nav_setstart"
+                android:background="@mipmap/btn_nav_setstart"
                 android:visibility="visible"/>
 
         </LinearLayout>
@@ -192,7 +192,7 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ico_tab_start"
+                        android:src="@mipmap/ico_tab_start"
                         />
 
                     <TextView
@@ -219,7 +219,7 @@
                         android:layout_width="15dp"
                         android:layout_height="15dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ico_tab_end"/>
+                        android:src="@mipmap/ico_tab_end"/>
 
                     <TextView
                         android:maxLines="2"

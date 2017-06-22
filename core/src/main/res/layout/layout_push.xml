@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:padding="15dp"
-    android:background="@drawable/bg_toast"
+    android:background="@mipmap/bg_toast"
     android:layout_height="match_parent">
 
 

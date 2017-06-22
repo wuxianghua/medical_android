@@ -190,7 +190,7 @@ public class PoiInfoViewActivity extends ExSwipeBackActivity<PoiInfoPresenter> i
 //            loadQRCode(qrcode, 80);
             if (!TextUtils.isEmpty(qrcode)) {
                 if (QRCODE_EXBT.equals(qrcode)) {
-                    poiInfoQrCode.setImageResource(R.drawable.exbt_qrcode);
+                    poiInfoQrCode.setImageResource(R.mipmap.exbt_qrcode);
                 } else {
                     Glide.with(this).load(qrcode).into(poiInfoQrCode);
                 }

@@ -70,7 +70,7 @@ repositories {
 dependencies {
     provided fileTree(include: ['*.jar'], dir: 'libs')
 
-    compile project(':h2')
+//    compile project(':h2')
 
     def dependencies = rootProject.ext.libDependencies
     annotationProcessor dependencies.daggerCompiler
