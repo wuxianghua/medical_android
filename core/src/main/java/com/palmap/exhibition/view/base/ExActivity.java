@@ -25,7 +25,10 @@ public abstract class ExActivity<P extends Presenter> extends BaseActivity {
     }
 
     public ApplicationComponent getApplicationComponent() {
-        return ((AndroidApplication) getApplication()).getApplicationComponent();
+        if (getApplication() instanceof AndroidApplication) {
+            return ((AndroidApplication) getApplication()).getApplicationComponent();
+        }
+        return AndroidApplication.getInstance().getApplicationComponent();
     }
 
     public ActivityModule getActivityModule() {

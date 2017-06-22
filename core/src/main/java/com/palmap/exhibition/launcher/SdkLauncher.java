@@ -78,8 +78,6 @@ public final class SdkLauncher {
                         subscriber.onNext(false);
                         return;
                     }
-                    String jsonStr = FileUtils.readFileFromAssets(context, "json/Region.json");
-                    AndroidApplication.getInstance().setRegionJsonStr(jsonStr);
                     subscriber.onNext(true);
                     subscriber.onCompleted();
                 } catch (Exception e) {

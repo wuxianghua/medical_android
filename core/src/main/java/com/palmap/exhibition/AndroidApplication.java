@@ -1,6 +1,6 @@
 package com.palmap.exhibition;
 
-import android.text.TextUtils;
+import android.content.Context;
 
 import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.di.compent.ApplicationComponent;
@@ -20,13 +20,11 @@ import javax.inject.Inject;
 /**
  * Created by 王天明 on 2016/6/3.
  */
-public class AndroidApplication extends BaseApplication{
+public class AndroidApplication extends BaseApplication {
     ApplicationComponent applicationComponent;
 
     @Inject
     Navigator navigator;
-
-    String regionJsonStr = null;
 
     private static AndroidApplication instance;
 
@@ -35,10 +33,20 @@ public class AndroidApplication extends BaseApplication{
      */
     private long locationMapId = -1;
 
+    public static void attachContext(Context base) {
+        if (instance != null) {
+            instance = null;
+        }
+        instance = new AndroidApplication();
+        instance.attachBaseContext(base);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
+        if (instance == null) {
+            instance = this;
+        }
         Engine.getInstance();
         LogUtil.allowE = LogUtil.allowD = BuildConfig.DEBUG;
         try {
@@ -47,6 +55,13 @@ public class AndroidApplication extends BaseApplication{
             e.printStackTrace();
             LogUtil.e("创建缓存文件夹失败");
         }
+    }
+
+    public static void onCreated() {
+        if (instance == null) {
+            throw new IllegalArgumentException("your must call AndroidApplication.attachContext(context) before !!!");
+        }
+        instance.onCreate();
     }
 
     @Override
@@ -61,16 +76,6 @@ public class AndroidApplication extends BaseApplication{
 
     public Navigator getNavigator() {
         return navigator;
-    }
-
-    public String getRegionJsonStr() {
-        return regionJsonStr;
-    }
-
-    public void setRegionJsonStr(String regionJsonStr) {
-        if (TextUtils.isEmpty(this.regionJsonStr)) {
-            this.regionJsonStr = regionJsonStr;
-        }
     }
 
     public synchronized static AndroidApplication getInstance() {
