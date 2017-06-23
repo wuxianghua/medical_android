@@ -34,7 +34,7 @@ public class YanTaiPoiMenuLayout extends LinearLayout {
     private Listener listener;
     private PoiModel poiModel;
 
-    private ClickHandler clichHandler = new ClickHandler();
+    private ClickHandler clickHandler = new ClickHandler();
 
     private PalmapViewState state = PalmapViewState.Normal;
 
@@ -122,12 +122,12 @@ public class YanTaiPoiMenuLayout extends LinearLayout {
 
         poi_img = (ImageView) findViewById(R.id.poi_img);
 
-        btn_end.setOnClickListener(clichHandler);
-        btn_start.setOnClickListener(clichHandler);
-        img_close.setOnClickListener(clichHandler);
-        findViewById(R.id.img_cancel).setOnClickListener(clichHandler);
-        findViewById(R.id.img_cancelStart).setOnClickListener(clichHandler);
-        btn_navi.setOnClickListener(clichHandler);
+        btn_end.setOnClickListener(clickHandler);
+        btn_start.setOnClickListener(clickHandler);
+        img_close.setOnClickListener(clickHandler);
+        findViewById(R.id.img_cancel).setOnClickListener(clickHandler);
+        findViewById(R.id.img_cancelStart).setOnClickListener(clickHandler);
+        btn_navi.setOnClickListener(clickHandler);
     }
 
     public void refreshView(PoiModel poiModel, PalmapViewState state) {

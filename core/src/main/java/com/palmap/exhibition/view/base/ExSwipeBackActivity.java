@@ -36,7 +36,10 @@ public abstract class ExSwipeBackActivity<P extends Presenter> extends BaseActiv
     }
 
     public ApplicationComponent getApplicationComponent() {
-        return ((AndroidApplication) getApplication()).getApplicationComponent();
+        if(getApplication() instanceof AndroidApplication){
+            return ((AndroidApplication) getApplication()).getApplicationComponent();
+        }
+        return AndroidApplication.getInstance().getApplicationComponent();
     }
 
     public ActivityModule getActivityModule() {
@@ -71,7 +74,10 @@ public abstract class ExSwipeBackActivity<P extends Presenter> extends BaseActiv
     }
 
     public AndroidApplication getAndroidApplication() {
-        return (AndroidApplication) getApplication();
+        if(getApplication() instanceof AndroidApplication){
+            return ((AndroidApplication) getApplication());
+        }
+        return AndroidApplication.getInstance();
     }
 
     public Navigator getNavigator() {

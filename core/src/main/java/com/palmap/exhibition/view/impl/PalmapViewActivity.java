@@ -179,7 +179,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         setContentView(R.layout.yantai_view_palmap);
         self = this;
         initView();
-        setSupportActionBar(toolBar);
         initStatusBar(R.color.ngr_colorPrimary);
         initMapView();
         Intent intent = getIntent();
@@ -1077,5 +1076,14 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             delayedDoCollisionDetection();
             refreshScaleView();
         }
+       /* View v2 = findViewById(R.id.testLayout);
+        if (v2.getHeight() != 0) {
+            ViewAnimUtils.animHeight(v2,0,500,null);
+            initStatusBar(R.color.ngr_colorPrimary);
+        }else{
+            ViewAnimUtils.animHeight(v2,500,500,null);
+            StatusBarCompat.setStatusBarColor(this, Color.RED);
+        }*/
+
     }
 }

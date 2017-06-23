@@ -4,6 +4,9 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by 王天明 on 2016/7/12.
@@ -45,6 +48,51 @@ public class ViewAnimUtils {
             valueAnimator.addListener(animatorListener);
         }
         return valueAnimator;
+    }
+
+    public static void animHeight(final View animView, final int tagetHeight, int time,Animator.AnimatorListener animatorListener) {
+        final int currentHeight = animView.getHeight();
+        if (tagetHeight == currentHeight) {
+            return;
+        }
+        final boolean increase = tagetHeight > currentHeight;
+        final int offset = Math.abs(tagetHeight - currentHeight);
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(.0f, 1.0f);
+        valueAnimator.setDuration(time);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float animatedFraction = animation.getAnimatedFraction();
+                ViewGroup.LayoutParams layoutParams = null;
+                int nextHeight;
+                if(increase){
+                    nextHeight = (int) (currentHeight + (offset * animatedFraction));
+                }else{
+                    nextHeight = (int) (currentHeight - (offset * animatedFraction));
+                }
+                if (animView.getParent() instanceof LinearLayout) {
+                    layoutParams = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, nextHeight);
+                }
+                if (animView.getParent() instanceof RelativeLayout) {
+                    layoutParams = new RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT, nextHeight);
+                }
+                if (animView.getParent() instanceof FrameLayout) {
+                    layoutParams = new FrameLayout.LayoutParams(
+                            FrameLayout.LayoutParams.MATCH_PARENT, nextHeight);
+                }
+                if (layoutParams == null) {
+                    layoutParams = new ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, nextHeight);
+                }
+                animView.setLayoutParams(layoutParams);
+            }
+        });
+        if (animatorListener != null) {
+            valueAnimator.addListener(animatorListener);
+        }
+        valueAnimator.start();
     }
 
 }
