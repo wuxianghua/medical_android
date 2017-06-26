@@ -15,7 +15,7 @@
 
     <dimen name="ngr_titleTextSize">20sp</dimen>
 
-    <dimen name="uiSize">36dp</dimen>
+    <dimen name="uiSize">40dp</dimen>
 
     <dimen name="poiInfiTextSize_big">17sp</dimen>
     <dimen name="poiInfiTextSize_normal">13sp</dimen>

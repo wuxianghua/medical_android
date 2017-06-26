@@ -17,13 +17,17 @@ import com.palmap.library.utils.LogUtil;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by wtm on 2017/1/3.
@@ -44,7 +48,7 @@ public class LocationRepoImpl implements LocationRepo {
 
     private TimeCallBack timeCallBack;
 
-    private Subscription apiSubscription;
+    private Disposable apiSubscription;
 
     private String ipAddress = null;
 
@@ -75,99 +79,91 @@ public class LocationRepoImpl implements LocationRepo {
         LogUtil.e("ip:" + IpUtils.getIpAddress());
         if (Config.isTestLocation) {
             LogUtil.e("请求测试的定位数据");
+
             apiSubscription = locationService.requestLocationTest("ip",
                     "10.0.20.197")
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.computation())
-                    .repeatWhen(new Func1<Observable<? extends Void>, Observable<?>>() {
+                    .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
                         @Override
-                        public Observable<?> call(Observable<? extends Void> observable) {
-                            return observable.delay(2000L, TimeUnit.MILLISECONDS);
+                        public ObservableSource<?> apply(@NonNull Observable<Object> objectObservable) throws Exception {
+                            return objectObservable.delay(2000L, TimeUnit.MILLISECONDS);
                         }
-                    })
-                    .retryWhen(new Func1<Observable<? extends Throwable>, Observable<?>>() {
+                    }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
                         @Override
-                        public Observable<?> call(Observable<? extends Throwable> observable) {
-                            return observable.delay(2000L, TimeUnit.MILLISECONDS);
+                        public ObservableSource<?> apply(@NonNull Observable<Throwable> throwableObservable) throws Exception {
+                            return throwableObservable.delay(2000L, TimeUnit.MILLISECONDS);
                         }
-                    })
-                    .subscribe(new Action1<LocationInfoModel>() {
+                    }).subscribe(new Consumer<LocationInfoModel>() {
                         @Override
-                        public void call(LocationInfoModel locationInfoModel) {
+                        public void accept(@NonNull LocationInfoModel locationInfoModel) throws Exception {
                             LocationRepoImpl.this.locationInfoModel = locationInfoModel;
                             callBackHandler.removeCallbacks(timeCallBack);
                             timeCallBack = new TimeCallBack();
                             timeCallBack.start(callBackHandler);
                         }
-                    }, new Action1<Throwable>() {
+                    }, new Consumer<Throwable>() {
                         @Override
-                        public void call(Throwable throwable) {
+                        public void accept(@NonNull Throwable throwable) throws Exception {
                             locationInfoModel = null;
                         }
                     });
+
             return;
         }
         LogUtil.e("请求真实的定位数据");
         apiSubscription =
-//                locationService.requestLocation("ip", ipAddress)
                 requestLocation()
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.computation())
-                        .repeatWhen(new Func1<Observable<? extends Void>, Observable<?>>() {
+                        .repeatWhen(new Function<Observable<Object>, ObservableSource<?>>() {
                             @Override
-                            public Observable<?> call(Observable<? extends Void> observable) {
-                                //ipAddress = IpUtils.getIpAddress();
-                                return observable.delay(2000L, TimeUnit.MILLISECONDS);
+                            public ObservableSource<?> apply(@NonNull Observable<Object> objectObservable) throws Exception {
+                                return objectObservable.delay(2000L, TimeUnit.MILLISECONDS);
                             }
-                        })
-                        .retryWhen(new Func1<Observable<? extends Throwable>, Observable<?>>() {
-                            @Override
-                            public Observable<?> call(Observable<? extends Throwable> observable) {
-                                //ipAddress = IpUtils.getIpAddress();
-                                return observable.delay(2000L, TimeUnit.MILLISECONDS);
-                            }
-                        })
-                        .subscribe(new Action1<LocationInfoModel>() {
-                            @Override
-                            public void call(LocationInfoModel locationInfoModel) {
-                                LocationRepoImpl.this.locationInfoModel = locationInfoModel;
-                                callBackHandler.removeCallbacks(timeCallBack);
-                                timeCallBack = new TimeCallBack();
-                                timeCallBack.start(callBackHandler);
-                            }
-                        }, new Action1<Throwable>() {
-                            @Override
-                            public void call(Throwable throwable) {
-                                locationInfoModel = null;
-                            }
-                        });
+                        }).retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(@NonNull Observable<Throwable> throwableObservable) throws Exception {
+                        return throwableObservable.delay(2000L, TimeUnit.MILLISECONDS);
+                    }
+                }).subscribe(new Consumer<LocationInfoModel>() {
+                    @Override
+                    public void accept(LocationInfoModel locationInfoModel) {
+                        LocationRepoImpl.this.locationInfoModel = locationInfoModel;
+                        callBackHandler.removeCallbacks(timeCallBack);
+                        timeCallBack = new TimeCallBack();
+                        timeCallBack.start(callBackHandler);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) {
+                        locationInfoModel = null;
+                    }
+                });
     }
 
     private Observable<LocationInfoModel> requestLocation() {
-//       return locationService.requestLocation("ip",
-//               IpUtils.getIpAddress());
-        return Observable.create(new Observable.OnSubscribe<LocationInfoModel>() {
+        return Observable.create(new ObservableOnSubscribe<LocationInfoModel>() {
             @Override
-            public void call(final Subscriber<? super LocationInfoModel> subscriber) {
+            public void subscribe(final ObservableEmitter<LocationInfoModel> emitter) throws Exception {
                 locationService.requestLocation(
                         Config.APP_KEY,
                         "ip",
                         IpUtils.getIpAddress())
-                        .subscribe(new Action1<LocationInfoModel>() {
+                        .subscribe(new Consumer<LocationInfoModel>() {
                             @Override
-                            public void call(LocationInfoModel locationInfoModel) {
-                                subscriber.onNext(locationInfoModel);
-                                subscriber.onCompleted();
+                            public void accept(LocationInfoModel locationInfoModel) {
+                                emitter.onNext(locationInfoModel);
+                                emitter.onComplete();
                             }
-                        }, new Action1<Throwable>() {
+                        }, new Consumer<Throwable>() {
                             @Override
-                            public void call(Throwable throwable) {
-                                subscriber.onError(throwable);
+                            public void accept(Throwable throwable) {
+                                emitter.onError(throwable);
                             }
                         });
             }
         });
-
     }
 
     /*static int index = 0;
@@ -204,8 +200,8 @@ public class LocationRepoImpl implements LocationRepo {
             callBackHandler.removeCallbacks(timeCallBack);
             timeCallBack = null;
         }
-        if (null != apiSubscription && !apiSubscription.isUnsubscribed()) {
-            apiSubscription.unsubscribe();
+        if (null != apiSubscription && !apiSubscription.isDisposed()) {
+            apiSubscription.dispose();
             apiSubscription = null;
         }
     }

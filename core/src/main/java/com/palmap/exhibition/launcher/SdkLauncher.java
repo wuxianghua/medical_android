@@ -19,13 +19,16 @@ import com.palmaplus.nagrand.io.FileCacheMethod;
 import java.io.File;
 import java.util.Locale;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by 王天明 on 2016/7/18.
@@ -49,12 +52,12 @@ public final class SdkLauncher {
     }
 
     private static Observable<Boolean> startEngine(final Context context) {
-        return Observable.create(new Observable.OnSubscribe<Boolean>() {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
+            public void subscribe(@NonNull ObservableEmitter<Boolean> emitter) throws Exception {
                 if (engineInit) {
-                    subscriber.onNext(true);
-                    subscriber.onCompleted();
+                    emitter.onNext(true);
+                    emitter.onComplete();
                 }
                 try {
                     ACache aCache = ACache.get(context);
@@ -69,25 +72,23 @@ public final class SdkLauncher {
                         }
                     }
                     aCache.put(KEY_CACHE, System.currentTimeMillis() + "");
-
-                    //clearCacheAtTime(System.currentTimeMillis() - cacheTime);
                     if (FileUtils.checkoutSDCard()) {
                         FileUtils.copyDirToSDCardFromAsserts(context, Config.LUR_NAME, "font", false);
                         FileUtils.copyDirToSDCardFromAsserts(context, Config.LUR_NAME, Config.LUR_NAME, true);
                     } else {
-                        subscriber.onNext(false);
+                        emitter.onNext(false);
                         return;
                     }
-                    subscriber.onNext(true);
-                    subscriber.onCompleted();
+                    emitter.onNext(true);
+                    emitter.onComplete();
                 } catch (Exception e) {
-                    subscriber.onError(e);
+                    emitter.onError(e);
                 }
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .map(new Func1<Boolean, Boolean>() {
+                .map(new Function<Boolean, Boolean>() {
                     @Override
-                    public Boolean call(Boolean aBoolean) {
+                    public Boolean apply(Boolean aBoolean) {
                         if (engineInit) return true;
                         if (aBoolean) {
                             Engine engine = Engine.getInstance(); //初始化引擎
@@ -116,17 +117,17 @@ public final class SdkLauncher {
         resources.updateConfiguration(config, dm);
     }
 
-    private static void launcher(final Context context, final LauncherListener listener, final Action1<Void> doOnNext, final LauncherModel launcherModel) {
-        startEngine(context).doOnSubscribe(new Action0() {
+    private static void launcher(final Context context, final LauncherListener listener, final Consumer<Integer> doOnNext, final LauncherModel launcherModel) {
+        startEngine(context).doOnSubscribe(new Consumer<Disposable>() {
             @Override
-            public void call() {
+            public void accept(@NonNull Disposable disposable) throws Exception {
                 if (listener != null) {
                     listener.onEngineLoading();
                 }
             }
-        }).subscribe(new Action1<Boolean>() {
+        }).subscribe(new Consumer<Boolean>() {
             @Override
-            public void call(Boolean aBoolean) {
+            public void accept(Boolean aBoolean) {
                 if (!aBoolean) {
                     if (listener != null) {
                         listener.onError(new SdCardNotFoundException());
@@ -134,7 +135,11 @@ public final class SdkLauncher {
                     return;
                 }
                 if (doOnNext != null) {
-                    doOnNext.call(null);
+                    try {
+                        doOnNext.accept(1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (launcherModel != null) {
 //                    PalMapViewActivity.navigatorThis(context, launcherModel);
@@ -153,9 +158,9 @@ public final class SdkLauncher {
                     listener.onLauncherComplete();
                 }
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 if (listener != null) {
                     listener.onError(throwable);
                 }
@@ -170,9 +175,9 @@ public final class SdkLauncher {
      * @param listener
      */
     public static void launcher(final Context context, final LauncherListener listener) {
-        launcher(context, listener, new Action1<Void>() {
+        launcher(context, listener, new Consumer<Integer>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Integer integer) {
                 Resources resources = context.getResources();//获得res资源对象
                 Configuration config = resources.getConfiguration();//获得设置对象
                 DisplayMetrics dm = resources.getDisplayMetrics();//获得屏幕参数：主要是分辨率，像素等。
@@ -189,9 +194,9 @@ public final class SdkLauncher {
     }
 
     public static void launcher(final Context context, final LauncherListener listener, String title) {
-        launcher(context, listener, new Action1<Void>() {
+        launcher(context, listener, new Consumer<Integer>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Integer aVoid) {
                 Resources resources = context.getResources();//获得res资源对象
                 Configuration config = resources.getConfiguration();//获得设置对象
                 DisplayMetrics dm = resources.getDisplayMetrics();//获得屏幕参数：主要是分辨率，像素等。
@@ -208,9 +213,9 @@ public final class SdkLauncher {
     }
 
     public static void launcher(final Context context, final Config.Language language, final LauncherListener listener, final LauncherModel launcherModel) {
-        launcher(context, listener, new Action1<Void>() {
+        launcher(context, listener, new Consumer<Integer>() {
             @Override
-            public void call(Void aVoid) {
+            public void accept(Integer aVoid) {
                 changeLanguage(context, language);
             }
         }, launcherModel);

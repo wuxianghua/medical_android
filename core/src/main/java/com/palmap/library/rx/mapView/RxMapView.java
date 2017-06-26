@@ -7,9 +7,9 @@ import com.palmap.library.rx.mapView.event.SingleTapEvent;
 import com.palmaplus.nagrand.position.PositioningManager;
 import com.palmaplus.nagrand.view.MapView;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
-import static com.jakewharton.rxbinding.internal.Preconditions.checkNotNull;
+import static com.palmap.library.utils.Preconditions.checkNotNull;
 
 /**
  * Created by 王天明 on 2016/5/4.

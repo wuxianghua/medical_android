@@ -15,10 +15,10 @@ import java.util.List;
 
 import dagger.Module;
 import dagger.Provides;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by 王天明 on 2016/9/9.
@@ -52,9 +52,9 @@ public class FencingModule {
                 return ServiceFactory.create(ActivityInfoService.class).requestPositionInfo(
                         AndroidApplication.getInstance().getLocationMapId(), -1
                 ).observeOn(AndroidSchedulers.mainThread())
-                        .subscribeOn(Schedulers.computation()).map(new Func1<Api_PositionInfo, List<GeoFencing<Api_PositionInfo.ObjBean>>>() {
+                        .subscribeOn(Schedulers.computation()).map(new Function<Api_PositionInfo, List<GeoFencing<Api_PositionInfo.ObjBean>>>() {
                             @Override
-                            public List<GeoFencing<Api_PositionInfo.ObjBean>> call(Api_PositionInfo api_positionInfo) {
+                            public List<GeoFencing<Api_PositionInfo.ObjBean>> apply(Api_PositionInfo api_positionInfo) {
                                 List<GeoFencing<Api_PositionInfo.ObjBean>> list = new ArrayList<>();
                                 for (final Api_PositionInfo.ObjBean objBean : api_positionInfo.getObj()) {
                                     list.add(new CircleGeoFencing<Api_PositionInfo.ObjBean>(
@@ -74,23 +74,6 @@ public class FencingModule {
             }
         };
 
-
-//        return new GeoFencingProvides<Api_PositionInfo.ObjBean>() {
-//            @Override
-//            public Observable<List<GeoFencing<Api_PositionInfo.ObjBean>>> providesGeoFencing() {
-//                return Observable.create(new Observable.OnSubscribe<List<GeoFencing<PushModel>>>() {
-//                    @Override
-//                    public void call(Subscriber<? super List<GeoFencing<PushModel>>> subscriber) {
-//                        if (1 == 1) {
-//                            subscriber.onNext(null);
-//                            subscriber.onCompleted();
-//                        } else {
-//                            throw new RuntimeException("data is error");
-//                        }
-//                    }
-//                });
-//            }
-//        };
     }
 
 }

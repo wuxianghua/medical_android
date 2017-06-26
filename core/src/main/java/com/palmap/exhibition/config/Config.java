@@ -4,6 +4,7 @@ import android.content.Context;
 import android.preference.PreferenceManager;
 
 import com.palmap.exhibition.AndroidApplication;
+import com.palmap.exhibition.BuildConfig;
 import com.palmap.exhibition.R;
 
 import java.io.File;
@@ -16,7 +17,7 @@ public final class Config {
 
     static {
 //        APP_KEY = MetaHelper.getMetaDataByKey(AndroidApplication.getInstance(),"NGR_APPKEY");
-        APP_KEY = "6617d492627540a293237ccb70b85af1";
+        APP_KEY = BuildConfig.NAG_KEY;
     }
 
     public enum Language {

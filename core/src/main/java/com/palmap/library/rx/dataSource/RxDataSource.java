@@ -9,7 +9,8 @@ import com.palmaplus.nagrand.data.LocationPagingList;
 import com.palmaplus.nagrand.data.MapModel;
 import com.palmaplus.nagrand.data.PlanarGraph;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by 王天明 on 2016/4/26.

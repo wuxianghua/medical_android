@@ -1,6 +1,7 @@
 package com.palmap.library.executor;
 
-import rx.Scheduler;
+
+import io.reactivex.Scheduler;
 
 /**
  * Created by 王天明 on 2016/5/3.

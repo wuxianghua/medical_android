@@ -3,9 +3,9 @@ package com.palmap.exhibition.api;
 
 import com.palmap.exhibition.model.LocationInfoModel;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * Created by wtm on 2017/1/3.

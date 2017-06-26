@@ -12,12 +12,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-
     defaultConfig {
         minSdkVersion globalConfiguration.getAt("androidMinSdkVersion")
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
         multiDexEnabled true
         buildConfigField "boolean", "useSVA", "false"//是否使用SVA定位
+        buildConfigField "String", "NAG_KEY", "\"6617d492627540a293237ccb70b85af1\""
     }
 
     packagingOptions {
@@ -74,22 +74,18 @@ dependencies {
 
     def dependencies = rootProject.ext.libDependencies
     annotationProcessor dependencies.daggerCompiler
-    provided dependencies.dagger2
+    compile dependencies.dagger2
     compile dependencies.v7
-    provided dependencies.v4
-    provided dependencies.recyclerView
-    provided dependencies.multidex
-    provided dependencies.javaxAnnotation
+    compile dependencies.javaxAnnotation
+
     provided dependencies.glide
     provided dependencies.rxJava
     provided dependencies.rxAndroid
     provided dependencies.retrofit
     provided dependencies.retrofitRx
     provided dependencies.retrofitConverter_gson
-    provided dependencies.rxbinding
     provided dependencies.nineoldandroids
-
-    provided ('com.github.niorgai:StatusBarCompat:2.1.2', {
-        exclude group: 'com.android.support'
-    })
+    //provided dependencies.multidex
+    //provided dependencies.v4
+    //provided dependencies.rxbinding
 }

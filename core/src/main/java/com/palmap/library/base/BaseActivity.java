@@ -12,11 +12,11 @@ import com.palmap.library.delegate.ProgressDialogDelegate;
 import com.palmap.library.delegate.ToastDelegate;
 import com.palmap.library.utils.IOUtils;
 import com.palmap.library.view.LoadDataView;
+import com.palmap.library.view.statusBarCompat.StatusBarCompat;
 
 import javax.inject.Inject;
 
 import dagger.Lazy;
-import qiu.niorgai.StatusBarCompat;
 
 /**
  * Created by 王天明 on 2015/12/18 0018.

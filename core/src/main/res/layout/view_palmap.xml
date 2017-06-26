@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:arc="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:compass="http://schemas.android.com/apk/res-auto"
     xmlns:scale="http://schemas.android.com/apk/res-auto"
     xmlns:shadow="http://schemas.android.com/apk/res-auto"
@@ -9,337 +9,214 @@
     android:layout_height="match_parent"
     android:background="@android:color/white"
     android:orientation="vertical"
-    tools:context=".view.impl.PalMapViewActivity">
+    tools:context=".view.impl.PalmapViewActivity">
 
-    <include layout="@layout/ngr_toolbar" />
+    <FrameLayout
+        android:id="@+id/layout_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:id="@+id/container_retry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/layout_poiMenu"
+        android:layout_below="@+id/layout_top">
 
-        <FrameLayout
-            android:id="@+id/layout_mapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_locationMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@android:color/transparent"
+            android:padding="10dp"
+            android:textColor="#66000000"
+            android:visibility="gone"/>
+
+        <com.palmap.exhibition.widget.ShadowLayout
+            android:id="@+id/layout_compassView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ngr_large"
+            android:layout_marginTop="@dimen/ngr_large"
+            android:orientation="vertical"
+            shadow:hole="true"
+            shadow:offset="2dp"
+            shadow:shadowRadius="1dp"
+            shadow:type="circle">
+
+            <com.palmap.exhibition.widget.CompassView
+                android:id="@+id/compassView"
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="@dimen/uiSize"
+                compass:bitMapRes="@mipmap/ico_compass"/>
+
+        </com.palmap.exhibition.widget.ShadowLayout>
+
+        <com.palmap.exhibition.widget.RouteInfoView
+            android:id="@+id/routeInfoView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/ngr_large"
+            android:layout_marginTop="@dimen/ngr_large"
+            android:visibility="gone"/>
+
+        <com.palmap.exhibition.widget.ShadowLayout
+            android:id="@+id/layout_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/ngr_large"
+            android:layout_marginLeft="@dimen/ngr_large"
+            android:orientation="vertical"
+            shadow:hole="true"
+            shadow:offset="@dimen/shadow_width"
+            shadow:shadowRadius="@dimen/shadow_width">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop" />
+                android:id="@+id/map_location"
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="@dimen/uiSize"
+                android:clickable="true"
+                android:src="@drawable/icon_location"/>
 
-        </FrameLayout>
+        </com.palmap.exhibition.widget.ShadowLayout>
 
-        <RelativeLayout
-            android:id="@+id/layout_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <com.palmap.exhibition.widget.ShadowLayout
+            android:id="@+id/layout_tv_floor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_location"
+            android:layout_alignLeft="@+id/layout_location"
+            android:layout_marginBottom="@dimen/ngr_normal"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            shadow:hole="true"
+            shadow:offset="@dimen/shadow_width"
+            shadow:shadowRadius="@dimen/shadow_width">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_floor"
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="@dimen/uiSize"
+                android:background="@drawable/bg_floor_name"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textSize="@dimen/ngr_floorTextSize"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/layout_poiMenu">
+        </com.palmap.exhibition.widget.ShadowLayout>
 
-                <TextView
-                    android:id="@+id/tv_locationMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="30dp"
-                    android:background="@android:color/transparent"
-                    android:padding="10dp"
-                    android:textColor="#66000000"
-                    android:visibility="gone" />
+        <ListView
+            android:id="@+id/floorListView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_tv_floor"
+            android:layout_alignLeft="@+id/layout_tv_floor"
+            android:layout_alignRight="@+id/layout_tv_floor"
+            android:layout_marginBottom="@dimen/ngr_small"
+            android:choiceMode="singleChoice"
+            android:clickable="true"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="0dp"
+            android:scrollbars="none"
+            android:visibility="invisible"/>
 
-                <com.palmap.exhibition.widget.ShadowLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/ngr_large"
-                    android:layout_marginTop="@dimen/ngr_large"
-                    android:orientation="vertical"
-                    shadow:hole="true"
-                    shadow:offset="2dp"
-                    android:id="@+id/layout_compassView"
-                    shadow:shadowRadius="1dp"
-                    shadow:type="circle">
+        <com.palmap.exhibition.widget.Scale
+            android:id="@+id/scale"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/uiSize"
+            android:layout_alignBottom="@+id/layout_location"
+            android:layout_marginLeft="@dimen/ngr_normal"
+            android:layout_toRightOf="@+id/layout_location"
+            scale:LineWidth="5"/>
 
-                    <com.palmap.exhibition.widget.CompassView
-                        android:id="@+id/compassView"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        compass:bitMapRes="@mipmap/icon_compass" />
+        <LinearLayout
+            android:id="@+id/layout_zoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/ngr_normal"
+            android:layout_marginRight="@dimen/ngr_large"
+            android:orientation="vertical">
 
-                </com.palmap.exhibition.widget.ShadowLayout>
-
-                <com.palmap.exhibition.widget.LightEventAtyView
-                    android:padding="@dimen/ngr_small"
-                    android:layout_alignLeft="@+id/layout_compassView"
-                    android:layout_below="@+id/layout_compassView"
-                    android:id="@+id/lightEventActivityView"
-                    android:layout_marginTop="@dimen/ngr_normal"
-                    android:orientation="vertical"
-                    android:layout_width="53dp"
-                    android:layout_height="53dp"/>
-
-
-                <com.palmap.exhibition.widget.RouteInfoView
-                    android:id="@+id/routeInfoView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/ngr_large"
-                    android:layout_marginTop="@dimen/ngr_large"
-                    android:visibility="gone" />
-
-                <com.palmap.exhibition.widget.ShadowLayout
-                    android:id="@+id/layout_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="@dimen/ngr_large"
-                    android:layout_marginLeft="@dimen/ngr_large"
-                    android:orientation="vertical"
-                    shadow:hole="true"
-                    shadow:offset="@dimen/shadow_width"
-                    shadow:shadowRadius="@dimen/shadow_width">
-
-                    <ImageView
-                        android:id="@+id/map_location"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        android:clickable="true"
-                        android:src="@drawable/icon_location" />
-
-                </com.palmap.exhibition.widget.ShadowLayout>
-
-
-                <com.palmap.exhibition.widget.ShadowLayout
-                    android:id="@+id/layout_tv_floor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/layout_location"
-                    android:layout_alignLeft="@+id/layout_location"
-                    android:layout_marginBottom="@dimen/ngr_normal"
-                    android:orientation="vertical"
-                    android:visibility="invisible"
-                    shadow:hole="true"
-                    shadow:offset="@dimen/shadow_width"
-                    shadow:shadowRadius="@dimen/shadow_width">
-
-                    <TextView
-                        android:id="@+id/tv_floor"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        android:background="@drawable/bg_floor_name"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:textColor="#000"
-                        android:textSize="@dimen/ngr_floorTextSize" />
-
-                </com.palmap.exhibition.widget.ShadowLayout>
-
-                <ListView
-                    android:id="@+id/floorListView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/layout_tv_floor"
-                    android:layout_alignLeft="@+id/layout_tv_floor"
-                    android:layout_alignRight="@+id/layout_tv_floor"
-                    android:layout_marginBottom="@dimen/ngr_small"
-                    android:choiceMode="singleChoice"
-                    android:clickable="true"
-                    android:divider="@android:color/transparent"
-                    android:dividerHeight="0dp"
-                    android:scrollbars="none"
-                    android:visibility="invisible" />
-
-                <ImageView
-                    android:id="@+id/btn_backOutSide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/ngr_large"
-                    android:layout_marginTop="@dimen/ngr_large"
-                    android:clickable="true"
-                    android:src="@mipmap/icon_outside"
-                    android:visibility="invisible" />
-
-                <RelativeLayout
-                    android:id="@+id/layout_pubFacility"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignTop="@+id/layout_location"
-                    android:layout_marginRight="@dimen/ngr_Twenty"
-                    android:layout_toRightOf="@+id/layout_location"
-                    android:orientation="horizontal"
-                    android:visibility="invisible">
-
-                    <ImageView
-                        android:id="@+id/img_pubFacility"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        android:layout_alignParentRight="true"
-                        android:clickable="true"
-                        android:src="@drawable/icon_pub" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/list_pubFacility"
-                        android:layout_width="160dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/img_pubFacility"
-                        android:layout_marginLeft="@dimen/ngr_small"
-                        android:layout_toLeftOf="@+id/img_pubFacility"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/layout_serviceFacility"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/layout_pubFacility"
-                    android:layout_marginBottom="@dimen/ngr_large"
-                    android:layout_marginRight="@dimen/ngr_Twenty"
-                    android:layout_toRightOf="@+id/layout_location"
-                    android:orientation="horizontal"
-                    android:visibility="invisible">
-
-                    <ImageView
-                        android:id="@+id/img_serviceFacility"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        android:layout_alignParentRight="true"
-                        android:clickable="true" />
-
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/list_serviceFacility"
-                        android:layout_width="160dp"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/img_serviceFacility"
-                        android:layout_marginLeft="@dimen/ngr_small"
-                        android:layout_toLeftOf="@+id/img_serviceFacility"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-                <AbsoluteLayout
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:visibility="gone">
-
-                    <com.palmap.exhibition.widget.arcmenu.ArcMenu
-                        android:id="@+id/arc_menu"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:visibility="invisible"
-                        arc:childSize="30dp"
-                        arc:fromDegrees="180.0"
-                        arc:toDegrees="270.0" />
-
-                </AbsoluteLayout>
-
-                <com.palmap.exhibition.widget.Scale
-                    android:id="@+id/scale"
-                    android:layout_width="150dp"
-                    android:layout_height="@dimen/uiSize"
-                    android:layout_alignBottom="@+id/layout_location"
-                    android:layout_marginLeft="@dimen/ngr_normal"
-                    android:layout_toRightOf="@+id/layout_location"
-                    scale:LineWidth="5" />
-
-                <com.palmap.exhibition.widget.ShadowLayout
-                    android:id="@+id/layout_facilities"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/layout_meetingAty"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="@dimen/ngr_normal"
-                    android:layout_marginRight="@dimen/ngr_large"
-                    android:orientation="vertical"
-                    shadow:hole="true"
-                    shadow:offset="@dimen/shadow_width"
-                    shadow:shadowRadius="@dimen/shadow_width">
-
-                    <ImageView
-                        android:id="@+id/tv_facilities"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        android:onClick="facilitiesClick"
-                        android:src="@drawable/icon_pub" />
-                </com.palmap.exhibition.widget.ShadowLayout>
-
-                <ListView
-                    android:id="@+id/list_facilities"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/layout_facilities"
-                    android:layout_alignLeft="@+id/layout_facilities"
-                    android:layout_alignRight="@+id/layout_facilities"
-                    android:divider="@null"
-                    android:listSelector="@android:color/transparent"
-                    android:scrollbars="none"
-                    android:visibility="gone" />
-
-                <View
-                    android:id="@+id/bgView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#33000000"
-                    android:visibility="gone" />
-
-                <com.palmap.exhibition.widget.MeetingAtyView
-                    android:id="@+id/layout_meetingAtyView"
-                    android:layout_width="match_parent"
-                    android:layout_height="264dp"
-                    android:layout_above="@+id/layout_meetingAty"
-                    android:layout_marginBottom="@dimen/ngr_small"
-                    android:layout_marginLeft="@dimen/ngr_large"
-                    android:layout_marginRight="@dimen/ngr_large"
-                    android:orientation="vertical"
-                    android:visibility="gone" />
-
-                <com.palmap.exhibition.widget.ShadowLayout
-                    android:id="@+id/layout_meetingAty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginBottom="@dimen/ngr_large"
-                    android:layout_marginRight="@dimen/ngr_large"
-                    android:orientation="vertical"
-                    shadow:hole="true"
-                    shadow:offset="@dimen/shadow_width"
-                    shadow:shadowRadius="@dimen/shadow_width">
-
-                    <ImageView
-                        android:id="@+id/img_meetingAty"
-                        android:layout_width="@dimen/uiSize"
-                        android:layout_height="@dimen/uiSize"
-                        android:onClick="meetingAtyClick"
-                        android:src="@drawable/btn_event" />
-
-                </com.palmap.exhibition.widget.ShadowLayout>
-
-            </RelativeLayout>
-
-            <com.palmap.exhibition.widget.PoiMenuLayout
-                android:id="@+id/layout_poiMenu"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/map_zoom_in"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:visibility="gone" />
+                android:background="@mipmap/btn_zoomin"
+                android:onClick="mapZoomInClick"/>
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/map_zoom_out"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/btn_zoomout"
+                android:onClick="mapZoomOutClick"/>
 
-        <RelativeLayout
-            android:id="@+id/container_retry"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/list_facilities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/layout_zoom"
+            android:layout_alignLeft="@+id/layout_zoom"
+            android:layout_alignRight="@+id/layout_zoom"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none"
+            android:visibility="visible"/>
+
+        <Switch
+            android:id="@+id/switch_test_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="测试定位"
+            android:textColor="#f00"
+            android:visibility="gone"/>
+
     </RelativeLayout>
-</LinearLayout>
+
+    <com.palmap.exhibition.widget.YanTaiPoiMenuLayout
+        android:id="@+id/layout_poiMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/ngr_toolbar"/>
+
+        <LinearLayout
+            android:id="@+id/testLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+        </LinearLayout>
+    </FrameLayout>
+
+</RelativeLayout>

@@ -5,8 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/Medical.iml" filepath="$PROJECT_DIR$/Medical.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/h2/h2.iml" filepath="$PROJECT_DIR$/h2/h2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/medical_android.iml" filepath="$PROJECT_DIR$/medical_android.iml" />
     </modules>
   </component>
 </project>

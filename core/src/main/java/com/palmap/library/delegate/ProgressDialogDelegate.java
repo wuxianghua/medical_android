@@ -5,8 +5,7 @@ import android.content.Context;
 
 import com.palmap.library.utils.IOUtils;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by 王天明 on 2015/12/21 0021.
@@ -31,9 +30,9 @@ public class ProgressDialogDelegate {
         if (IOUtils.checkMainThread()) {
             showDialog();
         } else {
-            AndroidSchedulers.mainThread().createWorker().schedule(new Action0() {
+            AndroidSchedulers.mainThread().createWorker().schedule(new Runnable() {
                 @Override
-                public void call() {
+                public void run() {
                     showDialog();
                 }
             });

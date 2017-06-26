@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.config.Config;
@@ -70,8 +69,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
-
 public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implements PalMapView, FloorDataProvides, View.OnClickListener {
 
     private static final String KEY_LOCATION_ID = "key_location_id";
@@ -95,7 +92,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     ListView floorListView;
     CompassView compassView;
     ImageView mapLocation;
-    RelativeLayout layoutServiceFacility;
     Scale scale;
     Toolbar toolBar;
     ViewGroup layout_overlay;
@@ -107,8 +103,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     ViewGroup layoutBack;
     View layout_search;
     RouteInfoView routeInfoView;
-    ImageView img_search;
-    ViewGroup layout_location;
+    View map_location;
     ViewGroup layout_floor;
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
@@ -176,7 +171,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityUtils.noBackground(this);
-        setContentView(R.layout.yantai_view_palmap);
+        setContentView(R.layout.view_palmap);
         self = this;
         initView();
         initStatusBar(R.color.ngr_colorPrimary);
@@ -541,39 +536,33 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         if (data.size() == 0) return;
         facilitiesListAdapter = new FacilitiesListAdapter(getContext(), data);
         facilitiesListView.setAdapter(facilitiesListAdapter);
-        RxAdapterView.itemClicks(facilitiesListView)
-                .subscribe(new Action1<Integer>() {
-                    @Override
-                    public void call(Integer position) {
-                        if (facilitiesListAdapter.getSelectPosition() == position) {
-                            presenter.clearFacilityMarks();
-                            facilitiesListAdapter.setSelectPosition(-1);
-                            return;
-                        }
-                        presenter.clearFacilityMarks();
-                        ArrayList<Long> ids = data.get(position).getIds();
-                        List<Feature> facilityModelCoordinates = new ArrayList<>();
-                        for (int i = 0; i < ids.size(); i++) {
-                            List<Feature> tempResult = mapView.searchFeature("Area", "category", new Value(ids.get(i)));
-                            if (tempResult != null && tempResult.size() > 0) {
-                                facilityModelCoordinates.addAll(tempResult);
-                            }
-                        }
-                        if (facilityModelCoordinates.size() == 0) {
-                            showMessage(getString(R.string.ngr_msg_facility_none));
-                            facilitiesListAdapter.setSelectPosition(-1);
-                            return;
-                        } else {
-                            facilitiesListAdapter.setSelectPosition(position);
-                            presenter.addFacilityMarks(facilityModelCoordinates);
-                        }
+        facilitiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (facilitiesListAdapter.getSelectPosition() == position) {
+                    presenter.clearFacilityMarks();
+                    facilitiesListAdapter.setSelectPosition(-1);
+                    return;
+                }
+                presenter.clearFacilityMarks();
+                ArrayList<Long> ids = data.get(position).getIds();
+                List<Feature> facilityModelCoordinates = new ArrayList<>();
+                for (int i = 0; i < ids.size(); i++) {
+                    List<Feature> tempResult = mapView.searchFeature("Area", "category", new Value(ids.get(i)));
+                    if (tempResult != null && tempResult.size() > 0) {
+                        facilityModelCoordinates.addAll(tempResult);
                     }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        LogUtil.e(throwable.toString());
-                    }
-                });
+                }
+                if (facilityModelCoordinates.size() == 0) {
+                    showMessage(getString(R.string.ngr_msg_facility_none));
+                    facilitiesListAdapter.setSelectPosition(-1);
+                    return;
+                } else {
+                    facilitiesListAdapter.setSelectPosition(position);
+                    presenter.addFacilityMarks(facilityModelCoordinates);
+                }
+            }
+        });
     }
 
     @Override
@@ -746,22 +735,20 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void hideMapViewControl() {
-        img_search.setVisibility(View.GONE);
         floorListView.setVisibility(View.INVISIBLE);
         layout_floor.setVisibility(View.INVISIBLE);
         scale.setVisibility(View.INVISIBLE);
-        layout_location.setVisibility(View.INVISIBLE);
+        map_location.setVisibility(View.INVISIBLE);
         layout_zoom.setVisibility(View.INVISIBLE);
         facilitiesListView.setVisibility(View.INVISIBLE);
     }
 
     @Override
     public void showMapViewControl() {
-        img_search.setVisibility(View.VISIBLE);
         layout_floor.setVisibility(View.VISIBLE);
         floorListView.setVisibility(View.VISIBLE);
         scale.setVisibility(View.VISIBLE);
-        layout_location.setVisibility(View.VISIBLE);
+        map_location.setVisibility(View.VISIBLE);
         layout_zoom.setVisibility(View.VISIBLE);
         facilitiesListView.setVisibility(View.VISIBLE);
     }
@@ -870,7 +857,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         mapLocation = findView(R.id.map_location);
         layout_tv_floor = findView(R.id.layout_tv_floor);
-        layoutServiceFacility = findView(R.id.layout_serviceFacility);
         facilitiesListView = findView(R.id.list_facilities);
         routeInfoView = findView(R.id.routeInfoView);
         scale = findView(R.id.scale);
@@ -886,9 +872,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         layout_search.setVisibility(View.GONE);
 
-        img_search = findView(R.id.img_search);
-
-        layout_location = findView(R.id.layout_location);
+        map_location = findView(R.id.map_location);
         layout_zoom = findView(R.id.layout_zoom);
 
         tvFloor.setOnClickListener(this);
@@ -896,7 +880,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         mapLocation.setOnClickListener(this);
         layoutBack.setOnClickListener(this);
         layout_search.setOnClickListener(this);
-        img_search.setOnClickListener(this);
 
         tvTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -1002,8 +985,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             compassViewClick();
         } else if (i == R.id.tv_floor) {
             floorClick();
-        } else if (i == R.id.img_search) {
-            toYanTaiSearchView();
         }
     }
 

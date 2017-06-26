@@ -17,7 +17,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.functions.Action1;
+import io.reactivex.functions.Consumer;
+
 
 /**
  * Created by 天明 on 2016/6/28.
@@ -71,9 +72,9 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                 Config.ID_FLOOR_F1,
                 Config.ID_FLOOR_F2
         }, categories)
-                .subscribe(new Action1<LocationPagingList>() {
+                .subscribe(new Consumer<LocationPagingList>() {
                     @Override
-                    public void call(LocationPagingList locationPagingList) {
+                    public void accept(LocationPagingList locationPagingList) {
                         if (locationPagingList.getSize() == 0) {
                             poiSearchView.requestPoiDataError(new NotFoundDataException());
                             return;
@@ -84,9 +85,9 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                         }
                         poiSearchView.readPoiData(result);
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
                         poiSearchView.requestPoiDataError(throwable);
                         if (BuildConfig.DEBUG) {
                             throwable.printStackTrace();
@@ -98,14 +99,14 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
     private void loadHistoryPoiData() {
         if (poiSearchView == null) return;
         //历史取最后10条数据
-        historyPoiSearchBusiness.find_All().takeLast(10).subscribe(new Action1<List<HistoryPoiSearch>>() {
+        historyPoiSearchBusiness.find_All().takeLast(10).subscribe(new Consumer<List<HistoryPoiSearch>>() {
             @Override
-            public void call(List<HistoryPoiSearch> historyPoiSearches) {
+            public void accept(List<HistoryPoiSearch> historyPoiSearches) {
                 poiSearchView.readHistorySearch(convertData(historyPoiSearches));
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(Throwable throwable) {
                 throwable.printStackTrace();
             }
         });

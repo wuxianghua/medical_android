@@ -1,7 +1,7 @@
 package com.palmap.medical;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.palmap.exhibition.launcher.SdkLauncher;
 
@@ -12,5 +12,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_destination_search);
         SdkLauncher.launcher(this,null,"测试医疗产品");
+
     }
 }

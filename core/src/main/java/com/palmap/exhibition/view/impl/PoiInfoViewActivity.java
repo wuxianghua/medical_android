@@ -42,11 +42,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class PoiInfoViewActivity extends ExSwipeBackActivity<PoiInfoPresenter> implements PoiInfoView {
 
@@ -232,26 +234,27 @@ public class PoiInfoViewActivity extends ExSwipeBackActivity<PoiInfoPresenter> i
         if (TextUtils.isEmpty(code)) {
             return;
         }
-        Observable.create(new Observable.OnSubscribe<Bitmap>() {
+        Observable.create(new ObservableOnSubscribe<Bitmap>() {
             @Override
-            public void call(Subscriber<? super Bitmap> subscriber) {
+            public void subscribe(@NonNull ObservableEmitter<Bitmap> emitter) throws Exception {
                 try {
-                    subscriber.onNext(EncodingHandler.createQRCode(code, DeviceUtils.dip2px(getContext(), widthHeight)));
+                    emitter.onNext(EncodingHandler.createQRCode(code, DeviceUtils.dip2px(getContext(), widthHeight)));
+                    emitter.onComplete();
                 } catch (WriterException e) {
                     e.printStackTrace();
-                    subscriber.onError(e);
+                    emitter.onError(e);
                 }
             }
         }).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<Bitmap>() {
+                .subscribe(new Consumer<Bitmap>() {
                     @Override
-                    public void call(Bitmap o) {
-                        poiInfoQrCode.setImageBitmap(o);
+                    public void accept(@NonNull Bitmap bitmap) throws Exception {
+                        poiInfoQrCode.setImageBitmap(bitmap);
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(@NonNull Throwable throwable) throws Exception {
                         showErrorMessage("二维码加载失败");
                     }
                 });

@@ -48,7 +48,7 @@ import com.palmap.library.utils.FloorUtils;
 import com.palmap.library.utils.IOUtils;
 import com.palmap.library.utils.LogUtil;
 import com.palmap.library.utils.MapUtils;
-import com.palmap.library.utils.SubscriptionUtils;
+import com.palmap.library.utils.DisposableUtils;
 import com.palmap.library.utils.SystemUtils;
 import com.palmaplus.nagrand.core.Types;
 import com.palmaplus.nagrand.data.DataList;
@@ -81,12 +81,14 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.functions.Func1;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+
 
 /**
  * Created by 王天明 on 2016/6/3.
@@ -129,7 +131,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     private boolean isHaveOutSide = false;
 
-    private Subscription locationSubscription;
     /**
      * 当前楼层ID
      */
@@ -187,9 +188,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     private HashMap<Long, PlanarGraph> mapDataCache;
 
-    private Subscription loadMapSubscribe;
+    private Disposable loadMapSubscribe;
 
-    private Subscription loadMapWithBuildingIdSubscription;
+    private Disposable loadMapWithBuildingIdSubscription;
 
     private static boolean openMapCache = false;
 
@@ -243,12 +244,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     private Observable<PlanarGraph> loadPlanarGraph(final long floorId) {
         if (openMapCache) {
             if (mapDataCache.get(floorId) != null) {
-                return Observable.create(new Observable.OnSubscribe<PlanarGraph>() {
+                return Observable.create(new ObservableOnSubscribe<PlanarGraph>() {
                     @Override
-                    public void call(Subscriber<? super PlanarGraph> subscriber) {
-                        LogUtil.e("load map with cache");
-                        subscriber.onNext(mapDataCache.get(floorId));
-                        subscriber.onCompleted();
+                    public void subscribe(@NonNull ObservableEmitter<PlanarGraph> e) throws Exception {
+                        e.onNext(mapDataCache.get(floorId));
+                        e.onComplete();
                     }
                 });
             }
@@ -258,24 +258,24 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     }
 
     private Observable<Long> checkMapId(final long mapId) {
-        return Observable.create(new Observable.OnSubscribe<Long>() {
+        return Observable.create(new ObservableOnSubscribe<Long>() {
             @Override
-            public void call(final Subscriber<? super Long> subscriber) {
+            public void subscribe(final ObservableEmitter<Long> e) throws Exception {
                 if (mapId == ID_NONE) {
-                    RxDataSource.requestMaps(dataSource).subscribe(new Action1<DataList<MapModel>>() {
+                    RxDataSource.requestMaps(dataSource).subscribe(new Consumer<DataList<MapModel>>() {
                         @Override
-                        public void call(DataList<MapModel> mapModelDataList) {
+                        public void accept(DataList<MapModel> mapModelDataList) {
                             MapModel poi = mapModelDataList.getPOI(0);
-                            subscriber.onNext(MapParam.getId(poi));
+                            e.onNext(MapParam.getId(poi));
                         }
-                    }, new Action1<Throwable>() {
+                    }, new Consumer<Throwable>() {
                         @Override
-                        public void call(Throwable throwable) {
-                            subscriber.onError(throwable);
+                        public void accept(Throwable throwable) {
+                            e.onError(throwable);
                         }
                     });
                 } else {
-                    subscriber.onNext(mapId);
+                    e.onNext(mapId);
                 }
             }
         });
@@ -291,22 +291,22 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     private void loadMap(final long mapId, final long floorId, final long featureId) {
         // TODO: 2016/12/1  修改不传入mapId的错误
-        loadMapSubscribe = checkMapId(mapId).flatMap(new Func1<Long, Observable<MapModel>>() {
+        loadMapSubscribe = checkMapId(mapId).flatMap(new Function<Long, Observable<MapModel>>() {
             @Override
-            public Observable<MapModel> call(Long aLong) {
+            public Observable<MapModel> apply(@NonNull Long aLong) throws Exception {
                 LogUtil.e("加载地图 mapID:" + aLong);
                 return RxDataSource.requestMap(dataSource, aLong);
             }
-        }).subscribe(new Action1<MapModel>() {
+        }).subscribe(new Consumer<MapModel>() {
             @Override
-            public void call(MapModel mapModel) {
+            public void accept(@NonNull MapModel mapModel) throws Exception {
                 long mapid = MapParam.getId(mapModel);
                 AndroidApplication.getInstance().setLocationMapId(mapid);
                 loadMapWithBuildingId(MapModel.POI.get(mapModel), floorId, featureId);
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(@NonNull Throwable throwable) throws Exception {
                 throwable.printStackTrace();
                 palMapView.hideLoading();
                 nextFloorId = ID_NONE;
@@ -318,22 +318,17 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 });
             }
         });
+
     }
 
     private void loadMapWithBuildingId(final long buildingId, final long floorId, final long featureId) {
 //        Config.MAP_ANGLE = MapAngleHelper.getAngleWithMapId(buildingId);
-
         Config.MAP_ANGLE = (float) MapAngleHelper.getAngleWithMapId((int) AndroidApplication.getInstance().getLocationMapId());
-
-        LogUtil.e(String.format("加载地图==> mapId:%d mapId:%d floorId:%d featureId:%d"
-                , AndroidApplication.getInstance().getLocationMapId(),
-                buildingId, floorId, featureId
-        ));
         nextFloorId = floorId;
 
-        loadMapWithBuildingIdSubscription = RxDataSource.requestPOI(dataSource, buildingId).flatMap(new Func1<LocationModel, Observable<LocationList>>() {
+        loadMapWithBuildingIdSubscription = RxDataSource.requestPOI(dataSource, buildingId).flatMap(new Function<LocationModel, Observable<LocationList>>() {
             @Override
-            public Observable<LocationList> call(LocationModel locationModel) {
+            public Observable<LocationList> apply(LocationModel locationModel) {
                 exBuildingModel = new ExBuildingModel(locationModel);
                 palMapView.readTitle(exBuildingModel.getName());
                 LocationType locationType = new LocationType(locationModel);
@@ -342,42 +337,39 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     case PLANAR_GRAPH:
                         isHaveOutSide = true;
                         planarGraphId = buildingId;
-                        return Observable.create(new Observable.OnSubscribe<LocationList>() {
+                        return Observable.create(new ObservableOnSubscribe<LocationList>() {
                             @Override
-                            public void call(Subscriber<? super LocationList> subscriber) {
-                                subscriber.onNext(null);
+                            public void subscribe(@NonNull ObservableEmitter<LocationList> e) throws Exception {
+                                e.onNext(null);
                             }
                         });
                     default:
                         return RxDataSource.requestPOIChildren(dataSource, buildingId);
                 }
             }
-        }).flatMap(new Func1<LocationList, Observable<PlanarGraph>>() {
+        }).flatMap(new Function<LocationList, Observable<PlanarGraph>>() {
             @Override
-            public Observable<PlanarGraph> call(LocationList locationList) {
+            public Observable<PlanarGraph> apply(LocationList locationList) {
                 if (locationList == null) {
                     palMapView.readFloorData(null, 0);
-//                    return RxDataSource.requestPlanarGraph(dataSource, buildingId);
                     return loadPlanarGraph(buildingId);
                 }
                 nextFloorId = floorId;
                 if (nextFloorId == ID_NONE) {
-//                    nextFloorId = MapUtils.obtainDefaultFloorId(locationList);
                     LocationModel locationModel = MapUtils.obtainDefaultLocationModel(locationList);
                     nextFloorId = LocationModel.id.get(locationModel);
                 }
                 palMapView.readFloorData(locationList, nextFloorId);
-//                return RxDataSource.requestPlanarGraph(dataSource, nextFloorId);
                 return loadPlanarGraph(nextFloorId);
             }
-        }).doOnSubscribe(new Action0() {
+        }).doOnSubscribe(new Consumer<Disposable>() {
             @Override
-            public void call() {
+            public void accept(@NonNull Disposable disposable) throws Exception {
                 palMapView.showLoading();
             }
-        }).subscribe(new Action1<PlanarGraph>() {
+        }).subscribe(new Consumer<PlanarGraph>() {
             @Override
-            public void call(PlanarGraph planarGraph) {
+            public void accept(@NonNull PlanarGraph planarGraph) throws Exception {
                 palMapView.hideRetry();
                 PalMapViewPresenterImpl.this.featureId = featureId;
                 getOverLayerManager().hideStartAndEnd();
@@ -387,9 +379,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 }
                 palMapView.readMapData(planarGraph);
             }
-        }, new Action1<Throwable>() {
+        }, new Consumer<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
+            public void accept(@NonNull Throwable throwable) throws Exception {
                 throwable.printStackTrace();
                 palMapView.hideLoading();
                 nextFloorId = ID_NONE;
@@ -401,6 +393,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 });
             }
         });
+
     }
 
     @Override
@@ -511,18 +504,18 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         if (floorId == getBuildingId()) {
             backOutSide();
         } else {
-            RxDataSource.requestPOI(dataSource, floorId).subscribe(new Action1<LocationModel>() {
+            RxDataSource.requestPOI(dataSource, floorId).subscribe(new Consumer<LocationModel>() {
                 @Override
-                public void call(LocationModel locationModel) {
+                public void accept(LocationModel locationModel) {
                     long buildingId = LocationModel.parent.get(locationModel);
                     if (buildingId == 1271335) {
                         buildingId = 1318733;
                     }
                     changeFloor(buildingId, floorId);
                 }
-            }, new Action1<Throwable>() {
+            }, new Consumer<Throwable>() {
                 @Override
-                public void call(Throwable throwable) {
+                public void accept(Throwable throwable) {
                     palMapView.showRetry(throwable, new Runnable() {
                         @Override
                         public void run() {
@@ -1019,7 +1012,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     @Override
     public void destroy() {
-        SubscriptionUtils.unsubscribeAll(locationSubscription, loadMapSubscribe, loadMapWithBuildingIdSubscription);
+        DisposableUtils.unsubscribeAll(loadMapSubscribe, loadMapWithBuildingIdSubscription);
         if (navigateManager != null && !navigateManager.getPtr().isRelase()) {
             navigateManager.clear();
             navigateManager.drop();
