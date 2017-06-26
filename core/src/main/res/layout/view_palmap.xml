@@ -59,7 +59,6 @@
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
-
         <TextView
             android:id="@+id/tv_locationMessage"
             android:layout_width="wrap_content"

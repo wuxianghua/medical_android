@@ -533,6 +533,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void readPubFacility(final List<FacilityModel> data) {
         if (data.size() == 0) return;
+        if (1 == 1) {
+            LogUtil.e("赵云阳 sb");
+            return;
+        }
+
         facilitiesListAdapter = new FacilitiesListAdapter(getContext(), data);
         facilitiesListView.setAdapter(facilitiesListAdapter);
         facilitiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
