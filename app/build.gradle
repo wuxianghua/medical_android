@@ -37,7 +37,6 @@ dependencies {
     compile dependencies.rxAndroid
     compile dependencies.nineoldandroids
 
-
     //compile dependencies.dagger2
     //compile dependencies.retrofit
     //compile dependencies.retrofitRx
