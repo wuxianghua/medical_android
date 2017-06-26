@@ -26,5 +26,7 @@
 
     <dimen name="margin_large">15dp</dimen>
     <dimen name="layout_slarge">20dp</dimen>
+    <dimen name="all_title_bar_height">48dp</dimen>
+    <dimen name="all_go_back_size">15dp</dimen>
 
 </resources>

@@ -63,7 +63,7 @@ public class HistoryListAdapter extends BaseAdapter {
         TextView tvKeyWord;
 
         ViewHolder(View view) {
-            tvKeyWord = (TextView) view.findViewById(R.id.tv_keyWord);
+            tvKeyWord = (TextView) view.findViewById(R.id.tvHistoryRecord);
             view.setTag(this);
         }
     }

@@ -52,4 +52,5 @@
     <color name="white">#ffffff</color>
 
     <color name="yt_search_bg">#3000</color>
+    <color name="bg_destination_search_title_bar">#FAFAFA</color>
 </resources>

@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:gravity="center_vertical"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="40dp"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
 
     <ImageView
-        android:src="@mipmap/icon_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="17dp"
+        android:layout_height="17dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:src="@mipmap/ic_list_location"/>
 
     <TextView
-        android:layout_marginLeft="@dimen/ngr_large"
-        android:id="@+id/tv_keyWord"
-        android:textColor="@android:color/black"
-        android:layout_weight="1"
+        android:id="@+id/tvHistoryRecord"
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="口腔科"
+        android:textColor="#9098B8"/>
+
+    <ImageView
+        android:id="@+id/imgVDelHistory"
+        android:layout_width="17dp"
+        android:layout_marginRight="22dp"
+        android:src="@mipmap/ic_list_delete"
+        android:layout_height="17dp"/>
 
 </LinearLayout>
