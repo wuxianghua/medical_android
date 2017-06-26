@@ -28,22 +28,21 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile project(':core')
+
     def dependencies = rootProject.ext.libDependencies
     compile dependencies.dagger2
     compile dependencies.v7
-    compile dependencies.v4
-    compile dependencies.recyclerView
-    compile dependencies.multidex
+
     compile dependencies.javaxAnnotation
     compile dependencies.glide
     compile dependencies.rxJava
     compile dependencies.rxAndroid
-    compile dependencies.retrofit
-    compile dependencies.retrofitRx
-    compile dependencies.retrofitConverter_gson
-    compile dependencies.rxbinding
     compile dependencies.nineoldandroids
-    compile ('com.github.niorgai:StatusBarCompat:2.1.2', {
-        exclude group: 'com.android.support'
-    })
+
+//    compile dependencies.retrofit
+//    compile dependencies.retrofitRx
+//    compile dependencies.retrofitConverter_gson
+    //compile dependencies.multidex
+    //compile dependencies.rxbinding
+    //compile dependencies.v4
 }

@@ -59,29 +59,9 @@
 
             <com.palmap.exhibition.widget.CompassView
                 android:id="@+id/compassView"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="@dimen/uiSize"
                 compass:bitMapRes="@mipmap/ico_compass"/>
-
-        </com.palmap.exhibition.widget.ShadowLayout>
-
-        <com.palmap.exhibition.widget.ShadowLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/layout_compassView"
-            android:layout_marginRight="@dimen/layout_slarge"
-            android:orientation="vertical"
-            shadow:hole="true"
-            shadow:offset="2dp"
-            shadow:shadowRadius="1dp"
-            shadow:type="circle">
-
-            <ImageView
-                android:id="@+id/img_search"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:src="@mipmap/btn_search"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 

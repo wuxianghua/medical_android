@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding.widget.RxTextView;
-import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.ExFloorModel;
@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import rx.functions.Action1;
 
 
 public class PoiSearchViewActivity extends ExSwipeBackActivity<PoiSearchPresenter> implements PoiSearchView {
@@ -122,15 +120,20 @@ public class PoiSearchViewActivity extends ExSwipeBackActivity<PoiSearchPresente
     private void initView() {
         bindView();
 
-        RxTextView.textChangeEvents(edit_search).subscribe(new Action1<TextViewTextChangeEvent>() {
+        edit_search.addTextChangedListener(new TextWatcher() {
             @Override
-            public void call(TextViewTextChangeEvent textViewTextChangeEvent) {
-                LogUtil.d("editStr:" + textViewTextChangeEvent.text().toString());
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                LogUtil.d("editStr:" + s.toString());
 
                 if (list_poiSearch.getAdapter() != null) {
                     ((SearchListAdapter) list_poiSearch.getAdapter()).clear();
                 }
-                if (TextUtils.isEmpty(textViewTextChangeEvent.text().toString().trim())) {
+                if (TextUtils.isEmpty(s.toString().trim())) {
                     layoutSearchResult.setVisibility(View.GONE);
                     layout_quickSearch.setVisibility(View.VISIBLE);
                     img_clear.setVisibility(View.INVISIBLE);
@@ -140,12 +143,17 @@ public class PoiSearchViewActivity extends ExSwipeBackActivity<PoiSearchPresente
                     //吊起
                     LogUtil.d("吊起查询");
                     if (isUseKeyWord) {
-                        presenter.requestPoiData(textViewTextChangeEvent.text().toString(), searchCategoryArr);
+                        presenter.requestPoiData(s.toString(), searchCategoryArr);
                     } else {
                         presenter.requestPoiData(null, searchCategoryArr);
                     }
                     isUseKeyWord = true;
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 

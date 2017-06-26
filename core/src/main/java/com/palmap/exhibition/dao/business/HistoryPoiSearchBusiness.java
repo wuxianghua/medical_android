@@ -12,20 +12,19 @@ import java.util.List;
 import rx.Observable;
 import rx.Subscriber;
 
-import static com.jakewharton.rxbinding.internal.Preconditions.checkNotNull;
-
+import static com.palmap.library.utils.Preconditions.checkNotNull;
 /**
  * Created by 王天明 on 2016/5/9.
  */
 public class HistoryPoiSearchBusiness {
 
-    private Context context;
+    //private Context context;
 
     private HistoryPoiSearchDao dao;
 
     public HistoryPoiSearchBusiness(Context context) {
         checkNotNull(context, "context == null!!!");
-        this.context = context;
+        //this.context = context;
         dao = DBUtils.getDaoSession(context)
                 .getHistoryPoiSearchDao();
     }

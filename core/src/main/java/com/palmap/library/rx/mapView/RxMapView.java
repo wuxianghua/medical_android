@@ -9,7 +9,7 @@ import com.palmaplus.nagrand.view.MapView;
 
 import rx.Observable;
 
-import static com.jakewharton.rxbinding.internal.Preconditions.checkNotNull;
+import static com.palmap.library.utils.Preconditions.checkNotNull;
 
 /**
  * Created by 王天明 on 2016/5/4.

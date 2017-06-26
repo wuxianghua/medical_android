@@ -3,8 +3,7 @@ package com.palmap.exhibition.other.delegate;
 import com.palmaplus.nagrand.core.Value;
 import com.palmaplus.nagrand.view.MapView;
 
-import static com.jakewharton.rxbinding.internal.Preconditions.checkNotNull;
-
+import static com.palmap.library.utils.Preconditions.checkNotNull;
 /**
  * Created by 王天明 on 2016/5/5.
  * 设施图层管理

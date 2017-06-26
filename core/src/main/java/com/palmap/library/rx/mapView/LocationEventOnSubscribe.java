@@ -9,7 +9,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.android.MainThreadSubscription;
 
-import static com.jakewharton.rxbinding.internal.Preconditions.checkUiThread;
+import static com.palmap.library.utils.Preconditions.checkUiThread;
 
 /**
  * Created by 王天明 on 2016/5/4.
