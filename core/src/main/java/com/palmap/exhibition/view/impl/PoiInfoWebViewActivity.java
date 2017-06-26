@@ -93,7 +93,6 @@ public class PoiInfoWebViewActivity extends ExActivity<PoiInfoWebViewPresenter> 
         tvTitle = findView(R.id.tv_title);
         webView = findView(R.id.webView);
         configWebView(webView);
-        findViewById(R.id.layout_search).setVisibility(View.GONE);
         toolbar = findView(R.id.toolBar);
         setSupportActionBar(toolbar);
         initStatusBar(R.color.ngr_colorPrimary);

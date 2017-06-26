@@ -101,7 +101,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     YanTaiPoiMenuLayout layoutPoiMenu;
     ViewGroup layout_mapView;
     ViewGroup layoutBack;
-    View layout_search;
     RouteInfoView routeInfoView;
     View map_location;
     ViewGroup layout_floor;
@@ -868,9 +867,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         layoutPoiMenu = findView(R.id.layout_poiMenu);
         layout_mapView = findView(R.id.layout_mapView);
         layoutBack = findView(R.id.layout_back);
-        layout_search = findView(R.id.layout_search);
-
-        layout_search.setVisibility(View.GONE);
 
         map_location = findView(R.id.map_location);
         layout_zoom = findView(R.id.layout_zoom);
@@ -879,7 +875,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         compassView.setOnClickListener(this);
         mapLocation.setOnClickListener(this);
         layoutBack.setOnClickListener(this);
-        layout_search.setOnClickListener(this);
 
         tvTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

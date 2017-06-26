@@ -34,6 +34,32 @@
         android:layout_above="@+id/layout_poiMenu"
         android:layout_below="@+id/layout_top">
 
+        <com.palmap.exhibition.widget.ShadowLayout
+            android:id="@+id/layout_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/ngr_large"
+            android:layout_marginTop="@dimen/ngr_large"
+            android:layout_marginRight="@dimen/ngr_large"
+            android:orientation="vertical"
+            shadow:hole="true"
+            shadow:offset="2dp"
+            shadow:shadowRadius="1dp"
+            shadow:type="roundRect">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_corner_white"
+                android:drawableLeft="@mipmap/ic_home_search"
+                android:drawablePadding="@dimen/ngr_normal"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/ngr_large"
+                android:text="请输入目的地"/>
+
+        </com.palmap.exhibition.widget.ShadowLayout>
+
+
         <TextView
             android:id="@+id/tv_locationMessage"
             android:layout_width="wrap_content"
@@ -49,6 +75,7 @@
             android:id="@+id/layout_compassView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_search"
             android:layout_marginLeft="@dimen/ngr_large"
             android:layout_marginTop="@dimen/ngr_large"
             android:orientation="vertical"
@@ -82,6 +109,7 @@
             android:layout_marginBottom="@dimen/ngr_large"
             android:layout_marginLeft="@dimen/ngr_large"
             android:orientation="vertical"
+            compass:type="roundRect"
             shadow:hole="true"
             shadow:offset="@dimen/shadow_width"
             shadow:shadowRadius="@dimen/shadow_width">
@@ -218,5 +246,6 @@
 
         </LinearLayout>
     </FrameLayout>
+
 
 </RelativeLayout>

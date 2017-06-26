@@ -107,7 +107,7 @@
                 android:id="@+id/btn_start"
                 android:layout_width="74dp"
                 android:layout_height="28dp"
-                android:layout_margin="@dimen/margin_large"
+                android:layout_margin="@dimen/ngr_large"
                 android:background="@mipmap/btn_nav_setstart"
                 android:visibility="visible"/>
 

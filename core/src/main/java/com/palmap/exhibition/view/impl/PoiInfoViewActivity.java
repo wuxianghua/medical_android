@@ -73,12 +73,10 @@ public class PoiInfoViewActivity extends ExSwipeBackActivity<PoiInfoPresenter> i
     ImageView poiInfoQrCode;
     RelativeLayout layoutSorry;
     ViewGroup layout_back;
-    ViewGroup layout_search;
 
     private void bindViews() {
         tvTitle = findView(R.id.tv_title);
         layout_back = findView(R.id.layout_back);
-        layout_search = findView(R.id.layout_search);
         poiInfoCompanyName = findView(R.id.poi_info_company_name);
         poiInfoTelephony = findView(R.id.poi_info_telephony);
         poiInfoEmail = findView(R.id.poi_info_email);
@@ -132,7 +130,6 @@ public class PoiInfoViewActivity extends ExSwipeBackActivity<PoiInfoPresenter> i
         bindViews();
         setSupportActionBar(toolBar);
         initStatusBar(R.color.ngr_colorPrimary);
-        layout_search.setVisibility(View.GONE);
         try {
             Intent valueIntent = getIntent();
             if (Intent.ACTION_VIEW.equals(valueIntent.getAction())) {
