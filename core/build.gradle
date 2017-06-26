@@ -74,18 +74,16 @@ dependencies {
 
     def dependencies = rootProject.ext.libDependencies
     annotationProcessor dependencies.daggerCompiler
-    provided dependencies.dagger2
+    compile dependencies.dagger2
     compile dependencies.v7
+    compile dependencies.javaxAnnotation
 
-
-    provided dependencies.javaxAnnotation
     provided dependencies.glide
     provided dependencies.rxJava
     provided dependencies.rxAndroid
     provided dependencies.retrofit
     provided dependencies.retrofitRx
     provided dependencies.retrofitConverter_gson
-
     provided dependencies.nineoldandroids
 
     //provided dependencies.multidex

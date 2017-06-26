@@ -30,18 +30,18 @@ dependencies {
     compile project(':core')
 
     def dependencies = rootProject.ext.libDependencies
-    compile dependencies.dagger2
     compile dependencies.v7
 
-    compile dependencies.javaxAnnotation
     compile dependencies.glide
     compile dependencies.rxJava
     compile dependencies.rxAndroid
     compile dependencies.nineoldandroids
 
-//    compile dependencies.retrofit
-//    compile dependencies.retrofitRx
-//    compile dependencies.retrofitConverter_gson
+
+    //compile dependencies.dagger2
+    //compile dependencies.retrofit
+    //compile dependencies.retrofitRx
+    //compile dependencies.retrofitConverter_gson
     //compile dependencies.multidex
     //compile dependencies.rxbinding
     //compile dependencies.v4
