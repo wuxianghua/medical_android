@@ -36,7 +36,6 @@
                 android:id="@+id/layout_sorry"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="@mipmap/bg_default_poi"
                 android:visibility="gone">
 
                 <LinearLayout
