@@ -1,6 +1,7 @@
 package com.palmap.exhibition.view;
 
 import com.palmap.exhibition.model.Api_ActivityInfo;
+import com.palmap.exhibition.model.QuickSearchKeyWordModel;
 import com.palmap.library.view.LoadDataView;
 import com.palmaplus.nagrand.data.LocationModel;
 import com.palmaplus.nagrand.data.LocationPagingList;
@@ -25,6 +26,8 @@ public interface PoiSearchView extends LoadDataView {
     void readActivityData(Api_ActivityInfo info);
 
     void readSearchMeetingData(Api_ActivityInfo info);
+
+    void readQuickSearchData(List<QuickSearchKeyWordModel> data);
 
     /**
      * 获取楼层名字

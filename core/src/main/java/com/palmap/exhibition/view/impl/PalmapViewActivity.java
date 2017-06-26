@@ -120,11 +120,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     private PalmapViewActivity self;
 
-    /**
-     * 搜索字符串
-     */
-    private String searchText = null;
-
     public static void navigatorThis(Context that) {
         Intent intent = new Intent(that, PalmapViewActivity.class);
         that.startActivity(intent);
@@ -621,7 +616,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             // TODO: 2016/6/29 获取poi搜索结果
             try {
                 LocationType.Type locationType = (LocationType.Type) data.getExtras().getSerializable(KEY_LOCATION_TYPE);
-                searchText = data.getExtras().getString(KEY_SEARCH_TEXT);
                 if (null == locationType) return;
                 long locationId = data.getExtras().getLong(KEY_LOCATION_ID);
                 long floorId = data.getExtras().getLong(KEY_FLOOR_ID);
@@ -992,7 +986,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         presenter.resetState();
         presenter.clearFacilityMarks();
         clearFacilityListSelect();
-        getNavigator().toSearchViewForResult(this, presenter.getBuildingId(), searchText, floorModelList, CODE_SEARCH_REQUEST);
+        getNavigator().toSearchViewForResult(this, presenter.getBuildingId(), floorModelList, CODE_SEARCH_REQUEST);
     }
 
     private void changeFloor(int floorId) {

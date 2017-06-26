@@ -4,6 +4,7 @@ import com.palmap.exhibition.di.ActivityScope;
 import com.palmap.exhibition.di.module.ActivityModule;
 import com.palmap.exhibition.di.module.LocationModule;
 import com.palmap.exhibition.di.module.PresenterModule;
+import com.palmap.exhibition.view.impl.DestinationSearchActivity;
 import com.palmap.exhibition.view.impl.PalmapViewActivity;
 import com.palmap.exhibition.view.impl.PoiInfoViewActivity;
 import com.palmap.exhibition.view.impl.PoiInfoWebViewActivity;
@@ -25,4 +26,6 @@ public interface PresenterComponent extends ActivityComponent {
     void inject(PoiInfoWebViewActivity activity);
 
     void inject(PoiSearchViewActivity poiSearchViewActivity);
+
+    void inject(DestinationSearchActivity poiSearchViewActivity);
 }

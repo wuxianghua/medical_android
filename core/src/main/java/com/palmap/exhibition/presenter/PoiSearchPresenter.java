@@ -23,4 +23,6 @@ public interface PoiSearchPresenter extends Presenter {
     void requestMeetingData();
 
     void requestActivityData();
+
+    void requestQuickSearchModel();
 }

@@ -5,10 +5,10 @@ import android.content.Context;
 
 import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.model.ExFloorModel;
+import com.palmap.exhibition.view.impl.DestinationSearchActivity;
 import com.palmap.exhibition.view.impl.PalmapViewActivity;
 import com.palmap.exhibition.view.impl.PoiInfoViewActivity;
 import com.palmap.exhibition.view.impl.PoiInfoWebViewActivity;
-import com.palmap.exhibition.view.impl.PoiSearchViewActivity;
 
 import java.util.ArrayList;
 
@@ -45,8 +45,9 @@ public class Navigator {
         PoiInfoWebViewActivity.navigatorThis(activity, poiId, poiName);
     }
 
-    public void toSearchViewForResult(Activity that, long buildingId, String searchText, ArrayList<ExFloorModel> floorListData, int requestCode) {
-        PoiSearchViewActivity.navigatorThisForResult(that, buildingId, searchText, floorListData, requestCode);
+    public void toSearchViewForResult(Activity that, long buildingId, ArrayList<ExFloorModel> floorListData, int requestCode) {
+//        PoiSearchViewActivity.navigatorThisForResult(that, buildingId, searchText, floorListData, requestCode);
+        DestinationSearchActivity.navigatorThisForResult(that, buildingId, floorListData, requestCode);
     }
 
 }

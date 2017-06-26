@@ -69,8 +69,7 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
     @Override
     public void requestPoiData(final String keyWord,long[] categories) {
         RxDataSource.search(dataSource, keyWord, 1, 2000, new long[]{
-                Config.ID_FLOOR_F1,
-                Config.ID_FLOOR_F2
+                buildingId
         }, categories)
                 .subscribe(new Consumer<LocationPagingList>() {
                     @Override
@@ -139,6 +138,20 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
 
     @Override
     public void requestActivityData() {
+    }
+
+    //ui层请求快捷搜索的数据
+    @Override
+    public void requestQuickSearchModel() {
+        // 加载 json
+
+        // 解析 json
+
+        // 转换成model
+
+
+        //
+//        poiSearchView.readSearchMeetingData(xxx);
     }
 
 }

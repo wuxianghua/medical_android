@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.ExFloorModel;
+import com.palmap.exhibition.model.QuickSearchKeyWordModel;
 import com.palmap.exhibition.model.SearchResultModel;
 import com.palmap.exhibition.presenter.PoiSearchPresenter;
 import com.palmap.exhibition.view.PoiSearchView;
@@ -219,6 +220,11 @@ public class PoiSearchViewActivity extends ExSwipeBackActivity<PoiSearchPresente
 
     @Override
     public void readSearchMeetingData(Api_ActivityInfo info) {
+    }
+
+    @Override
+    public void readQuickSearchData(List<QuickSearchKeyWordModel> data) {
+
     }
 
     @Override
