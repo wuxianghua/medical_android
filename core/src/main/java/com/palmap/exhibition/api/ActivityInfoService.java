@@ -4,11 +4,11 @@ import com.palmap.exhibition.config.ServereConfig;
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.Api_PositionInfo;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import rx.Observable;
 
 /**
  * Created by 王天明 on 2016/9/19.

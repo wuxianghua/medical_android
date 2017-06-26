@@ -92,7 +92,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     ListView floorListView;
     CompassView compassView;
     ImageView mapLocation;
-    RelativeLayout layoutServiceFacility;
     Scale scale;
     Toolbar toolBar;
     ViewGroup layout_overlay;
@@ -104,7 +103,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     ViewGroup layoutBack;
     View layout_search;
     RouteInfoView routeInfoView;
-    ViewGroup layout_location;
+    View map_location;
     ViewGroup layout_floor;
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
@@ -172,7 +171,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityUtils.noBackground(this);
-        setContentView(R.layout.yantai_view_palmap);
+        setContentView(R.layout.view_palmap);
         self = this;
         initView();
         initStatusBar(R.color.ngr_colorPrimary);
@@ -739,7 +738,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         floorListView.setVisibility(View.INVISIBLE);
         layout_floor.setVisibility(View.INVISIBLE);
         scale.setVisibility(View.INVISIBLE);
-        layout_location.setVisibility(View.INVISIBLE);
+        map_location.setVisibility(View.INVISIBLE);
         layout_zoom.setVisibility(View.INVISIBLE);
         facilitiesListView.setVisibility(View.INVISIBLE);
     }
@@ -749,7 +748,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         layout_floor.setVisibility(View.VISIBLE);
         floorListView.setVisibility(View.VISIBLE);
         scale.setVisibility(View.VISIBLE);
-        layout_location.setVisibility(View.VISIBLE);
+        map_location.setVisibility(View.VISIBLE);
         layout_zoom.setVisibility(View.VISIBLE);
         facilitiesListView.setVisibility(View.VISIBLE);
     }
@@ -858,7 +857,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         mapLocation = findView(R.id.map_location);
         layout_tv_floor = findView(R.id.layout_tv_floor);
-        layoutServiceFacility = findView(R.id.layout_serviceFacility);
         facilitiesListView = findView(R.id.list_facilities);
         routeInfoView = findView(R.id.routeInfoView);
         scale = findView(R.id.scale);
@@ -874,7 +872,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         layout_search.setVisibility(View.GONE);
 
-        layout_location = findView(R.id.layout_location);
+        map_location = findView(R.id.map_location);
         layout_zoom = findView(R.id.layout_zoom);
 
         tvFloor.setOnClickListener(this);

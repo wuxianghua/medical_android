@@ -4,13 +4,14 @@ import com.palmap.library.rx.exception.DataSourceStateException;
 import com.palmaplus.nagrand.data.DataSource;
 import com.palmaplus.nagrand.data.MapModel;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 
 /**
  * Created by 王天明 on 2016/4/26.
  */
-public class DataSourceMapOnSubscribe implements Observable.OnSubscribe<MapModel> {
+public class DataSourceMapOnSubscribe implements ObservableOnSubscribe<MapModel> {
 
     private DataSource dataSource;
     private long id;
@@ -21,15 +22,16 @@ public class DataSourceMapOnSubscribe implements Observable.OnSubscribe<MapModel
     }
 
     @Override
-    public void call(final Subscriber<? super MapModel> subscriber) {
+    public void subscribe(@NonNull final ObservableEmitter<MapModel> e) throws Exception {
         dataSource.requestMap(id, new DataSource.OnRequestDataEventListener<MapModel>() {
             @Override
             public void onRequestDataEvent(DataSource.ResourceState resourceState, MapModel mapModel) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!e.isDisposed()) {
                     if (resourceState == DataSource.ResourceState.OK || resourceState == DataSource.ResourceState.CACHE) {
-                        subscriber.onNext(mapModel);
+                        e.onNext(mapModel);
+                        e.onComplete();
                     } else {
-                        subscriber.onError(new DataSourceStateException(resourceState));
+                        e.onError(new DataSourceStateException(resourceState));
                     }
                 }
             }

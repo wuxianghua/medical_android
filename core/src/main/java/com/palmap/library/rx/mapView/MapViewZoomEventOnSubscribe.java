@@ -4,16 +4,17 @@ import com.palmap.library.rx.mapView.event.MapViewZoomEvent;
 import com.palmaplus.nagrand.view.MapView;
 import com.palmaplus.nagrand.view.gestures.OnZoomListener;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.MainThreadSubscription;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.MainThreadDisposable;
+import io.reactivex.annotations.NonNull;
 
 import static com.palmap.library.utils.Preconditions.checkUiThread;
 
 /**
  * Created by 王天明 on 2016/5/4.
  */
-public class MapViewZoomEventOnSubscribe implements Observable.OnSubscribe<MapViewZoomEvent> {
+public class MapViewZoomEventOnSubscribe implements ObservableOnSubscribe<MapViewZoomEvent> {
 
     private MapView mapView;
 
@@ -21,39 +22,40 @@ public class MapViewZoomEventOnSubscribe implements Observable.OnSubscribe<MapVi
         this.mapView = mapView;
     }
 
+
     @Override
-    public void call(final Subscriber<? super MapViewZoomEvent> subscriber) {
+    public void subscribe(@NonNull final ObservableEmitter<MapViewZoomEvent> emitter) throws Exception {
         checkUiThread();
         OnZoomListener onZoomListener = new OnZoomListener() {
             @Override
             public void preZoom(MapView mapView, float v, float v1) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!emitter.isDisposed()) {
                     MapViewZoomEvent zoomEvent = new MapViewZoomEvent(v, v1, mapView);
-                    subscriber.onNext(zoomEvent);
+                    emitter.onNext(zoomEvent);
                 }
             }
 
             @Override
             public void onZoom(MapView mapView, boolean b) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!emitter.isDisposed()) {
                     MapViewZoomEvent zoomEvent = new MapViewZoomEvent(mapView, b);
-                    subscriber.onNext(zoomEvent);
+                    emitter.onNext(zoomEvent);
                 }
             }
 
             @Override
             public void postZoom(MapView mapView, float v, float v1) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!emitter.isDisposed()) {
                     MapViewZoomEvent zoomEvent = new MapViewZoomEvent(mapView, v, v1);
-                    subscriber.onNext(zoomEvent);
+                    emitter.onNext(zoomEvent);
                 }
             }
         };
 
         mapView.setOnZoomListener(onZoomListener);
-        subscriber.add(new MainThreadSubscription() {
+        emitter.setDisposable(new MainThreadDisposable() {
             @Override
-            protected void onUnsubscribe() {
+            protected void onDispose() {
                 mapView.setOnZoomListener(null);
             }
         });

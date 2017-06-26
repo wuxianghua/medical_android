@@ -85,7 +85,6 @@ dependencies {
     provided dependencies.retrofitRx
     provided dependencies.retrofitConverter_gson
     provided dependencies.nineoldandroids
-
     //provided dependencies.multidex
     //provided dependencies.v4
     //provided dependencies.rxbinding

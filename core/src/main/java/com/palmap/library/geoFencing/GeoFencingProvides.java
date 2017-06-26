@@ -2,7 +2,8 @@ package com.palmap.library.geoFencing;
 
 import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by 王天明 on 2016/9/9.

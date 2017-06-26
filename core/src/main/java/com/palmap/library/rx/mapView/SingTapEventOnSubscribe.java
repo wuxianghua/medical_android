@@ -4,16 +4,18 @@ import com.palmap.library.rx.mapView.event.SingleTapEvent;
 import com.palmaplus.nagrand.view.MapView;
 import com.palmaplus.nagrand.view.gestures.OnSingleTapListener;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.MainThreadSubscription;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.MainThreadDisposable;
+import io.reactivex.annotations.NonNull;
 
 import static com.palmap.library.utils.Preconditions.checkUiThread;
+
 
 /**
  * Created by 王天明 on 2016/5/5.
  */
-public class SingTapEventOnSubscribe implements Observable.OnSubscribe<SingleTapEvent> {
+public class SingTapEventOnSubscribe implements ObservableOnSubscribe<SingleTapEvent> {
 
     private MapView mapView;
 
@@ -22,21 +24,21 @@ public class SingTapEventOnSubscribe implements Observable.OnSubscribe<SingleTap
     }
 
     @Override
-    public void call(final Subscriber<? super SingleTapEvent> subscriber) {
+    public void subscribe(@NonNull final ObservableEmitter<SingleTapEvent> emitter) throws Exception {
         checkUiThread();
         OnSingleTapListener listener = new OnSingleTapListener() {
             @Override
             public void onSingleTap(MapView mapView, float v, float v1) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!emitter.isDisposed()) {
                     SingleTapEvent event = new SingleTapEvent(mapView, v, v1);
-                    subscriber.onNext(event);
+                    emitter.onNext(event);
                 }
             }
         };
         mapView.setOnSingleTapListener(listener);
-        subscriber.add(new MainThreadSubscription() {
+        emitter.setDisposable(new MainThreadDisposable() {
             @Override
-            protected void onUnsubscribe() {
+            protected void onDispose() {
                 mapView.setOnSingleTapListener(null);
             }
         });

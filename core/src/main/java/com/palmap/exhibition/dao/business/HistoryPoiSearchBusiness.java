@@ -9,8 +9,10 @@ import com.palmap.exhibition.dao.utils.DBUtils;
 
 import java.util.List;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 
 import static com.palmap.library.utils.Preconditions.checkNotNull;
 /**
@@ -52,11 +54,11 @@ public class HistoryPoiSearchBusiness {
     }
 
     public Observable<List<HistoryPoiSearch>> find_All(){
-        return Observable.create(new Observable.OnSubscribe<List<HistoryPoiSearch>>() {
+        return Observable.create(new ObservableOnSubscribe<List<HistoryPoiSearch>>() {
             @Override
-            public void call(Subscriber<? super List<HistoryPoiSearch>> subscriber) {
-                subscriber.onNext(findAll());
-                subscriber.onCompleted();
+            public void subscribe(@NonNull ObservableEmitter<List<HistoryPoiSearch>> e) throws Exception {
+                e.onNext(findAll());
+                e.onComplete();
             }
         });
     }

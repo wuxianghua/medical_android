@@ -2,7 +2,8 @@ package com.palmap.exhibition.repo;
 
 import com.palmap.exhibition.model.Api_ActivityInfo;
 
-import rx.Observable;
+import io.reactivex.Observable;
+
 
 /**
  * Created by 王天明 on 2016/10/19.

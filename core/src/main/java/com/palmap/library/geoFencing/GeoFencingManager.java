@@ -10,9 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by 王天明 on 2016/9/9.
@@ -108,14 +109,14 @@ public class GeoFencingManager<O> {
             geoFencingProvides.providesGeoFencing()
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Action1<List<GeoFencing<O>>>() {
+                    .subscribe(new Consumer<List<GeoFencing<O>>>() {
                         @Override
-                        public void call(List<GeoFencing<O>> geoFencings) {
+                        public void accept(List<GeoFencing<O>> geoFencings) {
                             addAllFencing(geoFencings);
                         }
-                    }, new Action1<Throwable>() {
+                    }, new Consumer<Throwable>() {
                         @Override
-                        public void call(Throwable throwable) {
+                        public void accept(Throwable throwable) {
                             if (BuildConfig.DEBUG) {
                                 throwable.printStackTrace();
                             }

@@ -4,10 +4,10 @@ import com.palmap.exhibition.config.ServereConfig;
 import com.palmap.exhibition.model.Api_PoiModel;
 import com.palmap.exhibition.model.Api_SimpleInfo;
 
+import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
-import rx.Observable;
 
 /**
  * Created by 天明 on 2016/6/16.

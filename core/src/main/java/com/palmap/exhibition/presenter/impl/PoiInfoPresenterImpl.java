@@ -11,11 +11,11 @@ import com.palmap.exhibition.view.impl.PoiInfoViewActivity;
 
 import javax.inject.Inject;
 
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action0;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by aoc on 2016/6/23.
@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
 public class PoiInfoPresenterImpl implements PoiInfoPresenter {
 
     private PoiInfoView poiInfoView;
-    private Subscription subscription;
+    private Disposable subscription;
 
     @Inject
     public PoiInfoPresenterImpl() {
@@ -32,21 +32,21 @@ public class PoiInfoPresenterImpl implements PoiInfoPresenter {
     @Override
     public void loadPoiInfo(long poiId) {
         if (subscription != null) {
-            subscription.unsubscribe();
+            subscription.dispose();
             subscription = null;
         }
         subscription = ServiceFactory.create(PoiInfoService.class).loadPoiData(poiId, Config.getLanguagePara())
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(new Action0() {
+                .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
-                    public void call() {
+                    public void accept(@NonNull Disposable disposable) throws Exception {
                         poiInfoView.showLoading();
                     }
                 })
-                .subscribe(new Action1<Api_PoiModel>() {
+                .subscribe(new Consumer<Api_PoiModel>() {
                     @Override
-                    public void call(Api_PoiModel s) {
+                    public void accept(Api_PoiModel s) {
                         poiInfoView.hideLoading();
                         if (s.isOk()) {
                             poiInfoView.readPoiData(s);
@@ -55,9 +55,9 @@ public class PoiInfoPresenterImpl implements PoiInfoPresenter {
                         }
 
                     }
-                }, new Action1<Throwable>() {
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
+                    public void accept(Throwable throwable) {
                         poiInfoView.hideLoading();
                         poiInfoView.poiDataError(obtainDefaultApi_PoiModel());
                         if (BuildConfig.DEBUG) {
@@ -84,8 +84,8 @@ public class PoiInfoPresenterImpl implements PoiInfoPresenter {
 
     @Override
     public void destroy() {
-        if (subscription != null && subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+        if (subscription != null && subscription.isDisposed()) {
+            subscription.dispose();
         }
     }
 

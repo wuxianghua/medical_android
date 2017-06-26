@@ -5,13 +5,14 @@ import com.palmap.library.utils.LogUtil;
 import com.palmaplus.nagrand.data.DataSource;
 import com.palmaplus.nagrand.data.LocationModel;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.annotations.NonNull;
 
 /**
  * Created by 王天明 on 2016/5/11.
  */
-public class DataSourcePOIOnSubscribe implements Observable.OnSubscribe<LocationModel> {
+public class DataSourcePOIOnSubscribe implements ObservableOnSubscribe<LocationModel> {
 
 
     private DataSource dataSource;
@@ -24,19 +25,19 @@ public class DataSourcePOIOnSubscribe implements Observable.OnSubscribe<Location
     }
 
     @Override
-    public void call(final Subscriber<? super LocationModel> subscriber) {
+    public void subscribe(@NonNull final ObservableEmitter<LocationModel> e) throws Exception {
         dataSource.requestPOI(id, new DataSource.OnRequestDataEventListener<LocationModel>() {
             @Override
             public void onRequestDataEvent(DataSource.ResourceState state, LocationModel locationModel) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!e.isDisposed()) {
                     if (state == DataSource.ResourceState.OK|| state == DataSource.ResourceState.CACHE) {
-                        subscriber.onNext(locationModel);
+                        e.onNext(locationModel);
+                        e.onComplete();
                     } else {
-                        subscriber.onError(new DataSourceStateException(state));
+                        e.onError(new DataSourceStateException(state));
                     }
                 }
             }
         });
     }
-
 }

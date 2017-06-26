@@ -4,13 +4,13 @@ import com.palmap.library.rx.exception.DataSourceStateException;
 import com.palmaplus.nagrand.data.DataSource;
 import com.palmaplus.nagrand.data.LocationPagingList;
 
-import rx.Observable;
-import rx.Subscriber;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * Created by 王天明 on 2016/5/11.
  */
-public class DataSourceSearchOnSubscribe implements Observable.OnSubscribe<LocationPagingList> {
+public class DataSourceSearchOnSubscribe implements ObservableOnSubscribe<LocationPagingList> {
 
     private DataSource dataSource;
     private String keyWord;
@@ -29,15 +29,15 @@ public class DataSourceSearchOnSubscribe implements Observable.OnSubscribe<Locat
     }
 
     @Override
-    public void call(final Subscriber<? super LocationPagingList> subscriber) {
+    public void subscribe(final ObservableEmitter<LocationPagingList> e) throws Exception {
         dataSource.search(keyWord,start,number,parents,categories, new DataSource.OnRequestDataEventListener<LocationPagingList>() {
             @Override
             public void onRequestDataEvent(DataSource.ResourceState state, LocationPagingList data) {
-                if (!subscriber.isUnsubscribed()) {
+                if (!e.isDisposed()) {
                     if (state == DataSource.ResourceState.OK|| state == DataSource.ResourceState.CACHE) {
-                        subscriber.onNext(data);
+                        e.onNext(data);
                     } else {
-                        subscriber.onError(new DataSourceStateException(state));
+                        e.onError(new DataSourceStateException(state));
                     }
                 }
             }
