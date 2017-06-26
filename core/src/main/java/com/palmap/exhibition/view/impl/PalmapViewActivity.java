@@ -196,7 +196,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         mapView = new MapView("default" + LAUNCHER_INDEX % 7, getContext());
         mapView.start();
         layout_mapView.addView(mapView);
-        mapView.setBackgroundColor(0xfffafafa);
+//        mapView.setBackgroundColor(0xfffafafa);
         mapView.setMinAngle(45);
 
         mapView.initRatio(1.1f);
