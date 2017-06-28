@@ -37,6 +37,10 @@ dependencies {
     compile dependencies.rxAndroid
     compile dependencies.nineoldandroids
 
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+
+    compile dependencies.gson
     //compile dependencies.dagger2
     //compile dependencies.retrofit
     //compile dependencies.retrofitRx

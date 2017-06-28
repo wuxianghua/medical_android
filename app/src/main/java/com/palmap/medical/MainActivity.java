@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_destination_search);
+        setContentView(R.layout.activity_main);
         SdkLauncher.launcher(this,null,"测试医疗产品");
 
     }

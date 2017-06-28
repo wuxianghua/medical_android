@@ -19,7 +19,6 @@ ext {
     rxAndroidVersion = '2.0.1'
 
     javaxAnnotationVersion = '1.0'
-    gsonVersion = '2.3'
     okHttpVersion = '2.5.0'
     androidAnnotationsVersion = '21.0.3'
     glideVersion = '3.6.1'
@@ -28,7 +27,7 @@ ext {
     stetho_okHttpVersion = '1.3.1'
     stetho_jsVersion = '1.3.1'
     stetho_urlconnection = '1.3.1'
-    GSONVersion = '2.5'
+    GSONVersion = '2.7'
     leakcanaryVersion = '1.3.1'
 
     retrofitVersion = '2.3.0'

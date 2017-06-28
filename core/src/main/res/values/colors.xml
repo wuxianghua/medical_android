@@ -50,7 +50,8 @@
     <color name="header">#58567D</color>
     <color name="grgray">#686868</color>
     <color name="white">#ffffff</color>
+    <color name="separate_line">#98c4c6cc</color>
 
     <color name="yt_search_bg">#3000</color>
-    <color name="bg_destination_search_title_bar">#FAFAFA</color>
+    <color name="bg_destination_search_title_bar">#FFFAFAFA</color>
 </resources>

@@ -542,8 +542,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void readPubFacility(final List<FacilityModel> data) {
         if (data.size() == 0) return;
+        // TODO: 2017/6/26
         if (1 == 1) {
-            LogUtil.e("赵云阳 sb");
+            LogUtil.e("");
             return;
         }
 
@@ -1039,6 +1040,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             if (m.getId() == floorId) return m.getName();
         }
         return null;
+    }
+
+    public void goToSearch(View view){
+        getNavigator().toSearchViewForResult(
+                this, presenter.getBuildingId(), floorModelList, CODE_SEARCH_REQUEST);
     }
 
     public void mapZoomInClick(View view) {

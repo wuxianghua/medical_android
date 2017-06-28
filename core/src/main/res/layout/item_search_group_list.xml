@@ -6,24 +6,23 @@
               android:orientation="horizontal">
 
     <ImageView
+        android:id="@+id/imgVGroupIcon"
         android:layout_width="17dp"
         android:layout_height="17dp"
         android:layout_marginLeft="12dp"
-        android:layout_marginRight="12dp"
-        android:src="@mipmap/ic_list_location"/>
+        android:layout_marginRight="12dp"/>
 
     <TextView
-        android:id="@+id/tvHistoryRecord"
+        android:id="@+id/tvGroupTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="#9098B8"/>
 
     <ImageView
-        android:id="@+id/imgVDelHistory"
-        android:layout_width="17dp"
-        android:layout_height="17dp"
-        android:layout_marginRight="22dp"
-        android:src="@mipmap/ic_list_delete"/>
+        android:id="@+id/imgVGroupExpand"
+        android:layout_width="16dp"
+        android:layout_height="14dp"
+        android:layout_marginRight="16dp"/>
 
 </LinearLayout>

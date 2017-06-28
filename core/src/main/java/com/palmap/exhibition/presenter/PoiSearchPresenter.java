@@ -18,6 +18,8 @@ public interface PoiSearchPresenter extends Presenter {
 
     void clearHistoryPoiKey();
 
+    boolean deleteHistoryPoiKey(String keyWord);
+
     void requestExbtShopData();
 
     void requestMeetingData();
@@ -25,4 +27,6 @@ public interface PoiSearchPresenter extends Presenter {
     void requestActivityData();
 
     void requestQuickSearchModel();
+
+    void requestHistoryPOIData();
 }

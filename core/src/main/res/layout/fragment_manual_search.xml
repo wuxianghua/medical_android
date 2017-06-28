@@ -3,20 +3,43 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-
-    <TextView
-        android:text="历史搜索"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="14dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="12dp"
-        android:textColor="#9098B8"
-        android:textSize="14sp"/>
+        android:layout_height="1dp"
+        android:background="@color/separate_line"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="@string/history_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="12dp"
+            android:textColor="#9098B8"
+            android:textSize="@dimen/text_size_14"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/separate_line"/>
+
+        <ListView
+            android:id="@+id/lvHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
 
     <ListView
-        android:id="@+id/lvHistory"
+        android:id="@+id/lvAssociation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.palmap.exhibition.R;
@@ -16,24 +17,31 @@ import java.util.List;
  */
 public class HistoryListAdapter extends BaseAdapter {
 
-    private Context context;
-    private List<String> data;
-    private LayoutInflater inflater;
+    private List<String> mData = null;
+    private LayoutInflater inflater = null;
+    private OnDeleteClickListener mOnDeleteClickListener = null;
 
     public HistoryListAdapter(Context context, List<String> data) {
-        this.context = context;
-        this.data = data;
+        mData = data;
         inflater = LayoutInflater.from(context);
+    }
+
+    public synchronized void setHistoryData(List<String> data){
+        mData = data;
+    }
+
+    public void setOnDeleteClickListener(OnDeleteClickListener listener){
+        mOnDeleteClickListener = listener;
     }
 
     @Override
     public int getCount() {
-        return data == null ? 0 : data.size();
+        return mData == null ? 0 : mData.size();
     }
 
     @Override
     public String getItem(int position) {
-        return data == null ? null : data.get(position);
+        return mData == null ? null : mData.get(position);
     }
 
     @Override
@@ -42,29 +50,39 @@ public class HistoryListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_history_list, parent, false);
             viewHolder = new ViewHolder(convertView);
+            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.tvKeyWord.setText(getItem(position));
+        viewHolder.tvHistoryRecord.setText(getItem(position));
+        viewHolder.imgVDelHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mOnDeleteClickListener != null){
+                    mOnDeleteClickListener.onDeleteClick(mData.get(position));
+                }
+            }
+        });
         return convertView;
     }
 
-    public void clear() {
-        data.clear();
-        notifyDataSetChanged();
-    }
-
     static class ViewHolder {
-        TextView tvKeyWord;
+        TextView tvHistoryRecord;
+        ImageView imgVDelHistory;
 
         ViewHolder(View view) {
-            tvKeyWord = (TextView) view.findViewById(R.id.tvHistoryRecord);
-            view.setTag(this);
+            tvHistoryRecord = (TextView) view.findViewById(R.id.tvHistoryRecord);
+            imgVDelHistory = (ImageView) view.findViewById(R.id.imgVDelHistory);
         }
     }
+
+    public interface OnDeleteClickListener{
+        void onDeleteClick(String keyword);
+    }
+
 }

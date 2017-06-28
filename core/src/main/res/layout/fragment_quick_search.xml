@@ -4,15 +4,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <LinearLayout
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </LinearLayout>
+        android:layout_height="1dp"
+        android:background="@color/separate_line"/>
 
     <ExpandableListView
         android:id="@+id/expandLvGroup"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:groupIndicator="@null"/>
 
 </LinearLayout>

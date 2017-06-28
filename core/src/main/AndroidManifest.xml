@@ -68,6 +68,11 @@
             android:theme="@style/ngr_AppTheme"
             android:windowSoftInputMode="adjustNothing" />
         <activity
+            android:name=".view.impl.DestinationSearchActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ngr_AppTheme"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
             android:name=".view.impl.PoiSearchViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/YanTaiPoiSearchTheme"

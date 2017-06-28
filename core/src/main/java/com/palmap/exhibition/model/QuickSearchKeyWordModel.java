@@ -1,5 +1,6 @@
 package com.palmap.exhibition.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class QuickSearchKeyWordModel {
      * //0是不展开 // 1 就是展开
      */
     private int state;
-    private List<ChildBean> child;
+    private List<ChildBean> child = new ArrayList<>();
 
     public String getTitle() {
         return title;
@@ -83,4 +84,5 @@ public class QuickSearchKeyWordModel {
             this.searchKeyWord = searchKeyWord;
         }
     }
+
 }

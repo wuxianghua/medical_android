@@ -90,7 +90,8 @@ public class ResourceManager {
      */
 
     public static int getRidByName(Context context, String name) {
-        return getRidByName(context, ResourceType.DRAWABLE, name);
+//        return getRidByName(context, ResourceType.DRAWABLE, name);
+        return getRidByName(context, ResourceType.MIPMAP, name);
     }
 
     /**

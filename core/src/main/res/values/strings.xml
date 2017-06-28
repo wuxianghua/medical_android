@@ -73,4 +73,7 @@
     <string name="share2Friends">分享至朋友圈</string>
     <string name="friends">朋友圈</string>
     <string name="share">分享</string>
+    <string name="search">搜索</string>
+    <string name="please_input_destination">请输入目的地</string>
+    <string name="history_search">历史搜索</string>
 </resources>

@@ -55,7 +55,8 @@
                 android:drawablePadding="@dimen/ngr_normal"
                 android:gravity="center_vertical"
                 android:paddingLeft="@dimen/ngr_large"
-                android:text="请输入目的地"/>
+                android:text="请输入目的地"
+                android:onClick="goToSearch"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 

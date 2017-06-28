@@ -25,6 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="32dp"
             android:layout_gravity="center_vertical"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:background="@drawable/bg_round_white">
 
             <ImageView
@@ -37,20 +39,20 @@
             <EditText
                 android:id="@+id/edtTxtSearch"
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="42dp"
                 android:layout_toLeftOf="@+id/img_clear"
                 android:layout_toRightOf="@+id/img_ico_search"
                 android:background="@null"
                 android:completionThreshold="1"
-                android:hint="请输入目的地"
-                android:imeActionLabel="搜索"
+                android:hint="@string/please_input_destination"
+                android:imeActionLabel="@string/search"
                 android:imeOptions="actionSearch"
                 android:maxLines="1"
                 android:textColor="@android:color/black"
                 android:textColorHint="#B7BBCD"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/text_size_16"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,13 +60,18 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
-                android:onClick="cancelClick"
-                android:text="搜索"
+                android:onClick="onSearchClick"
+                android:text="@string/search"
                 android:textColor="#6E768F"
-                android:textSize="16sp"/>
+                android:textSize="@dimen/text_size_16"/>
 
         </RelativeLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/relativeLaySearchKey"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
