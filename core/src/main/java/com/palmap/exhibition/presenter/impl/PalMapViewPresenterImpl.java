@@ -44,12 +44,11 @@ import com.palmap.library.geoFencing.GeoFencingListener;
 import com.palmap.library.geoFencing.GeoFencingManager;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.rx.dataSource.RxDataSource;
+import com.palmap.library.utils.DisposableUtils;
 import com.palmap.library.utils.FloorUtils;
 import com.palmap.library.utils.IOUtils;
 import com.palmap.library.utils.LogUtil;
 import com.palmap.library.utils.MapUtils;
-import com.palmap.library.utils.DisposableUtils;
-import com.palmap.library.utils.SystemUtils;
 import com.palmaplus.nagrand.core.Types;
 import com.palmaplus.nagrand.data.DataList;
 import com.palmaplus.nagrand.data.DataSource;
@@ -61,12 +60,14 @@ import com.palmaplus.nagrand.data.MapModel;
 import com.palmaplus.nagrand.data.PlanarGraph;
 import com.palmaplus.nagrand.geos.Coordinate;
 import com.palmaplus.nagrand.navigate.ConnectedInfo;
+import com.palmaplus.nagrand.navigate.CoordinateInfo;
 import com.palmaplus.nagrand.navigate.DynamicNavigateParams;
 import com.palmaplus.nagrand.navigate.DynamicNavigateWrapper;
 import com.palmaplus.nagrand.navigate.DynamicNavigationMode;
 import com.palmaplus.nagrand.navigate.LineMode;
 import com.palmaplus.nagrand.navigate.NavigateManager;
 import com.palmaplus.nagrand.navigate.OnDynamicNavigateListener;
+import com.palmaplus.nagrand.position.Location;
 import com.palmaplus.nagrand.position.PositioningManager;
 import com.palmaplus.nagrand.position.ble.BeaconPositioningManager;
 import com.palmaplus.nagrand.position.ble.utils.BleLocation;
@@ -78,12 +79,15 @@ import com.palmaplus.nagrand.view.MapView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -206,6 +210,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      * 定位惯导算法
      */
     private PDR pdr;
+
+    /**
+     * 是不是模拟导航
+     */
+    private AtomicBoolean isMockNavi = new AtomicBoolean(false);
 
     @Inject
     public PalMapViewPresenterImpl() {
@@ -867,7 +876,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     @Override
     public void beginNavigate() {
-        if (navigateManager == null || null == userCoordinate) {
+        if (navigateManager == null || null == userCoordinate || PalmapViewState.Navigating == getState()) {
             return;
         }
         palMapView.getMapView().zoom(2.0f);
@@ -901,15 +910,47 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     }
 
     @Override
+    public void beginMockNavigate() {
+        if (navigateManager == null) {
+            palMapView.showMessage("模拟导航失败!!!");
+            return;
+        }
+
+        isMockNavi.set(true);
+
+        final CoordinateInfo[] coordinates = navigateManager.getSimulationLocationPoint(3);
+        Observable
+                .interval(1000, TimeUnit.MILLISECONDS)
+                .take(coordinates.length)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(@NonNull Long aLong) throws Exception {
+                        boolean b = IOUtils.checkMainThread();
+                        LogUtil.e("checkUI :" + b);
+                        CoordinateInfo coordinate = coordinates[aLong.intValue()];
+                        myLocationListener.onMockLocation(
+                                new LocationInfoModel(coordinate.x, coordinate.y, coordinate.floorId),
+                                System.currentTimeMillis()
+                        );
+                        beginNavigate();
+                    }
+                });
+    }
+
+
+    @Override
     public void startSpeaking(final View v, String msg) {
     }
 
-    private void resetFeature() {
+    @Override
+    public void resetFeature() {
         if (mFeature != null) {
             palMapView.resetFeatureStyle(mFeature);
             mFeature = null;
         }
     }
+
 
     @Override
     public void startLocation(BeaconPositioningManager positioningManager) {
@@ -926,12 +967,18 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 this.positioningManager.setOnLocationChangeListener(new PositioningManager.OnLocationChangeListener<BleLocation>() {
                     @Override
                     public void onLocationChange(PositioningManager.LocationStatus locationStatus, BleLocation bleLocation, BleLocation t1) {
-                        if (PositioningManager.LocationStatus.MOVE == locationStatus && t1!=null) {
-                            LocationInfoModel locationInfoModel = new LocationInfoModel();
-                            myLocationListener.onComplete(locationInfoModel,System.currentTimeMillis());
-                        }else{
-                            if (PositioningManager.LocationStatus.START != locationStatus || PositioningManager.LocationStatus.STOP != locationStatus){
-                                myLocationListener.onFailed(new IllegalArgumentException(),"定位失败");
+                        if (PositioningManager.LocationStatus.MOVE == locationStatus && t1 != null) {
+                            Coordinate coordinate = t1.getPoint().getCoordinate();
+                            long locationFloorId = Location.floorId.get(t1.getProperties());
+                            myLocationListener.onComplete(new LocationInfoModel(
+                                            coordinate.getX(),
+                                            coordinate.getY(),
+                                            locationFloorId
+                                    ),
+                                    System.currentTimeMillis());
+                        } else {
+                            if (PositioningManager.LocationStatus.START != locationStatus || PositioningManager.LocationStatus.STOP != locationStatus) {
+                                myLocationListener.onFailed(new IllegalArgumentException(), "定位失败");
                             }
                         }
                     }
@@ -950,7 +997,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             return;
         }
         endNavigationDialogCanShow = false;
-        SystemUtils.vibrate(palMapView.getContext(), 500);
+        if (isMockNavi.compareAndSet(true, false)) {
+            userCoordinate = null;
+            getOverLayerManager().hideLocation();
+            resetFeature();
+        }
         palMapView.showNavigationEndView(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -962,6 +1013,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 palMapView.hidePoiMenu();
                 palMapView.showMapViewControl();
                 dialog.dismiss();
+                isMockNavi.set(false);
             }
         }, new DialogInterface.OnClickListener() {
             @Override
@@ -1144,8 +1196,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     || categoryId == 23999000) {//不可到达区域不可点击
                 palMapView.hidePoiMenu();
                 featureId = ID_NONE;
-                getOverLayerManager().removeTapMark();
-                getOverLayerManager().removePoiMark();
+                removeTapAndPoiMark();
                 return;
             }
 
@@ -1191,9 +1242,14 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         } else {
             palMapView.hidePoiMenu();
             featureId = ID_NONE;
-            getOverLayerManager().removeTapMark();
-            getOverLayerManager().removePoiMark();
+            removeTapAndPoiMark();
         }
+    }
+
+    @Override
+    public void removeTapAndPoiMark() {
+        getOverLayerManager().removeTapMark();
+        getOverLayerManager().removePoiMark();
     }
 
     @Override
@@ -1462,6 +1518,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             locationCoordinate.setZ(locationFloorId);
 
             eventFencing(locationCoordinate, locationFloorId);
+
             // TODO: 2016/6/22 如果下一个楼层id和当前楼层Id不一致 说明正在处于切换楼层动作中
             if (palMapView.isRetry() || nextFloorId != ID_NONE && getCurrentFloorId() != nextFloorId) {
                 floorSwitchManager.clearData();
@@ -1527,11 +1584,41 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
         @Override
         public void onFailed(Exception ex, String msg) {
-//            userCoordinate = null;
             locationErrorMsgCount++;
             if (locationErrorMsgCount > LOCATION_ERROR_MSG_MAX_COUNT) {
                 palMapView.showLocationError(ex);
                 locationErrorMsgCount = 0;
+            }
+        }
+
+        @Override
+        public void onMockLocation(LocationInfoModel locationInfoModel, long timeStamp) {
+            long locationFloorId = (long) locationInfoModel.getZ();
+            Coordinate locationCoordinate = new Coordinate(locationInfoModel.getX(), locationInfoModel.getY());
+            locationCoordinate.setZ(locationFloorId);
+            if (userCoordinate == null) {
+                userCoordinate = locationCoordinate;
+            }
+            //模拟导航
+            if (userCoordinate.getZ() - getOverLayerManager().getEndMark().getFloorId() == 0 &&
+                    MapUtils.pointDistance(
+                            locationCoordinate.getX(),
+                            locationCoordinate.getY(),
+                            getOverLayerManager().getEndMark().getWorldX(),
+                            getOverLayerManager().getEndMark().getWorldY()
+                    ) < Config.END_NAVI_DISTANCE) {
+                onNavigationEnd();
+                return;
+            }
+            // TODO: 2016/7/11 路网吸附
+            final Coordinate pointOfIntersectioan = navigateManager.getPointOfIntersectioanByPoint(locationCoordinate);
+            userCoordinate.setX(pointOfIntersectioan.getX());
+            userCoordinate.setY(pointOfIntersectioan.getY());
+            if (locationFloorId == getCurrentFloorId()) {
+                getOverLayerManager().animLocation(userCoordinate, locationFloorId);
+                if (getState() == PalmapViewState.Navigating) {
+                    navigateManager.dynamicNavigate(userCoordinate, currentFloorId, 0);
+                }
             }
         }
     }

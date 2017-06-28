@@ -139,4 +139,13 @@ public interface PalMapViewPresenter extends Presenter, OnSingleTapListener, OnD
 
     void exitNavigate();
 
+    void removeTapAndPoiMark();
+
+    void resetFeature();
+
+    /**
+     * 开始模拟导航
+     */
+    void beginMockNavigate();
+
 }

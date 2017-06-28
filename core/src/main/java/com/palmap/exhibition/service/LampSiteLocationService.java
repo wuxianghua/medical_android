@@ -71,4 +71,9 @@ public class LampSiteLocationService extends Service implements LocationListener
         intent.putExtra(ERROR_MSG,msg);
         sendBroadcast(intent);
     }
+
+    @Override
+    public void onMockLocation(LocationInfoModel locationInfoModel, long timeStamp) {
+
+    }
 }

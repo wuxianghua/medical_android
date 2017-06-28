@@ -21,15 +21,11 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.exception.NetWorkTypeException;
 import com.palmap.exhibition.iflytek.IFlytekController;
-import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.listenetImpl.MapOnZoomListener;
 import com.palmap.exhibition.model.Api_ActivityInfo;
@@ -46,10 +42,11 @@ import com.palmap.exhibition.view.adapter.FacilitiesListAdapter;
 import com.palmap.exhibition.view.adapter.FloorListAdapter;
 import com.palmap.exhibition.view.base.ExActivity;
 import com.palmap.exhibition.widget.CompassView;
+import com.palmap.exhibition.widget.IPoiMenu;
+import com.palmap.exhibition.widget.PoiMenuLayout;
 import com.palmap.exhibition.widget.RouteInfoView;
 import com.palmap.exhibition.widget.Scale;
 import com.palmap.exhibition.widget.TaskShareDialog;
-import com.palmap.exhibition.widget.YanTaiPoiMenuLayout;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.utils.ActivityUtils;
 import com.palmap.library.utils.DeviceUtils;
@@ -99,16 +96,17 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     TextView tvTitle;
     RelativeLayout containerRetry;
     TextView tvLocationMessage;
-    YanTaiPoiMenuLayout layoutPoiMenu;
     ViewGroup layout_mapView;
     ViewGroup layoutBack;
     RouteInfoView routeInfoView;
     View map_location;
-    ViewGroup layout_floor;
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
     ViewGroup layout_zoom;
     private FeatureLayer navigateLayer;
+
+    PoiMenuLayout poiMenuLayout;
+    IPoiMenu poiMenu;
 
     /**
      * 是否添加了导航层
@@ -188,7 +186,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             }
         }, 150);
 
-        final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
+        /*final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
                 .obtainSpeechSynthesizer(this, null);
         speechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, "xiaoqi");
         speechSynthesizer.startSpeaking("图聚智能是国内领先的室内地图供应商，拥有庞大的室内地图数据库系统，拥有一套完整的、" +
@@ -209,7 +207,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             public void onCompleted(SpeechError speechError) {
                 System.out.println(1);
             }
-        });
+        });*/
     }
 
     private static int LAUNCHER_INDEX = 0;
@@ -322,38 +320,60 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void showPoiMenu(final PoiModel poiModel, PalmapViewState state) {
-        layoutPoiMenu.setHaveLocationPoint(!(null == presenter.getUserCoordinate()));
-        if (poiModel == null) {
-            layoutPoiMenu.refreshView(state);
+//        layoutPoiMenu.setHaveLocationPoint(!(null == presenter.getUserCoordinate()));
+
+        if (state == PalmapViewState.ENd_SET) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("tips")
+                    .setMessage("是否设为起点")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            presenter.startMark(poiModel);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            presenter.removeTapAndPoiMark();
+                            presenter.resetFeature();
+                            dialog.dismiss();
+                        }
+                    });
+            builder.create().show();
             return;
         }
-        layoutPoiMenu.refreshView(poiModel, state);
-        layoutPoiMenu.animShow();
+
+        if (poiModel == null) {
+            poiMenu.refreshView(state);
+            return;
+        }
+        poiMenu.refreshView(poiModel, state);
     }
 
 
     @Override
     public void hidePoiMenuAtFloorChange() {
-        if (!layoutPoiMenu.layoutTipIsShow() && presenter.getState() != PalmapViewState.Navigating) {
-            hidePoiMenu();
-        }
+//        if (!layoutPoiMenu.layoutTipIsShow() && presenter.getState() != PalmapViewState.Navigating) {
+//            hidePoiMenu();
+//        }
     }
-
 
     @Override
     public void hidePoiMenu() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (presenter.getState().equals(PalmapViewState.Normal)
-                        || presenter.getState().equals(PalmapViewState.ENd_SET)) {
-                    layoutPoiMenu.animHide();
-                } else {
-                    showPoiMenu(null, presenter.getState());
-                    hidePoiMenuTop();
-                }
-            }
-        });
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (presenter.getState().equals(PalmapViewState.Normal)
+//                        || presenter.getState().equals(PalmapViewState.ENd_SET)) {
+//                    layoutPoiMenu.animHide();
+//                } else {
+//                    showPoiMenu(null, presenter.getState());
+//                    hidePoiMenuTop();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -374,7 +394,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         attachNavigateLayer();
         navigateLayer.clearFeatures();
         navigateLayer.addFeatures(featureCollection);
-        layoutPoiMenu.showRouteInfo();
+        //layoutPoiMenu.showRouteInfo();
     }
 
     @Override
@@ -536,7 +556,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void readRemainingLength(float mRemainingLength) {
-        layoutPoiMenu.readRemainingLength((int) mRemainingLength);
+        //layoutPoiMenu.readRemainingLength((int) mRemainingLength);
     }
 
     @Override
@@ -750,7 +770,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void hideMapViewControl() {
         floorListView.setVisibility(View.INVISIBLE);
-        layout_floor.setVisibility(View.INVISIBLE);
         scale.setVisibility(View.INVISIBLE);
         map_location.setVisibility(View.INVISIBLE);
         layout_zoom.setVisibility(View.INVISIBLE);
@@ -759,7 +778,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void showMapViewControl() {
-        layout_floor.setVisibility(View.VISIBLE);
         floorListView.setVisibility(View.VISIBLE);
         scale.setVisibility(View.VISIBLE);
         map_location.setVisibility(View.VISIBLE);
@@ -769,12 +787,12 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void showRouteInfoStart(String lable, String msg) {
-        layoutPoiMenu.showStartMsg(lable, msg);
     }
 
     @Override
     public void showRouteInfoEnd(String lable, String msg) {
-        layoutPoiMenu.showEndMsg(lable, msg);
+        //// TODO: 2017/6/28  终点有了
+        poiMenuLayout.refreshView(PalmapViewState.ENd_SET);
     }
 
     @Override
@@ -842,7 +860,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void showRouteInfoDetails(String msg) {
-        layoutPoiMenu.showDetailsMsg(msg);
     }
 
     /**
@@ -878,7 +895,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         tvTitle = findView(R.id.tv_title);
         containerRetry = findView(R.id.container_retry);
         tvLocationMessage = findView(R.id.tv_locationMessage);
-        layoutPoiMenu = findView(R.id.layout_poiMenu);
         layout_mapView = findView(R.id.layout_mapView);
         layoutBack = findView(R.id.layout_back);
 
@@ -935,7 +951,37 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     }
 
     private void initLayoutPoiMenu() {
-        layoutPoiMenu.setListener(new YanTaiPoiMenuLayout.Listener() {
+        poiMenuLayout = (PoiMenuLayout) findViewById(R.id.layout_poiMenu2);
+        poiMenu = poiMenuLayout;
+
+        poiMenuLayout.setViewHandler(new PoiMenuLayout.ViewHandler() {
+            @Override
+            public void onGoHereClick() {
+                if (presenter.startMarkFromLocation()) {
+                    presenter.endMark(poiMenuLayout.getPoiModel());
+                } else {
+                    //showMessage("当前没有定位点");
+                    presenter.setPalmapViewState(PalmapViewState.ENd_SET);
+                    presenter.endMark(poiMenuLayout.getPoiModel());
+                }
+            }
+
+            @Override
+            public void onMockNaviClick() {
+                presenter.beginMockNavigate();
+            }
+
+            @Override
+            public void onStartNaviClick() {
+                if (presenter.getUserCoordinate() == null) {
+                    showMessage("没有定位点,请尝试模拟定位");
+                }else{
+                    presenter.beginNavigate();
+                }
+            }
+        });
+
+        /*layoutPoiMenu.setListener(new YanTaiPoiMenuLayout.Listener() {
             @Override
             public void onStartClick(View v) {
                 presenter.startMark(layoutPoiMenu.getPoiModel());
@@ -974,12 +1020,12 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 }
             }
 
-        });
+        });*/
     }
 
     @Override
     public void readExitNavigate() {
-        layoutPoiMenu.exitNavigate();
+//        layoutPoiMenu.exitNavigate();
     }
 
     @Override

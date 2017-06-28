@@ -12,4 +12,6 @@ public interface LocationListener {
 
     void onFailed(Exception ex, String msg);
 
+    void onMockLocation(LocationInfoModel locationInfoModel, long timeStamp);
+
 }

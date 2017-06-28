@@ -1,5 +1,7 @@
 package com.palmap.exhibition.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Spannable;
 
 import com.palmap.exhibition.config.MapParam;
@@ -9,7 +11,7 @@ import com.palmaplus.nagrand.data.LocationModel;
 /**
  * Created by 王天明 on 2016/7/18.
  */
-public class SearchResultModel implements Comparable<SearchResultModel> {
+public class SearchResultModel implements Comparable<SearchResultModel>,Parcelable {
 
     private String name;
     private long id;
@@ -137,19 +139,56 @@ public class SearchResultModel implements Comparable<SearchResultModel> {
 
     @Override
     public int compareTo(SearchResultModel another) {
-//        if (another == null) return -1;
-//        if (this.isMeeting()) {
-//            return 1;
-//        }
-//        if (another.isMeeting()) {
-//            return 0;
-//        }
-//        return -1;
-
         try{
             return Integer.parseInt(this.address) - Integer.parseInt(another.address);
         }catch (Exception e){
             return 0;
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeLong(this.id);
+        dest.writeInt(this.locationType == null ? -1 : this.locationType.ordinal());
+        dest.writeString(this.venueName);
+        dest.writeByte(this.isMeeting ? (byte) 1 : (byte) 0);
+        dest.writeLong(this.mapId);
+        dest.writeLong(this.floorId);
+        dest.writeString(this.startTime);
+        dest.writeString(this.endTime);
+        dest.writeString(this.address);
+    }
+
+    protected SearchResultModel(Parcel in) {
+        this.name = in.readString();
+        this.id = in.readLong();
+        int tmpLocationType = in.readInt();
+        this.locationType = tmpLocationType == -1 ? null : LocationType.Type.values()[tmpLocationType];
+        this.venueName = in.readString();
+        this.isMeeting = in.readByte() != 0;
+        this.mapId = in.readLong();
+        this.floorId = in.readLong();
+        this.startTime = in.readString();
+        this.endTime = in.readString();
+        this.address = in.readString();
+        this.nameSpan = null;
+    }
+
+    public static final Parcelable.Creator<SearchResultModel> CREATOR = new Parcelable.Creator<SearchResultModel>() {
+        @Override
+        public SearchResultModel createFromParcel(Parcel source) {
+            return new SearchResultModel(source);
+        }
+
+        @Override
+        public SearchResultModel[] newArray(int size) {
+            return new SearchResultModel[size];
+        }
+    };
 }
