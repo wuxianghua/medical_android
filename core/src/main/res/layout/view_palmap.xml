@@ -31,7 +31,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_poiMenu"
+        android:layout_above="@+id/layout_bottom"
         android:layout_below="@+id/layout_top">
 
         <com.palmap.exhibition.widget.ShadowLayout
@@ -111,7 +111,7 @@
             compass:type="roundRect"
             shadow:hole="true"
             shadow:offset="@dimen/shadow_width"
-            shadow:shadowRadius="@dimen/shadow_width">
+            shadow:shadowRadius="1.5dp">
 
             <ImageView
                 android:id="@+id/map_location"
@@ -122,45 +122,20 @@
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
-        <com.palmap.exhibition.widget.ShadowLayout
-            android:id="@+id/layout_tv_floor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/layout_location"
-            android:layout_alignLeft="@+id/layout_location"
-            android:layout_marginBottom="@dimen/ngr_normal"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            shadow:hole="true"
-            shadow:offset="@dimen/shadow_width"
-            shadow:shadowRadius="@dimen/shadow_width">
-
-            <TextView
-                android:id="@+id/tv_floor"
-                android:layout_width="@dimen/uiSize"
-                android:layout_height="@dimen/uiSize"
-                android:background="@drawable/bg_floor_name"
-                android:gravity="center"
-                android:singleLine="true"
-                android:textColor="#000"
-                android:textSize="@dimen/ngr_floorTextSize"/>
-
-        </com.palmap.exhibition.widget.ShadowLayout>
-
         <ListView
             android:id="@+id/floorListView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/layout_tv_floor"
-            android:layout_alignLeft="@+id/layout_tv_floor"
-            android:layout_alignRight="@+id/layout_tv_floor"
+            android:layout_height="105dp"
+            android:layout_above="@+id/layout_location"
+            android:layout_alignLeft="@+id/layout_location"
+            android:layout_alignRight="@+id/layout_location"
             android:layout_marginBottom="@dimen/ngr_small"
             android:choiceMode="singleChoice"
             android:clickable="true"
             android:divider="@android:color/transparent"
             android:dividerHeight="0dp"
             android:scrollbars="none"
-            android:visibility="invisible"/>
+            android:visibility="visible"/>
 
         <com.palmap.exhibition.widget.Scale
             android:id="@+id/scale"
@@ -221,12 +196,25 @@
 
     </RelativeLayout>
 
-    <com.palmap.exhibition.widget.YanTaiPoiMenuLayout
-        android:id="@+id/layout_poiMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <FrameLayout
         android:layout_alignParentBottom="true"
-        android:visibility="gone"/>
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.palmap.exhibition.widget.PoiMenuLayout
+            android:id="@+id/layout_poiMenu2"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.palmap.exhibition.widget.YanTaiPoiMenuLayout
+            android:id="@+id/layout_poiMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/layout_top"

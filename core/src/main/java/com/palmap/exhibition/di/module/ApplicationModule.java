@@ -6,6 +6,7 @@ import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.dao.business.ActivityInfoBusiness;
 import com.palmap.exhibition.dao.business.CoordinateBusiness;
+import com.palmap.exhibition.di.compent.ApplicationComponent;
 import com.palmap.library.executor.PostExecutionThread;
 import com.palmap.library.executor.ThreadExecutor;
 import com.palmap.library.executor.impl.JobExecutor;
@@ -17,6 +18,7 @@ import com.palmaplus.nagrand.io.FileCacheMethod;
 
 import java.io.File;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -73,6 +75,12 @@ public class ApplicationModule {
     @Singleton
     CoordinateBusiness provideCoordinateBusiness() {
         return new CoordinateBusiness(application);
+    }
+
+    @Named(ApplicationComponent.IFLYTEK_KEY)
+    @Provides
+    String provideKey(){
+        return "5953456b";
     }
 
 }

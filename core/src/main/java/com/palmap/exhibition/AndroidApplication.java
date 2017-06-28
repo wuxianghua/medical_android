@@ -6,6 +6,7 @@ import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.di.compent.ApplicationComponent;
 import com.palmap.exhibition.di.compent.DaggerApplicationComponent;
 import com.palmap.exhibition.di.module.ApplicationModule;
+import com.palmap.exhibition.iflytek.IFlytekController;
 import com.palmap.exhibition.navigator.Navigator;
 import com.palmap.library.base.BaseApplication;
 import com.palmap.library.utils.FileUtils;
@@ -16,6 +17,9 @@ import com.palmaplus.nagrand.core.Engine;
 import java.io.File;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import static com.palmap.exhibition.di.compent.ApplicationComponent.IFLYTEK_KEY;
 
 /**
  * Created by 王天明 on 2016/6/3.
@@ -25,6 +29,9 @@ public class AndroidApplication extends BaseApplication {
 
     @Inject
     Navigator navigator;
+    @Named(IFLYTEK_KEY)
+    @Inject
+    String iflytek_key;
 
     private static AndroidApplication instance;
 
@@ -48,6 +55,7 @@ public class AndroidApplication extends BaseApplication {
             instance = this;
         }
         Engine.getInstance();
+        IFlytekController.getInstance().initWithKey(this, iflytek_key);
         LogUtil.allowE = LogUtil.allowD = BuildConfig.DEBUG;
         try {
             FileUtils.createSDDir(Config.CACHE_FILE_PATH + File.separator);

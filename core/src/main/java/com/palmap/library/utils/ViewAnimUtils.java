@@ -50,8 +50,11 @@ public class ViewAnimUtils {
         return valueAnimator;
     }
 
-    public static void animHeight(final View animView, final int tagetHeight, int time,Animator.AnimatorListener animatorListener) {
-        final int currentHeight = animView.getHeight();
+    public static void animHeight(final View animView, final int tagetHeight, int time, Animator.AnimatorListener animatorListener) {
+        animHeight(animView,animView.getHeight(),tagetHeight,time,animatorListener);
+    }
+
+    public static void animHeight(final View animView, final int currentHeight, final int tagetHeight, int time, Animator.AnimatorListener animatorListener) {
         if (tagetHeight == currentHeight) {
             return;
         }
@@ -65,9 +68,9 @@ public class ViewAnimUtils {
                 float animatedFraction = animation.getAnimatedFraction();
                 ViewGroup.LayoutParams layoutParams = null;
                 int nextHeight;
-                if(increase){
+                if (increase) {
                     nextHeight = (int) (currentHeight + (offset * animatedFraction));
-                }else{
+                } else {
                     nextHeight = (int) (currentHeight - (offset * animatedFraction));
                 }
                 if (animView.getParent() instanceof LinearLayout) {

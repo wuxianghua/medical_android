@@ -72,8 +72,8 @@ public class HistoryPoiSearchBusiness {
         return !(findAll(name).size() == 0);
     }
 
-    public void delete(String namekeyWord) {
-        for (HistoryPoiSearch historyPoiSearch : findAll(namekeyWord)) {
+    public void delete(String nameKeyWord) {
+        for (HistoryPoiSearch historyPoiSearch : findAll(nameKeyWord)) {
             dao.delete(historyPoiSearch);
         }
     }

@@ -21,10 +21,15 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.exception.NetWorkTypeException;
+import com.palmap.exhibition.iflytek.IFlytekController;
+import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.listenetImpl.MapOnZoomListener;
 import com.palmap.exhibition.model.Api_ActivityInfo;
@@ -33,7 +38,6 @@ import com.palmap.exhibition.model.ExFloorModel;
 import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.PoiModel;
 import com.palmap.exhibition.model.ServiceFacilityModel;
-import com.palmap.exhibition.other.delegate.ViewAnimDelegate;
 import com.palmap.exhibition.presenter.PalMapViewPresenter;
 import com.palmap.exhibition.service.LampSiteLocationService;
 import com.palmap.exhibition.view.FloorDataProvides;
@@ -51,7 +55,6 @@ import com.palmap.library.utils.ActivityUtils;
 import com.palmap.library.utils.DeviceUtils;
 import com.palmap.library.utils.IOUtils;
 import com.palmap.library.utils.LogUtil;
-import com.palmap.library.utils.ViewUtils;
 import com.palmaplus.nagrand.core.Types;
 import com.palmaplus.nagrand.core.Value;
 import com.palmaplus.nagrand.data.Feature;
@@ -87,8 +90,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     BeaconPositioningManager beaconPositioningManager;
     MapView mapView;
     ListView facilitiesListView;
-    ViewGroup layout_tv_floor;
-    TextView tvFloor;
     ListView floorListView;
     CompassView compassView;
     ImageView mapLocation;
@@ -106,7 +107,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     ViewGroup layout_floor;
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
-    ViewAnimDelegate floorListViewDelegate;
     ViewGroup layout_zoom;
     private FeatureLayer navigateLayer;
 
@@ -187,6 +187,29 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 presenter.loadPushEventActivity();
             }
         }, 150);
+
+        final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
+                .obtainSpeechSynthesizer(this, null);
+        speechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, "xiaoqi");
+        speechSynthesizer.startSpeaking("图聚智能是国内领先的室内地图供应商，拥有庞大的室内地图数据库系统，拥有一套完整的、" +
+                "低成本的绘制和维护室内地图数据的平台。目前图聚智能已经拥有20000套室内地图，收录了3500000 个POI 数据，覆盖了全国350座城市， " +
+                "涵盖了79种建筑类型。开发者使用图聚的地图引擎，可以轻松实现室内地图的2D 2.5D 3D的效果展示。图聚智能绘制的地图为矢量地图，" +
+                "能够支持旋转、缩放、渲染、线路规划等功能。", new SimpleSynthesizerListener() {
+            @Override
+            public void onSpeakBegin() {
+                System.out.println(1);
+            }
+
+            @Override
+            public void onSpeakProgress(int i, int i1, int i2) {
+                super.onSpeakProgress(i, i1, i2);
+            }
+
+            @Override
+            public void onCompleted(SpeechError speechError) {
+                System.out.println(1);
+            }
+        });
     }
 
     private static int LAUNCHER_INDEX = 0;
@@ -426,7 +449,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 floorListAdapter.clear();
                 floorListAdapter = null;
             }
-            layout_tv_floor.setVisibility(View.INVISIBLE);
             floorListView.setVisibility(View.GONE);
             return;
         }
@@ -438,13 +460,8 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             }
         }
         floorListAdapter = new FloorListAdapter(this, floorModelList, selectFloorId);
-        floorListViewDelegate = new ViewAnimDelegate(floorListView, ViewAnimDelegate.Gravity.Bottom);
         floorListView.setAdapter(floorListAdapter);
-        if (floorListAdapter.getCount() > 6) {
-            ViewUtils.setListViewBasedOnItem(floorListView, 6, false);
-        }
-        layout_tv_floor.setVisibility(View.VISIBLE);
-        tvFloor.setText(floorListAdapter.getLocationModelName(selectFloorId));
+
         floorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -452,7 +469,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 ExFloorModel floorModel = floorListAdapter.getItem(position);
                 long nextFloorId = floorModel.getId();
                 if (nextFloorId == presenter.getCurrentFloorId()) {
-                    floorListViewDelegate.hideOnAnim();
                     return;
                 }
                 //TODO 准备切换楼层 先去除所有覆盖层
@@ -481,8 +497,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 if (floorListAdapter != null) {
                     floorListAdapter.setSelectFloorId(newFloorId);
                     floorListAdapter.notifyDataSetChanged();
-                    tvFloor.setText(floorListAdapter.getLocationModelName(newFloorId));
-                    floorListViewDelegate.hideOnAnim();
                 }
                 if (oldFloorId != newFloorId) {
                     isAttachNavigateLayer = false;
@@ -572,10 +586,10 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         if (presenter.getState() == PalmapViewState.Navigating) {
             return;
         }
-        if (floorListViewDelegate != null) {
-            floorListViewDelegate.switchVisibilityOnAnim();
-            floorListView.smoothScrollToPosition(floorListAdapter.getSelectIndex());
-        }
+//        if (floorListViewDelegate != null) {
+//            floorListViewDelegate.switchVisibilityOnAnim();
+//            floorListView.smoothScrollToPosition(floorListAdapter.getSelectIndex());
+//        }
     }
 
     void compassViewClick() {
@@ -638,6 +652,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        IFlytekController.getInstance().destroyAllSpeechSynthesizer();
         if (mapView != null && !mapView.getPtr().isRelase()) {
             mapView.drop();
         }
@@ -819,8 +834,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public String getCurrentFloorName() {
-        if (null == tvFloor) return "";
-        return tvFloor.getText().toString();
+//        if (null == tvFloor) return "";
+//        return tvFloor.getText().toString();
+        return null;
     }
 
     @Override
@@ -848,13 +864,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     }
 
     private void initView() {
-        tvFloor = findView(R.id.tv_floor);
         floorListView = findView(R.id.floorListView);
         compassView = findView(R.id.compassView);
         compassView.setAlpha(.9f);
 
         mapLocation = findView(R.id.map_location);
-        layout_tv_floor = findView(R.id.layout_tv_floor);
         facilitiesListView = findView(R.id.list_facilities);
         routeInfoView = findView(R.id.routeInfoView);
         scale = findView(R.id.scale);
@@ -870,7 +884,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         map_location = findView(R.id.map_location);
         layout_zoom = findView(R.id.layout_zoom);
 
-        tvFloor.setOnClickListener(this);
         compassView.setOnClickListener(this);
         mapLocation.setOnClickListener(this);
         layoutBack.setOnClickListener(this);
@@ -977,8 +990,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             backClick();
         } else if (i == R.id.compassView) {
             compassViewClick();
-        } else if (i == R.id.tv_floor) {
-            floorClick();
         }
     }
 
@@ -998,13 +1009,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         //TODO 自动手动切换了楼层 就取消自动切换楼层的支持了
         presenter.setCanAutoChangeFloor(false);
         presenter.changeFloor(floorId);
-    }
-
-    public void facilitiesClick(View v) {
-        presenter.clearFacilityMarks();
-        if (facilitiesListAdapter != null) {
-            facilitiesListAdapter.setSelectPosition(-1);
-        }
     }
 
     @Override

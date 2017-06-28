@@ -21,6 +21,9 @@ import dagger.Component;
 @Component(modules = {ApplicationModule.class})
 @Singleton
 public interface ApplicationComponent {
+
+    String IFLYTEK_KEY = "iflytek_key";
+
     AndroidApplication application();
 
     PostExecutionThread mainExecutor();
