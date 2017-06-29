@@ -76,4 +76,6 @@
     <string name="search">搜索</string>
     <string name="please_input_destination">请输入目的地</string>
     <string name="history_search">历史搜索</string>
+    <string name="current_no_search_result">抱歉！没有找到相关结果</string>
+    <string name="please_input_search_key">请输入搜索关键字</string>
 </resources>

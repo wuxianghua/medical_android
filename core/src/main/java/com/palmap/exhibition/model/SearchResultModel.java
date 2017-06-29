@@ -11,7 +11,7 @@ import com.palmaplus.nagrand.data.LocationModel;
 /**
  * Created by 王天明 on 2016/7/18.
  */
-public class SearchResultModel implements Comparable<SearchResultModel>,Parcelable {
+public class SearchResultModel implements Comparable<SearchResultModel>, Parcelable {
 
     private String name;
     private long id;
@@ -139,9 +139,9 @@ public class SearchResultModel implements Comparable<SearchResultModel>,Parcelab
 
     @Override
     public int compareTo(SearchResultModel another) {
-        try{
+        try {
             return Integer.parseInt(this.address) - Integer.parseInt(another.address);
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }
