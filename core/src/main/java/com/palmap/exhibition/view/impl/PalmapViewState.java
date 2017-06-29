@@ -12,7 +12,7 @@ public enum  PalmapViewState {
 
     Navigating, //导航中
 
-    ENd_SET, // 设置了起点
+    END_SET, // 设置了起点
 
     NaviComplete //导航完成
 

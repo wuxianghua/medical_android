@@ -188,7 +188,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
                 layout_poi_info.setVisibility(VISIBLE);
                 nextHeight = height_poi_info;
                 break;
-            case ENd_SET:
+            case END_SET:
                 layout_select_start.setVisibility(VISIBLE);
                 nextHeight = height_select_start;
                 break;

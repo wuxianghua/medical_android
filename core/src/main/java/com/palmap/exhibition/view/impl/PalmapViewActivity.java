@@ -332,7 +332,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void showPoiMenu(final PoiModel poiModel, PalmapViewState state) {
 //        layoutPoiMenu.setHaveLocationPoint(!(null == presenter.getUserCoordinate()));
-        if (state == PalmapViewState.ENd_SET) {
+        if (state == PalmapViewState.END_SET) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("tips")
                     .setMessage("是否设为起点")
@@ -375,7 +375,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 //            @Override
 //            public void run() {
 //                if (presenter.getState().equals(PalmapViewState.Normal)
-//                        || presenter.getState().equals(PalmapViewState.ENd_SET)) {
+//                        || presenter.getState().equals(PalmapViewState.END_SET)) {
 //                    layoutPoiMenu.animHide();
 //                } else {
 //                    showPoiMenu(null, presenter.getState());
@@ -810,15 +810,18 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void showRouteInfoEnd(String lable, String msg) {
         //// TODO: 2017/6/28  终点有了
-        poiMenuLayout.refreshView(PalmapViewState.ENd_SET);
+        poiMenuLayout.refreshView(PalmapViewState.END_SET);
     }
 
     /**
      * 显示 路线信息 (直行xx米 左转)
      * @param msg
+     * @param mAction 动作{@link com.palmaplus.nagrand.navigate.DynamicNavigateAction}
+     * @param startFloorName 起点的楼层名
+     * @param endFloorName  终点的楼层名
      */
     @Override
-    public void showRouteInfoDetails(String msg) {
+    public void showRouteInfoDetails(String msg, int mAction, String startFloorName, String endFloorName) {
         showMessage(msg);
     }
 
@@ -850,8 +853,14 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public String getCurrentFloorName() {
-//        if (null == tvFloor) return "";
-//        return tvFloor.getText().toString();
+        if (floorListAdapter != null && floorModelList!=null) {
+            long selectFloorId = floorListAdapter.getSelectFloorId();
+            for (ExFloorModel exFloorModel : floorModelList) {
+                if (exFloorModel.getId() == selectFloorId) {
+                    return exFloorModel.getName();
+                }
+            }
+        }
         return null;
     }
 
@@ -963,7 +972,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     presenter.endMark(poiMenuLayout.getPoiModel());
                 } else {
                     //showMessage("当前没有定位点");
-                    presenter.setPalmapViewState(PalmapViewState.ENd_SET);
+                    presenter.setPalmapViewState(PalmapViewState.END_SET);
                     presenter.endMark(poiMenuLayout.getPoiModel());
                 }
             }
@@ -1010,7 +1019,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     return true;
                 } else {
                     //showMessage("当前没有定位点");
-                    presenter.setPalmapViewState(PalmapViewState.ENd_SET);
+                    presenter.setPalmapViewState(PalmapViewState.END_SET);
                     presenter.endMark(layoutPoiMenu.getPoiModel());
                     return false;
                 }

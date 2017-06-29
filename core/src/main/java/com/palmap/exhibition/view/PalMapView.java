@@ -190,7 +190,7 @@ public interface PalMapView extends LoadDataView {
      */
     void showRouteInfoStart(String lable,String msg);
     void showRouteInfoEnd(String lable,String msg);
-    void showRouteInfoDetails(String msg);
+    void showRouteInfoDetails(String msg, int mAction, String startFloorName, String endFloorName);
 
     /**
      * 隐藏路线描述信息视图

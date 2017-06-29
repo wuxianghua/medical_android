@@ -195,7 +195,7 @@ public class YanTaiPoiMenuLayout extends LinearLayout {
         layout_routeInfo.setVisibility(GONE);
         btn_end.setVisibility(VISIBLE);
 
-        if (state == PalmapViewState.ENd_SET) {
+        if (state == PalmapViewState.END_SET) {
             btn_end.setVisibility(INVISIBLE);
             layout_start.setVisibility(VISIBLE);
         }

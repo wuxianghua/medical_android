@@ -740,7 +740,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             return;
         }
         // TODO: 2016/6/27 设置为路劲规划状态
-        if (state == PalmapViewState.Normal || state == PalmapViewState.ENd_SET) {
+        if (state == PalmapViewState.Normal || state == PalmapViewState.END_SET) {
             setPalmapViewState(PalmapViewState.RoutePlanning);
         }
         palMapView.showPoiMenu(null, state);
@@ -1393,9 +1393,16 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         palMapView.readRemainingLength(wrapper.mDynamicNavigateOutput.mDynamicNaviExplain, mRemainingLength);
         try {
             //显示路线信息
+
+            StartMark startMark = getOverLayerManager().getStartMark();
+            EndMark endMark = getOverLayerManager().getEndMark();
+
             StepInfo stepInfo = navigateManager.getAllStepInfo()[wrapper.mDynamicNavigateOutput.mIndex];
             palMapView.showRouteInfoDetails(String.format("直行%.2f米，%s", wrapper.mDynamicNavigateOutput.mLengthToNextStep,
-                    stepInfo.mActionName));
+                    stepInfo.mActionName),stepInfo.mAction,
+                    startMark.getFloorName(),
+                    endMark.getFloorName()
+                    );
         } catch (Exception e) {
             e.printStackTrace();
         }
