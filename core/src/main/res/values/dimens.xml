@@ -5,7 +5,7 @@
 
     <dimen name="action_bar_height">55dp</dimen>
 
-    <dimen name="nrg_big">30dp</dimen>
+    <dimen name="ngr_big">30dp</dimen>
     <dimen name="ngr_Twenty">20dp</dimen>
     <dimen name="ngr_large">15dp</dimen>
     <dimen name="ngr_normal">10dp</dimen>
@@ -17,8 +17,8 @@
 
     <dimen name="uiSize">40dp</dimen>
 
-    <dimen name="poiInfiTextSize_big">17sp</dimen>
-    <dimen name="poiInfiTextSize_normal">13sp</dimen>
+    <dimen name="poiInfoTextSize_big">17sp</dimen>
+    <dimen name="poiInfoTextSize_normal">13sp</dimen>
 
     <dimen name="shadow_width">0.5dp</dimen>
 
