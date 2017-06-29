@@ -10,6 +10,10 @@ public enum  PalmapViewState {
 
     NavigateReady, //导航准备状态
 
-    Navigating, ENd_SET, //导航中
+    Navigating, //导航中
+
+    ENd_SET, // 设置了起点
+
+    NaviComplete //导航完成
 
 }

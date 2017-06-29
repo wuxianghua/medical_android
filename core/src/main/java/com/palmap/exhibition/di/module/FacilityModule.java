@@ -2,8 +2,8 @@ package com.palmap.exhibition.di.module;
 
 import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.ServiceFacilityModel;
-import com.palmap.exhibition.other.FacilityFilterHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dagger.Module;
@@ -46,7 +46,8 @@ public class FacilityModule {
 
     @Provides
     public List<FacilityModel> providesPubFacilityList() {
-        return FacilityFilterHelper.getFacilityData();
+//        return FacilityFilterHelper.getFacilityData();
+        return new ArrayList<>();
     }
 
 }

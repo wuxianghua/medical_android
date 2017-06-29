@@ -28,7 +28,6 @@ public interface PalMapView extends LoadDataView {
 
     void showAlertMsg(String title, String msg);
 
-
     void moveToLocationPoint();
 
     void refreshCompassView(long time);
@@ -208,6 +207,11 @@ public interface PalMapView extends LoadDataView {
     void showRouteUpView();
     void showRouteDownView();
     void hideRouteArrowView();
+    /**
+     * 显示路线长度
+     * @param msg
+     */
+    void showRouteLength(String msg);
 
     /**
      * 显示推送视图
@@ -239,8 +243,12 @@ public interface PalMapView extends LoadDataView {
      */
     boolean canUsePDR();
 
-    void readRemainingLength(float mRemainingLength);
+    void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength);
 
     void readExitNavigate();
 
+    /**
+     * 导航完成了
+     */
+    void readNaviComplete();
 }

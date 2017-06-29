@@ -108,7 +108,6 @@ public class CompassView extends View {
             if (index < maxIndex) {
                 postInvalidate();
                 setRotateAngle(-(float) mapView.getRotate());
-                LogUtil.e("postInvalidate");
                 postDelayed(this, 15);
                 index++;
             }else{

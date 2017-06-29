@@ -2,7 +2,6 @@ package com.palmap.exhibition.presenter.impl;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.SensorEvent;
@@ -11,8 +10,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.BuildConfig;
 import com.palmap.exhibition.R;
@@ -21,7 +18,6 @@ import com.palmap.exhibition.config.MapParam;
 import com.palmap.exhibition.dao.business.ActivityInfoBusiness;
 import com.palmap.exhibition.dao.business.CoordinateBusiness;
 import com.palmap.exhibition.iflytek.IFlytekController;
-import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.Api_PositionInfo;
 import com.palmap.exhibition.model.ExBuildingModel;
@@ -71,6 +67,7 @@ import com.palmaplus.nagrand.navigate.DynamicNavigationMode;
 import com.palmaplus.nagrand.navigate.LineMode;
 import com.palmaplus.nagrand.navigate.NavigateManager;
 import com.palmaplus.nagrand.navigate.OnDynamicNavigateListener;
+import com.palmaplus.nagrand.navigate.StepInfo;
 import com.palmaplus.nagrand.position.Location;
 import com.palmaplus.nagrand.position.PositioningManager;
 import com.palmaplus.nagrand.position.ble.BeaconPositioningManager;
@@ -200,11 +197,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     private Disposable loadMapWithBuildingIdSubscription;
 
+    private Disposable mockDisposable;
+
     private static boolean openMapCache = false;
 
     private int naviTotalLength;
-
-    private SpeechSynthesizer naviSpeech;
 
     /**
      * 导航线外包盒
@@ -677,6 +674,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
         setPalmapViewState(PalmapViewState.RoutePlanning);
         palMapView.hidePoiMenuTop();
+
         getOverLayerManager().removeTapMark();
         return true;
     }
@@ -777,10 +775,10 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         palMapView.clearNavigateRoad();
         palMapView.hidePoiMenu();
         resetFeature();
-        navigateManager.clear();
         palMapView.hideRouteInfoView();
         endNavigationDialogCanShow = true;
         if (navigateManager != null) {
+            navigateManager.clear();
             navigateManager.stop();
         }
     }
@@ -864,10 +862,19 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     //退出导航
     @Override
     public void exitNavigate() {
-        setPalmapViewState(PalmapViewState.RoutePlanning);
-        palMapView.showRouteInfoDetails(naviTotalLength + "m");
-        palMapView.readExitNavigate();
-        navigateManager.stop();
+//        setPalmapViewState(PalmapViewState.RoutePlanning);
+//        palMapView.showRouteInfoDetails(naviTotalLength + "m");
+//        palMapView.readExitNavigate();
+//        navigateManager.stop();
+        if (isMockNavi.compareAndSet(true, false)) {
+            mockDisposable.dispose();
+            userCoordinate = null;
+            getOverLayerManager().hideLocation();
+            getOverLayerManager().hideLocation();
+            resetFeature();
+        }
+
+        resetState();
         if (envelopeCoordinateArr != null) {
             palMapView.getMapView().moveToRect(
                     envelopeCoordinateArr[0].getX(),
@@ -922,11 +929,10 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             palMapView.showMessage("模拟导航失败!!!");
             return;
         }
-
         isMockNavi.set(true);
-
+        DisposableUtils.unsubscribeAll(mockDisposable);
         final CoordinateInfo[] coordinates = navigateManager.getSimulationLocationPoint(3);
-        Observable
+        mockDisposable = Observable
                 .interval(1000, TimeUnit.MILLISECONDS)
                 .take(coordinates.length)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1002,38 +1008,36 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      * 导航结束 用户到达终点附近
      */
     private void onNavigationEnd() {
-        if (!endNavigationDialogCanShow) {
-            return;
-        }
+//        if (!endNavigationDialogCanShow) {
+//            return;
+//        }
 
         IFlytekController.getInstance().obtainSpeechSynthesizer(palMapView.getContext(), null)
                 .startSpeaking("您已到达目的地,导航结束", null);
 
-        endNavigationDialogCanShow = false;
-        if (isMockNavi.compareAndSet(true, false)) {
-            userCoordinate = null;
-            getOverLayerManager().hideLocation();
-            resetFeature();
-        }
-        palMapView.showNavigationEndView(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                endNavigationDialogCanShow = true;
-                getOverLayerManager().clearAllNotLocation();
-                palMapView.clearNavigateRoad();
-                navigateManager.clear();
-                setPalmapViewState(PalmapViewState.Normal);
-                palMapView.hidePoiMenu();
-                palMapView.showMapViewControl();
-                dialog.dismiss();
-                isMockNavi.set(false);
-            }
-        }, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
+        //endNavigationDialogCanShow = false;
+
+        setPalmapViewState(PalmapViewState.NaviComplete);
+//        palMapView.showNavigationEndView(new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                endNavigationDialogCanShow = true;
+//                getOverLayerManager().clearAllNotLocation();
+//                palMapView.clearNavigateRoad();
+//                navigateManager.clear();
+//                setPalmapViewState(PalmapViewState.Normal);
+//                palMapView.hidePoiMenu();
+//                palMapView.showMapViewControl();
+//                dialog.dismiss();
+//                isMockNavi.set(false);
+//            }
+//        }, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+        palMapView.readNaviComplete();
     }
 
     /**
@@ -1383,24 +1387,21 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             return;
         }
         palMapView.getMapView().navigateOperate(wrapper.mNavigateMapOperate);
-        palMapView.readRemainingLength(mRemainingLength);
+        /*
+         * 显示剩余长度 以及 下一步的操作 (左转等)
+         */
+        palMapView.readRemainingLength(wrapper.mDynamicNavigateOutput.mDynamicNaviExplain, mRemainingLength);
+        try {
+            //显示路线信息
+            StepInfo stepInfo = navigateManager.getAllStepInfo()[wrapper.mDynamicNavigateOutput.mIndex];
+            palMapView.showRouteInfoDetails(String.format("直行%.2f米，%s", wrapper.mDynamicNavigateOutput.mLengthToNextStep,
+                    stepInfo.mActionName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         palMapView.refreshScaleView();
         palMapView.refreshCompassView(1000);
         getOverLayerManager().animRefreshOverlay(1000);
-
-        // TODO: 2017/6/28 语言播报
-        if (naviSpeech == null) {
-            naviSpeech = IFlytekController.getInstance().obtainSpeechSynthesizer(palMapView.getContext(), null);
-        }
-        naviSpeech.startSpeaking(wrapper.mDynamicNavigateOutput.mDynamicNaviExplain, new SimpleSynthesizerListener() {
-            @Override
-            public void onSpeakBegin() {
-            }
-
-            @Override
-            public void onCompleted(SpeechError speechError) {
-            }
-        });
     }
 
     private void eventFencing(Coordinate userCoordinate, long locationFloorId) {
@@ -1463,7 +1464,12 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                             // TODO: 2016/9/12 获取路线长度
                             if (state != PalmapViewState.Navigating) {
                                 naviTotalLength = (int) navigateManager.getTotalLineLength() + 1;
-                                palMapView.showRouteInfoDetails(naviTotalLength + "m");
+//                                palMapView.showRouteInfoDetails(naviTotalLength + "m");
+                                palMapView.showRouteLength(String.format("%s%s",
+                                        startMark.getFloorId() - endMark.getFloorId() == 0 ? "在同楼层" : "跨楼层",
+                                        naviTotalLength + "米"
+                                ));
+
                             }
                             // TODO: 2016/10/13 获取导航线所在楼层的集合
                             //获取导航线所在楼层的ID集合
@@ -1631,7 +1637,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             if (userCoordinate == null) {
                 userCoordinate = locationCoordinate;
             }
-            onComplete(locationInfoModel,timeStamp);
+            onComplete(locationInfoModel, timeStamp);
         }
     }
 

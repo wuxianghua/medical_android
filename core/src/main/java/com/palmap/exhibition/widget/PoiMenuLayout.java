@@ -6,8 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.R;
+import com.palmap.exhibition.iflytek.IFlytekController;
+import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.model.PoiModel;
 import com.palmap.exhibition.view.impl.PalmapViewState;
 import com.palmap.library.utils.LogUtil;
@@ -29,6 +34,14 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
     private View btn_goHere;
     private View btn_mockNavi;
     private View btn_startNavi;
+    private View image_closeNavi;
+
+    private View image_sound;
+
+    private View btn_navi_ok;
+
+    private TextView tv_navi_length;
+    private TextView tv_route_info;
 
     private int height_poi_info = 0;
     private int height_select_start = 0;
@@ -38,14 +51,30 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
 
     private PoiModel poiModel;
 
-    public interface ViewHandler{
+    private SpeechSynthesizer naviSpeech;
+    /**
+     * 是否可以播放语音
+     */
+    private boolean canSound = true;
+
+    public interface ViewHandler {
         ViewHandler DEFAULE = new ViewHandler() {
             @Override
-            public void onGoHereClick() {}
+            public void onGoHereClick() {
+            }
+
             @Override
-            public void onMockNaviClick() {}
+            public void onMockNaviClick() {
+            }
+
             @Override
-            public void onStartNaviClick() {}
+            public void onStartNaviClick() {
+            }
+
+            @Override
+            public void onExitNaviClick() {
+
+            }
         };
 
         void onGoHereClick();
@@ -53,6 +82,8 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         void onMockNaviClick();
 
         void onStartNaviClick();
+
+        void onExitNaviClick();
     }
 
     private ViewHandler viewHandler = ViewHandler.DEFAULE;
@@ -77,11 +108,15 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         btn_goHere = findViewById(R.id.btn_goHere);
         btn_startNavi = findViewById(R.id.btn_startNavi);
         btn_mockNavi = findViewById(R.id.btn_mockNavi);
+        image_sound = findViewById(R.id.image_sound);
+        btn_navi_ok = findViewById(R.id.btn_navi_ok);
+        image_closeNavi = findViewById(R.id.image_closeNavi);
+        tv_navi_length = (TextView) findViewById(R.id.tv_navi_length);
 
         height_poi_info = ViewUtils.measureView(layout_poi_info).y;
         height_select_start = ViewUtils.measureView(layout_select_start).y;
-        height_navi_ready = ViewUtils.measureView(layout_navi_ready).y;
-        height_navi_info = ViewUtils.measureView(layout_navi_info).y;
+        height_navi_ready = height_select_start;
+        height_navi_info = height_poi_info;
         height_navi_ok = ViewUtils.measureView(layout_navi_ok).y;
 
         btn_goHere.setOnClickListener(new OnClickListener() {
@@ -105,7 +140,33 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
             }
         });
 
+        image_closeNavi.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHandler.onExitNaviClick();
+            }
+        });
 
+        image_sound.setSelected(canSound);
+        image_sound.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                canSound = !canSound;
+                image_sound.setSelected(canSound);
+                if (!canSound && naviSpeech!= null) {
+                    naviSpeech.stopSpeaking();
+                    naviSpeech.destroy();
+                    naviSpeech = null;
+                }
+            }
+        });
+
+        btn_navi_ok.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewHandler.onExitNaviClick();
+            }
+        });
     }
 
     public void setViewHandler(ViewHandler viewHandler) {
@@ -127,7 +188,6 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
                 layout_poi_info.setVisibility(VISIBLE);
                 nextHeight = height_poi_info;
                 break;
-
             case ENd_SET:
                 layout_select_start.setVisibility(VISIBLE);
                 nextHeight = height_select_start;
@@ -137,6 +197,17 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
                 layout_navi_ready.setVisibility(VISIBLE);
                 nextHeight = height_navi_ready;
                 break;
+
+            case Navigating:
+                layout_navi_info.setVisibility(VISIBLE);
+                nextHeight = height_navi_info;
+                break;
+
+            case NaviComplete:
+                layout_navi_ok.setVisibility(VISIBLE);
+                nextHeight = height_navi_ok;
+                break;
+
             default:
 
                 break;
@@ -144,12 +215,54 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         animShow(nextHeight);
     }
 
-    public void animShow(int height) {
+    public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
+        if (layout_navi_info.getVisibility() == VISIBLE) {
+            tv_navi_length.setText(String.format("剩余约%d米", (int) mRemainingLength));
+            if (!canSound) {
+                return;
+            }
+            // TODO: 2017/6/28 语言播报
+            if (naviSpeech == null) {
+                naviSpeech = IFlytekController.getInstance().obtainSpeechSynthesizer(getContext(), null);
+            }
+            naviSpeech.startSpeaking(mDynamicNaviExplain, new SimpleSynthesizerListener() {
+                @Override
+                public void onSpeakBegin() {
+                }
+
+                @Override
+                public void onCompleted(SpeechError speechError) {
+                }
+            });
+        }
+    }
+
+    public void showRouteInfoDetails(String msg) {
+        if (tv_route_info == null) {
+            tv_route_info = (TextView) findViewById(R.id.tv_route_info);
+        }
+        if (tv_route_info != null) {
+            tv_route_info.setText(msg);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        IFlytekController.getInstance().destroyAllSpeechSynthesizer();
+        naviSpeech = null;
+    }
+
+    private void animShow(int height) {
         ViewAnimUtils.animHeight(
                 this,
                 this.getHeight(),
                 height,
                 300, null);
+    }
+
+    public void animHide() {
+        animShow(0);
     }
 
     public PoiModel getPoiModel() {

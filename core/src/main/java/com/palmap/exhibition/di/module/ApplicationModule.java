@@ -80,7 +80,8 @@ public class ApplicationModule {
     @Named(ApplicationComponent.IFLYTEK_KEY)
     @Provides
     String provideKey(){
-        return "5953456b";
+//        return "5953456b";
+        return "57ce20c9";//展图的key
     }
 
 }

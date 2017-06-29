@@ -21,11 +21,15 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.exception.NetWorkTypeException;
 import com.palmap.exhibition.iflytek.IFlytekController;
+import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.listenetImpl.MapOnZoomListener;
 import com.palmap.exhibition.model.Api_ActivityInfo;
@@ -186,7 +190,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             }
         }, 150);
 
-        /*final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
+        final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
                 .obtainSpeechSynthesizer(this, null);
         speechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, "xiaoqi");
         speechSynthesizer.startSpeaking("图聚智能是国内领先的室内地图供应商，拥有庞大的室内地图数据库系统，拥有一套完整的、" +
@@ -207,7 +211,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             public void onCompleted(SpeechError speechError) {
                 System.out.println(1);
             }
-        });*/
+        });
     }
 
     private static int LAUNCHER_INDEX = 0;
@@ -321,7 +325,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void showPoiMenu(final PoiModel poiModel, PalmapViewState state) {
 //        layoutPoiMenu.setHaveLocationPoint(!(null == presenter.getUserCoordinate()));
-
         if (state == PalmapViewState.ENd_SET) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("tips")
@@ -344,7 +347,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             builder.create().show();
             return;
         }
-
         if (poiModel == null) {
             poiMenu.refreshView(state);
             return;
@@ -374,6 +376,12 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 //                }
 //            }
 //        });
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                poiMenuLayout.animHide();
+            }
+        });
     }
 
     @Override
@@ -554,20 +562,22 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         return usePDR;
     }
 
+    /**
+     * 显示剩余距离
+     * @param mDynamicNaviExplain
+     * @param mRemainingLength
+     */
     @Override
-    public void readRemainingLength(float mRemainingLength) {
+    public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
         //layoutPoiMenu.readRemainingLength((int) mRemainingLength);
+        poiMenuLayout.refreshView(presenter.getState());
+        poiMenuLayout.readRemainingLength(mDynamicNaviExplain,mRemainingLength);
+
     }
 
     @Override
     public void readPubFacility(final List<FacilityModel> data) {
         if (data.size() == 0) return;
-        // TODO: 2017/6/26
-        if (1 == 1) {
-            LogUtil.e("");
-            return;
-        }
-
         facilitiesListAdapter = new FacilitiesListAdapter(getContext(), data);
         facilitiesListView.setAdapter(facilitiesListAdapter);
         facilitiesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -785,10 +795,20 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         facilitiesListView.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 显示起点信息
+     * @param lable
+     * @param msg
+     */
     @Override
     public void showRouteInfoStart(String lable, String msg) {
     }
 
+    /**
+     * 显示终点信息
+     * @param lable
+     * @param msg
+     */
     @Override
     public void showRouteInfoEnd(String lable, String msg) {
         //// TODO: 2017/6/28  终点有了
@@ -858,8 +878,22 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         return null;
     }
 
+    /**
+     * 显示 路线信息 (直行xx米 左转)
+     * @param msg
+     */
     @Override
     public void showRouteInfoDetails(String msg) {
+        showMessage(msg);
+    }
+
+    /**
+     * 显示导航距离
+     * @param msg
+     */
+    @Override
+    public void showRouteLength(String msg) {
+        poiMenuLayout.showRouteInfoDetails(msg);
     }
 
     /**
@@ -979,6 +1013,14 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     presenter.beginNavigate();
                 }
             }
+
+            @Override
+            public void onExitNaviClick() {
+                if (presenter.getState() == PalmapViewState.Navigating
+                        || presenter.getState() == PalmapViewState.NaviComplete) {
+                    presenter.exitNavigate();
+                }
+            }
         });
 
         /*layoutPoiMenu.setListener(new YanTaiPoiMenuLayout.Listener() {
@@ -1026,6 +1068,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void readExitNavigate() {
 //        layoutPoiMenu.exitNavigate();
+    }
+
+    @Override
+    public void readNaviComplete() {
+        poiMenuLayout.refreshView(presenter.getState());
     }
 
     @Override

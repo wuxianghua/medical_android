@@ -7,8 +7,12 @@
     tools:context="com.palmap.medical.MainActivity">
 
     <TextView
+        android:clickable="true"
+        android:onClick="launcherMap"
+        android:textSize="30sp"
+        android:layout_centerInParent="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"/>
+        android:text="Indoor Map"/>
 
 </RelativeLayout>
