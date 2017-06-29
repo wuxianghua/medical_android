@@ -32,8 +32,6 @@ import com.palmap.exhibition.iflytek.IFlytekController;
 import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.listenetImpl.MapOnZoomListener;
-import com.palmap.exhibition.model.Api_ActivityInfo;
-import com.palmap.exhibition.model.Api_PositionInfo;
 import com.palmap.exhibition.model.ExFloorModel;
 import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.PoiModel;
@@ -796,22 +794,32 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     /**
      * 显示起点信息
-     * @param lable
-     * @param msg
+     * @param lable 名称
+     * @param msg  楼层 + 地址
      */
     @Override
     public void showRouteInfoStart(String lable, String msg) {
+
     }
 
     /**
      * 显示终点信息
-     * @param lable
-     * @param msg
+     * @param lable 名称
+     * @param msg 楼层 + 地址
      */
     @Override
     public void showRouteInfoEnd(String lable, String msg) {
         //// TODO: 2017/6/28  终点有了
         poiMenuLayout.refreshView(PalmapViewState.ENd_SET);
+    }
+
+    /**
+     * 显示 路线信息 (直行xx米 左转)
+     * @param msg
+     */
+    @Override
+    public void showRouteInfoDetails(String msg) {
+        showMessage(msg);
     }
 
     @Override
@@ -845,15 +853,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 //        if (null == tvFloor) return "";
 //        return tvFloor.getText().toString();
         return null;
-    }
-
-    /**
-     * 显示 路线信息 (直行xx米 左转)
-     * @param msg
-     */
-    @Override
-    public void showRouteInfoDetails(String msg) {
-        showMessage(msg);
     }
 
     /**
