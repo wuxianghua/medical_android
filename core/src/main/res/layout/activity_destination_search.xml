@@ -46,8 +46,8 @@
                 android:layout_toRightOf="@+id/img_ico_search"
                 android:background="@null"
                 android:completionThreshold="1"
-                android:hint="@string/please_input_destination"
-                android:imeActionLabel="@string/search"
+                android:hint="@string/ngr_please_input_destination"
+                android:imeActionLabel="@string/ngr_search"
                 android:imeOptions="actionSearch"
                 android:maxLines="1"
                 android:textColor="@android:color/black"
@@ -61,7 +61,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="16dp"
                 android:onClick="onSearchClick"
-                android:text="@string/search"
+                android:text="@string/ngr_search"
                 android:textColor="#6E768F"
                 android:textSize="@dimen/text_size_16"/>
 

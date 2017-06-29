@@ -1,9 +1,5 @@
 package com.palmap.exhibition.view;
 
-import android.content.DialogInterface;
-
-import com.palmap.exhibition.model.Api_ActivityInfo;
-import com.palmap.exhibition.model.Api_PositionInfo;
 import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.PoiModel;
 import com.palmap.exhibition.model.ServiceFacilityModel;
@@ -213,29 +209,12 @@ public interface PalMapView extends LoadDataView {
      */
     void showRouteLength(String msg);
 
-    /**
-     * 显示推送视图
-     * @param model
-     */
-//    void showPushView(PushModel pushModel);
-    void showPushView(Api_PositionInfo.ObjBean model);
-
-    /**
-     * 显示点亮活动ui
-     * @param api_activityInfo
-     */
-    void readLightEventActivityList(Api_ActivityInfo api_activityInfo);
-
-    void showShareTaskView(Api_ActivityInfo.ObjBean objBean);
-
     String getFloorNameById(long floorId);
 
     /**
      * 清除设施选中状态
      */
     void clearFacilityListSelect();
-
-    void showNavigationEndView(DialogInterface.OnClickListener onClickListener, DialogInterface.OnClickListener onClickListener1);
 
     /**
      * 是否使用prd

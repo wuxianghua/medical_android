@@ -235,7 +235,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
     @Override
     public void requestPoiDataError(Throwable throwable) {
         if (throwable instanceof NotFoundDataException && mIsShowNoResultTip) {
-            showMessage(getString(R.string.current_no_search_result));
+            showMessage(getString(R.string.ngr_current_no_search_result));
         }
     }
 
@@ -256,7 +256,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
         String keyWord =  mEdtTxtSearch.getText().toString();
         if (models.isEmpty()) {
             if(keyWord.isEmpty()){
-                showMessage(getString(R.string.please_input_search_key));
+                showMessage(getString(R.string.ngr_please_input_search_key));
             }else {
                 mIsShowNoResultTip = true;
                 presenter.requestPoiData(keyWord);

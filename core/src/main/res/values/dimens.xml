@@ -20,12 +20,8 @@
     <dimen name="poiInfiTextSize_big">17sp</dimen>
     <dimen name="poiInfiTextSize_normal">13sp</dimen>
 
-
-    <dimen name="slidingmenu_offset">150dp</dimen>
     <dimen name="shadow_width">0.5dp</dimen>
 
-    <dimen name="margin_large">15dp</dimen>
-    <dimen name="layout_slarge">20dp</dimen>
     <dimen name="all_title_bar_height">48dp</dimen>
     <dimen name="all_go_back_size">15dp</dimen>
     <dimen name="height_history_tag">14dp</dimen>

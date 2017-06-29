@@ -51,7 +51,6 @@ import com.palmap.exhibition.widget.IPoiMenu;
 import com.palmap.exhibition.widget.PoiMenuLayout;
 import com.palmap.exhibition.widget.RouteInfoView;
 import com.palmap.exhibition.widget.Scale;
-import com.palmap.exhibition.widget.TaskShareDialog;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.utils.ActivityUtils;
 import com.palmap.library.utils.DeviceUtils;
@@ -558,16 +557,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     }
 
     @Override
-    public void showNavigationEndView(DialogInterface.OnClickListener onClickListener, DialogInterface.OnClickListener onClickListener1) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示");
-        builder.setMessage("您已到达目的地");
-        builder.setNegativeButton("取消", onClickListener1)
-                .setPositiveButton("确定", onClickListener);
-        builder.create().show();
-    }
-
-    @Override
     public boolean canUsePDR() {
         return usePDR;
     }
@@ -849,36 +838,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void hideRouteArrowView() {
         routeInfoView.hideArrowView();
-    }
-
-    /**
-     * 显示网页推送信息
-     *
-     * @param model
-     */
-    @Override
-    public void showPushView(final Api_PositionInfo.ObjBean model) {
-    }
-
-    /**
-     * 显示点亮活动UI
-     *
-     * @param api_activityInfo
-     */
-    @Override
-    public void readLightEventActivityList(final Api_ActivityInfo api_activityInfo) {
-    }
-
-    @Override
-    public void showShareTaskView(Api_ActivityInfo.ObjBean objBean) {
-        TaskShareDialog dialog = new TaskShareDialog(this, objBean);
-        dialog.setOnShareComplete(new TaskShareDialog.OnShareComplete() {
-            @Override
-            public void onComplete(Api_ActivityInfo.ObjBean obj) {
-                presenter.shareCompleteAty(obj.getId());
-            }
-        });
-        dialog.show();
     }
 
     @Override
