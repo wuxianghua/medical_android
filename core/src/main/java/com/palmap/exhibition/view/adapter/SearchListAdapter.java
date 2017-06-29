@@ -49,6 +49,10 @@ public class SearchListAdapter extends BaseAdapter {
         }
     }
 
+    public List<SearchResultModel> getLocationModel(){
+        return locationModels;
+    }
+
     @Override
     public int getCount() {
         return locationModels == null ? 0 : locationModels.size();

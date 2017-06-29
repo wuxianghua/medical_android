@@ -60,7 +60,6 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
 
     @Override
     public void destroy() {
-
     }
 
     @Override
@@ -73,8 +72,6 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
     @Override
     public void requestPoiData(String keyWord) {
         requestPoiData(keyWord, null);
-        // TODO: 2017/6/28  没有查找结果是否也加入到历史列表
-        savePoiSearchKeyWord(keyWord);
     }
 
     @Override

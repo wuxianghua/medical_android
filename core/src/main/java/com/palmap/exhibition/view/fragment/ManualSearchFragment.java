@@ -120,6 +120,10 @@ public class ManualSearchFragment extends Fragment {
         mSearchAdapter.addPoiData(data);
     }
 
+    public List<SearchResultModel> getSearchResultModels(){
+        return mSearchAdapter.getLocationModel();
+    }
+
     public interface OnHistoryOperateListener {
         void onSelectHistory(String keyWord);
 

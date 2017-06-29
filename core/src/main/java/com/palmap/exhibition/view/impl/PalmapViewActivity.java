@@ -33,6 +33,7 @@ import com.palmap.exhibition.model.Api_PositionInfo;
 import com.palmap.exhibition.model.ExFloorModel;
 import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.PoiModel;
+import com.palmap.exhibition.model.SearchResultModel;
 import com.palmap.exhibition.model.ServiceFacilityModel;
 import com.palmap.exhibition.presenter.PalMapViewPresenter;
 import com.palmap.exhibition.service.LampSiteLocationService;
@@ -79,6 +80,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     private static final String KEY_SEARCH_TEXT = "key_searchText";
     private static final String KEY_TITLE_NAME = "key_title_name";
     private static final String KEY_IS_TRAVEL_PLANNING = "key_isTravelPlanning";
+    private static final String KEY_SEARCH_LIST = "key_search_list";
     private static final int CODE_SEARCH_REQUEST = 1001;//搜索code
 
     @Inject
@@ -156,6 +158,14 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         intent.putExtra(KEY_LOCATION_TYPE, locationType);
         intent.putExtra(KEY_FLOOR_ID, floorId);
         intent.putExtra(KEY_SEARCH_TEXT, searchText);
+        return intent;
+    }
+
+    public static Intent getPoiSearchResultIntent(ArrayList<SearchResultModel> data) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(KEY_SEARCH_LIST, data);
+        intent.putExtras(bundle);
         return intent;
     }
 

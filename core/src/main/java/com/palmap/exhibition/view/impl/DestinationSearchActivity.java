@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.palmap.exhibition.R;
+import com.palmap.exhibition.exception.NotFoundDataException;
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.ExFloorModel;
 import com.palmap.exhibition.model.QuickSearchKeyWordModel;
@@ -50,6 +51,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
     private QuickSearchFragment mQuickSearchFragment = null;
     private ManualSearchFragment mManualSearchFragment = null;
     private boolean mIsFirstManual = true;
+    private boolean mIsShowNoResultTip = false;
 
     private EditText mEdtTxtSearch = null;
 
@@ -99,7 +101,9 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
                     new QuickSearchFragment.OnAcceptSearchKeyListener() {
                         @Override
                         public void acceptSearchKey(String keyWord) {
+                            mIsShowNoResultTip = true;
                             presenter.requestPoiData(keyWord);// TODO: 2017/6/28 是否使用categories
+                            presenter.savePoiSearchKeyWord(keyWord);
                         }
                     });
         }
@@ -124,6 +128,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
 
             @Override
             public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                mIsShowNoResultTip = false;
                 if (TextUtils.isEmpty(s.toString().trim())) {
                     mManualSearchFragment.hideSearchAssociation();
                 } else {
@@ -158,12 +163,16 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
                     });
             mManualSearchFragment.setOnSearchSelectedListener(
                     new ManualSearchFragment.OnSearchSelectedListener() {
-                @Override
-                public void onSelectSearch(SearchResultModel model) {
-                    // TODO: 2017/6/28
-                    presenter.savePoiSearchKeyWord(model.getName());
-                }
-            });
+                        @Override
+                        public void onSelectSearch(SearchResultModel model) {
+                            // TODO: 2017/6/28
+                            presenter.savePoiSearchKeyWord(model.getName());
+                            ArrayList<SearchResultModel> data = new ArrayList<>();
+                            data.add(model);
+                            PalmapViewActivity.getPoiSearchResultIntent(data);
+                            finish();
+                        }
+                    });
         }
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         if (mIsFirstManual) {
@@ -182,7 +191,20 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
 
     @Override
     public void readPoiData(List<LocationModel> data) {
-        mManualSearchFragment.addSearchData(data);
+        mIsShowNoResultTip = false;
+        if (mQuickSearchFragment.isVisible()) {
+            ArrayList<SearchResultModel> models = new ArrayList<>();
+            for (LocationModel model : data) {
+                if (model == null) {
+                    continue;
+                }
+                models.add(new SearchResultModel(model, null));
+            }
+            PalmapViewActivity.getPoiSearchResultIntent(models);
+            finish();
+        } else {
+            mManualSearchFragment.addSearchData(data);
+        }
     }
 
     @Override
@@ -212,7 +234,9 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
 
     @Override
     public void requestPoiDataError(Throwable throwable) {
-
+        if (throwable instanceof NotFoundDataException && mIsShowNoResultTip) {
+            showMessage(getString(R.string.current_no_search_result));
+        }
     }
 
     /**
@@ -223,8 +247,27 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
         mQuickSearchFragment.addKeyWords(data);
     }
 
-    public void onSearchClick(View view){
-        presenter.requestPoiData(mEdtTxtSearch.getText().toString());
+    public void onSearchClick(View view) {
+        if(mQuickSearchFragment.isVisible()){
+            return;
+        }
+        ArrayList<SearchResultModel> models =new ArrayList<>();
+        models.addAll(mManualSearchFragment.getSearchResultModels());
+        String keyWord =  mEdtTxtSearch.getText().toString();
+        if (models.isEmpty()) {
+            if(keyWord.isEmpty()){
+                showMessage(getString(R.string.please_input_search_key));
+            }else {
+                mIsShowNoResultTip = true;
+                presenter.requestPoiData(keyWord);
+                presenter.savePoiSearchKeyWord(keyWord);
+                presenter.requestHistoryPOIData();
+            }
+        }else {
+            presenter.savePoiSearchKeyWord(keyWord);
+            PalmapViewActivity.getPoiSearchResultIntent(models);
+            finish();
+        }
     }
 
     public void onGoBack(View view) {
@@ -244,6 +287,12 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
             mEdtTxtSearch.getText().clear();
             mEdtTxtSearch.clearFocus();
         }
+    }
+
+    @Override
+    public void finish() {
+        presenter.destroy();
+        super.finish();
     }
 
     @Override
