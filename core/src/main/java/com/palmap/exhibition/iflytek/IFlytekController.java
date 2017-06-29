@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
@@ -47,6 +48,7 @@ public class IFlytekController {
             throw new NullPointerException("context is not null!");
         }
         SpeechSynthesizer speechSynthesizer = SpeechSynthesizer.createSynthesizer(context, initListener);
+        speechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, "xiaoqi");
         speechSynthesizerList.add(speechSynthesizer);
         return speechSynthesizer;
     }

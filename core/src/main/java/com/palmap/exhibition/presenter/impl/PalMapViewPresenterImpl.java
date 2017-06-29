@@ -11,6 +11,8 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.BuildConfig;
 import com.palmap.exhibition.R;
@@ -18,6 +20,8 @@ import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.config.MapParam;
 import com.palmap.exhibition.dao.business.ActivityInfoBusiness;
 import com.palmap.exhibition.dao.business.CoordinateBusiness;
+import com.palmap.exhibition.iflytek.IFlytekController;
+import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.Api_PositionInfo;
 import com.palmap.exhibition.model.ExBuildingModel;
@@ -199,6 +203,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     private static boolean openMapCache = false;
 
     private int naviTotalLength;
+
+    private SpeechSynthesizer naviSpeech;
+
     /**
      * 导航线外包盒
      */
@@ -951,7 +958,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         }
     }
 
-
     @Override
     public void startLocation(BeaconPositioningManager positioningManager) {
         if (BuildConfig.useSVA) {
@@ -967,6 +973,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 this.positioningManager.setOnLocationChangeListener(new PositioningManager.OnLocationChangeListener<BleLocation>() {
                     @Override
                     public void onLocationChange(PositioningManager.LocationStatus locationStatus, BleLocation bleLocation, BleLocation t1) {
+                        if (isMockNavi.get()) {
+                            return;
+                        }
                         if (PositioningManager.LocationStatus.MOVE == locationStatus && t1 != null) {
                             Coordinate coordinate = t1.getPoint().getCoordinate();
                             long locationFloorId = Location.floorId.get(t1.getProperties());
@@ -996,6 +1005,10 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         if (!endNavigationDialogCanShow) {
             return;
         }
+
+        IFlytekController.getInstance().obtainSpeechSynthesizer(palMapView.getContext(), null)
+                .startSpeaking("您已到达目的地,导航结束", null);
+
         endNavigationDialogCanShow = false;
         if (isMockNavi.compareAndSet(true, false)) {
             userCoordinate = null;
@@ -1030,6 +1043,10 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      * @return
      */
     private boolean checkFloorChange(long floorId) {
+        if (isMockNavi.get() && currentFloorId != floorId) {
+            changeFloor(floorId);
+            return true;
+        }
         //TODO 将定位信息添加到楼层切换控制器
         floorSwitchManager.putLocation(floorId);
         //TODO 如果当前可以切换楼层 那么就切换了
@@ -1077,6 +1094,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             mapDataCache = null;
         }
         unRegisterLocationListener();
+        IFlytekController.getInstance().destroyAllSpeechSynthesizer();
     }
 
     private void registerLocationListener() {
@@ -1369,6 +1387,20 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         palMapView.refreshScaleView();
         palMapView.refreshCompassView(1000);
         getOverLayerManager().animRefreshOverlay(1000);
+
+        // TODO: 2017/6/28 语言播报
+        if (naviSpeech == null) {
+            naviSpeech = IFlytekController.getInstance().obtainSpeechSynthesizer(palMapView.getContext(), null);
+        }
+        naviSpeech.startSpeaking(wrapper.mDynamicNavigateOutput.mDynamicNaviExplain, new SimpleSynthesizerListener() {
+            @Override
+            public void onSpeakBegin() {
+            }
+
+            @Override
+            public void onCompleted(SpeechError speechError) {
+            }
+        });
     }
 
     private void eventFencing(Coordinate userCoordinate, long locationFloorId) {
@@ -1599,27 +1631,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             if (userCoordinate == null) {
                 userCoordinate = locationCoordinate;
             }
-            //模拟导航
-            if (userCoordinate.getZ() - getOverLayerManager().getEndMark().getFloorId() == 0 &&
-                    MapUtils.pointDistance(
-                            locationCoordinate.getX(),
-                            locationCoordinate.getY(),
-                            getOverLayerManager().getEndMark().getWorldX(),
-                            getOverLayerManager().getEndMark().getWorldY()
-                    ) < Config.END_NAVI_DISTANCE) {
-                onNavigationEnd();
-                return;
-            }
-            // TODO: 2016/7/11 路网吸附
-            final Coordinate pointOfIntersectioan = navigateManager.getPointOfIntersectioanByPoint(locationCoordinate);
-            userCoordinate.setX(pointOfIntersectioan.getX());
-            userCoordinate.setY(pointOfIntersectioan.getY());
-            if (locationFloorId == getCurrentFloorId()) {
-                getOverLayerManager().animLocation(userCoordinate, locationFloorId);
-                if (getState() == PalmapViewState.Navigating) {
-                    navigateManager.dynamicNavigate(userCoordinate, currentFloorId, 0);
-                }
-            }
+            onComplete(locationInfoModel,timeStamp);
         }
     }
 
