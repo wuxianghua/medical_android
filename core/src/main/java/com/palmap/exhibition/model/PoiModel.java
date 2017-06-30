@@ -19,6 +19,7 @@ public class PoiModel {
     private long categoryId;
     private LocationType type;
     private String address;
+    private String floorName;
 
     /**
      * 是不是设施
@@ -103,6 +104,14 @@ public class PoiModel {
             return name;
         }
         return disPlay;
+    }
+
+    public String getFloorName() {
+        return floorName;
+    }
+
+    public void setFloorName(String floorName) {
+        this.floorName = floorName;
     }
 
     public void setDisPlay(String disPlay) {

@@ -184,6 +184,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         layout_navi_ok.setVisibility(GONE);
 
         int nextHeight = getHeight();
+
         switch (state) {
             case Normal:
                 layout_poi_info.setVisibility(VISIBLE);

@@ -1209,6 +1209,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 poiModel.setY(featureCentroid.y);
             }
             poiModel.setZ(currentFloorId);
+            poiModel.setFloorName(palMapView.getCurrentFloorName());
             // TODO: 2016/7/13 地址加上场馆名
             getOverLayerManager().refreshTapMark(currentFloorId, new double[]{
                     poiModel.getX(), poiModel.getY()
