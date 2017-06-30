@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -15,12 +16,12 @@
         android:orientation="vertical">
 
         <TextView
-            android:text="@string/ngr_history_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/ngr_history_search"
             android:textColor="#9098B8"
             android:textSize="@dimen/text_size_14"/>
 
@@ -33,6 +34,11 @@
             android:id="@+id/lvHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/ngr_separate_line"/>
 
     </LinearLayout>
 

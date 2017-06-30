@@ -42,8 +42,11 @@ import com.palmap.exhibition.view.adapter.FloorListAdapter;
 import com.palmap.exhibition.view.base.ExActivity;
 import com.palmap.exhibition.widget.CompassView;
 import com.palmap.exhibition.widget.IPoiMenu;
+import com.palmap.exhibition.widget.NavigationTipPanelView;
 import com.palmap.exhibition.widget.PoiMenuLayout;
 import com.palmap.exhibition.widget.Scale;
+import com.palmap.exhibition.widget.ShadowLayout;
+import com.palmap.exhibition.widget.StartEndPoiChooseView;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.utils.ActivityUtils;
 import com.palmap.library.utils.DeviceUtils;
@@ -65,6 +68,14 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
+
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_ARRIVE;
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_BACK_LEFT;
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_BACK_RIGHT;
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_FRONT_LEFT;
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_FRONT_RIGHT;
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_TURN_LEFT;
+import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_TURN_RIGHT;
 
 public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implements PalMapView, FloorDataProvides {
 
@@ -103,7 +114,10 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
     ViewGroup layout_zoom;
-    private FeatureLayer navigateLayer;
+    FeatureLayer navigateLayer;
+    StartEndPoiChooseView startEndPoiChooseView;
+    NavigationTipPanelView navigationTipPanelView;
+    ShadowLayout searchPanel;
 
     PoiMenuLayout poiMenuLayout;
     IPoiMenu poiMenu;
@@ -459,7 +473,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         floorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 //  LocationModel locationModel = floorListAdapter.getItem(position);
                 ExFloorModel floorModel = floorListAdapter.getItem(position);
                 long nextFloorId = floorModel.getId();
@@ -520,6 +534,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     /**
      * 显示剩余距离
+     *
      * @param mDynamicNaviExplain
      * @param mRemainingLength
      */
@@ -527,7 +542,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
         //layoutPoiMenu.readRemainingLength((int) mRemainingLength);
         poiMenuLayout.refreshView(presenter.getState());
-        poiMenuLayout.readRemainingLength(mDynamicNaviExplain,mRemainingLength);
+        poiMenuLayout.readRemainingLength(mDynamicNaviExplain, mRemainingLength);
     }
 
     @Override
@@ -743,35 +758,102 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     /**
      * 显示起点信息
+     *
      * @param lable 名称
-     * @param msg  楼层 + 地址
+     * @param msg   楼层 + 地址
      */
     @Override
     public void showRouteInfoStart(String lable, String msg) {
-
+        startEndPoiChooseView.setStartPoiName(lable);
+        startEndPoiChooseView.setStartPoiDes(msg);
     }
 
     /**
      * 显示终点信息
-     * @param lable 名称
-     * @param msg 楼层 + 地址
+     *
+     * @param label 名称
+     * @param msg   楼层 + 地址
      */
     @Override
-    public void showRouteInfoEnd(String lable, String msg) {
-        //// TODO: 2017/6/28  终点有了
+    public void showRouteInfoEnd(String label, String msg) {
         poiMenuLayout.refreshView(PalmapViewState.END_SET);
+        startEndPoiChooseView.setEndPoiName(label);
+        startEndPoiChooseView.setEndPoiDes(msg);
+        showStartEndPoiChoosePanel(true);
+    }
+
+    private void showStartEndPoiChoosePanel(boolean isAnimated) {
+        searchPanel.setVisibility(View.GONE);
+        startEndPoiChooseView.setVisibility(View.VISIBLE);
+        if (isAnimated) {
+            startEndPoiChooseView.showDropAnimation();
+        }
+    }
+
+    private void hideStartEndPoiChoosePanel(boolean isAnimated) {
+        startEndPoiChooseView.setVisibility(View.GONE);
+        startEndPoiChooseView.resetInfo();
+        if (isAnimated) {
+            startEndPoiChooseView.showRiseAnimation();
+        }
+        searchPanel.setVisibility(View.VISIBLE);
+    }
+
+    private void showNavigationTipPanel(boolean isAnimated) {
+        startEndPoiChooseView.setVisibility(View.GONE);
+        startEndPoiChooseView.resetInfo();
+        navigationTipPanelView.setVisibility(View.VISIBLE);
+        if (isAnimated) {
+            navigationTipPanelView.showDropAnimation();
+        }
+    }
+
+    private void hideNavigationTipPanel(boolean isAnimated) {
+        navigationTipPanelView.setVisibility(View.GONE);
+        if (isAnimated) {
+            navigationTipPanelView.showRiseAnimation();
+        }
+        navigationTipPanelView.resetInfo();
+        searchPanel.setVisibility(View.VISIBLE);
     }
 
     /**
      * 显示 路线信息 (直行xx米 左转)
+     *
      * @param msg
-     * @param mAction 动作{@link com.palmaplus.nagrand.navigate.DynamicNavigateAction}
+     * @param mAction        动作{@link com.palmaplus.nagrand.navigate.DynamicNavigateAction}
      * @param startFloorName 起点的楼层名
-     * @param endFloorName  终点的楼层名
+     * @param endFloorName   终点的楼层名
      */
     @Override
     public void showRouteInfoDetails(String msg, int mAction, String startFloorName, String endFloorName) {
-//        showMessage(msg);
+        if (navigationTipPanelView.getVisibility() == View.GONE) {
+            showNavigationTipPanel(true);
+        }
+        int resId = R.mipmap.ic_nav_straight;
+        switch (mAction) {
+            case ACTION_FRONT_LEFT:
+            case ACTION_TURN_LEFT:
+            case ACTION_BACK_LEFT:{
+                resId = R.mipmap.ic_nav_left;
+                break;
+            }
+            case ACTION_FRONT_RIGHT:
+            case ACTION_TURN_RIGHT:
+            case ACTION_BACK_RIGHT:{
+                resId = R.mipmap.ic_nav_right;
+                break;
+            }
+            case ACTION_ARRIVE:{
+                resId = 0;
+            }
+            default:
+                break;
+        }
+        navigationTipPanelView.setSignIcon(resId);
+        navigationTipPanelView.setNavigationTip(msg);
+        navigationTipPanelView.setTvCurrentPosition(getCurrentFloorName());
+        navigationTipPanelView.setTargetPosition(endFloorName);
     }
 
     @Override
@@ -792,7 +874,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public String getCurrentFloorName() {
-        if (floorListAdapter != null && floorModelList!=null) {
+        if (floorListAdapter != null && floorModelList != null) {
             long selectFloorId = floorListAdapter.getSelectFloorId();
             for (ExFloorModel exFloorModel : floorModelList) {
                 if (exFloorModel.getId() == selectFloorId) {
@@ -805,6 +887,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     /**
      * 显示导航距离
+     *
      * @param msg
      */
     @Override
@@ -849,6 +932,10 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         map_location = findView(R.id.map_location);
         layout_zoom = findView(R.id.layout_zoom);
+
+        searchPanel = findView(R.id.layout_search);
+        startEndPoiChooseView = findView(R.id.startEndPoiChooseView);
+        navigationTipPanelView = findView(R.id.navigationTipPanelView);
 
         compassView.setOnClickListener(this);
         mapLocation.setOnClickListener(this);
@@ -924,7 +1011,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             public void onStartNaviClick() {
                 if (presenter.getUserCoordinate() == null) {
                     showMessage("没有定位点,请尝试模拟定位");
-                }else{
+                } else {
                     presenter.beginNavigate();
                 }
             }
@@ -982,11 +1069,13 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void readExitNavigate() {
+        hideNavigationTipPanel(true);
 //        layoutPoiMenu.exitNavigate();
     }
 
     @Override
     public void readNaviComplete() {
+        navigationTipPanelView.setNavigationTip(getString(R.string.ngr_arrive_destination));
         poiMenuLayout.refreshView(presenter.getState());
     }
 
@@ -1050,7 +1139,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         return null;
     }
 
-    public void goToSearch(View view){
+    public void goToSearch(View view) {
         getNavigator().toSearchViewForResult(
                 this, presenter.getBuildingId(), floorModelList, CODE_SEARCH_REQUEST);
     }
@@ -1079,4 +1168,5 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         }*/
 
     }
+
 }

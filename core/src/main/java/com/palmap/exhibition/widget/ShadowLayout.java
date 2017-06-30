@@ -32,8 +32,8 @@ public class ShadowLayout extends LinearLayout {
         public static int SHADOWCOLOR = 0x77000000;
         public static int SHADOWRADIUS = 20;
         public static int TYPE = 0;
-        public static int RX = 5;
-        public static int RY = 5;
+        public static int RX = 2;//5
+        public static int RY = 2;//5
         public static boolean HOLE = false;
     }
 

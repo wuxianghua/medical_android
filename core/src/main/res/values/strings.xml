@@ -44,4 +44,11 @@
     <string name="ngr_history_search">历史搜索</string>
     <string name="ngr_current_no_search_result">抱歉！没有找到相关结果</string>
     <string name="ngr_please_input_search_key">请输入搜索关键字</string>
+    <string name="ngr_start_point">起</string>
+    <string name="ngr_please_click_map_choose_start_poi">请通过地图选取起点</string>
+    <string name="ngr_end_point">终</string>
+    <string name="ngr_current_position">当前位置：</string>
+    <string name="ngr_target_position">目标位置：</string>
+    <string name="ngr_unknown_position">未知地点</string>
+    <string name="ngr_arrive_destination">您已到达目的地</string>
 </resources>

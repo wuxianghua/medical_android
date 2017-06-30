@@ -52,7 +52,7 @@ public class FloorListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_floor, parent, false);
             viewHolder = new ViewHolder(convertView);
@@ -70,14 +70,6 @@ public class FloorListAdapter extends BaseAdapter {
             selectIndex = position;
         }
         viewHolder.tvFloorName.setSelected(this.selectFloorId == curId);
-
-//        if (this.selectFloorId == curId) { // 修改选中项的背景
-//            viewHolder.tvFloorName.setTextColor(Color.parseColor("#ffffff"));
-//            viewHolder.tvFloorName.setBackgroundResource(R.mipmap.map_floor_name_hover);
-//        } else {
-//            viewHolder.tvFloorName.setTextColor(Color.parseColor("#696969"));
-//            viewHolder.tvFloorName.setBackgroundResource(R.mipmap.map_floor_name);
-//        }
         return convertView;
     }
 

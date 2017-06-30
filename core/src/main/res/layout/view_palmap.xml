@@ -39,8 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ngr_large"
-            android:layout_marginTop="@dimen/ngr_large"
             android:layout_marginRight="@dimen/ngr_large"
+            android:layout_marginTop="@dimen/ngr_large"
             android:orientation="vertical"
             shadow:hole="true"
             shadow:offset="2dp"
@@ -54,9 +54,9 @@
                 android:drawableLeft="@mipmap/ic_home_search"
                 android:drawablePadding="@dimen/ngr_normal"
                 android:gravity="center_vertical"
+                android:onClick="goToSearch"
                 android:paddingLeft="@dimen/ngr_large"
-                android:text="请输入目的地"
-                android:onClick="goToSearch"/>
+                android:text="请输入目的地"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
@@ -103,7 +103,7 @@
             compass:type="roundRect"
             shadow:hole="true"
             shadow:offset="@dimen/shadow_width"
-            shadow:shadowRadius="1.5dp">
+            shadow:shadowRadius="0.5dp">
 
             <ImageView
                 android:id="@+id/map_location"
@@ -114,20 +114,40 @@
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
-        <ListView
-            android:id="@+id/floorListView"
+        <com.palmap.exhibition.widget.ShadowLayout
             android:layout_width="wrap_content"
-            android:layout_height="105dp"
+            android:layout_height="wrap_content"
             android:layout_above="@+id/layout_location"
             android:layout_alignLeft="@+id/layout_location"
             android:layout_alignRight="@+id/layout_location"
             android:layout_marginBottom="@dimen/ngr_small"
-            android:choiceMode="singleChoice"
-            android:clickable="true"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0dp"
-            android:scrollbars="none"
-            android:visibility="visible"/>
+            android:orientation="vertical"
+            compass:type="roundRect"
+            shadow:hole="true"
+            shadow:offset="@dimen/shadow_width"
+            shadow:shadowRadius="0.5dp">
+
+            <ImageView
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="16dp"
+                android:src="@mipmap/ic_list_arrow_up"/>
+
+            <ListView
+                android:id="@+id/floorListView"
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="120dp"
+                android:choiceMode="singleChoice"
+                android:clickable="true"
+                android:divider="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:scrollbars="none"/>
+
+            <ImageView
+                android:layout_width="@dimen/uiSize"
+                android:layout_height="16dp"
+                android:src="@mipmap/ic_list_arrow_down"/>
+
+        </com.palmap.exhibition.widget.ShadowLayout>
 
         <com.palmap.exhibition.widget.Scale
             android:id="@+id/scale"
@@ -189,16 +209,22 @@
     </RelativeLayout>
 
     <FrameLayout
-        android:layout_alignParentBottom="true"
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
 
         <com.palmap.exhibition.widget.PoiMenuLayout
             android:id="@+id/layout_poiMenu2"
-            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="visible"/>
+
+        <com.palmap.exhibition.widget.PoiSearchResultLayout
+            android:id="@+id/layoutSearchResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </FrameLayout>
 
@@ -207,18 +233,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/ngr_toolbar"/>
+        <include
+            layout="@layout/ngr_toolbar"/>
 
-        <LinearLayout
-            android:id="@+id/testLayout"
+        <com.palmap.exhibition.widget.StartEndPoiChooseView
+            android:id="@+id/startEndPoiChooseView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@android:color/white"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
-        </LinearLayout>
+        <com.palmap.exhibition.widget.NavigationTipPanelView
+            android:id="@+id/navigationTipPanelView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
     </FrameLayout>
-
 
 </RelativeLayout>

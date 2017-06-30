@@ -9,4 +9,7 @@
     <color name="ngr_searchKeyWordColor" >#45a5f2</color>
     <color name="ngr_separate_line">#98c4c6cc</color>
     <color name="ngr_destination_search_title_bar">#FFFAFAFA</color>
+    <color name="ngr_floor_item_selected">#E5F5FE</color>
+    <color name="ngr_floor_item_text_selected">#00A2F5</color>
+    <color name="ngr_floor_item_text_normal">#9098B8</color>
 </resources>

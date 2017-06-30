@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="96dp"
+              android:background="#FAFAFA"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="13dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imgVBack"
+            android:layout_width="24dp"
+            android:layout_height="match_parent"
+            android:paddingLeft="5dp"
+            android:src="@mipmap/ic_action_back"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_info"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/ngr_start_point"
+                android:textColor="#00A2F5"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvStartPoiName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/ngr_please_click_map_choose_start_poi"
+                android:textColor="#3E4455"
+                android:textColorHint="#B7BBCD"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvStartPoiDes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="#B7BBCD"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="11dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_info"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/ngr_end_point"
+                android:textColor="#F04134"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvEndPoiName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#3E4455"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tvEndPoiDes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:textColor="#B7BBCD"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
