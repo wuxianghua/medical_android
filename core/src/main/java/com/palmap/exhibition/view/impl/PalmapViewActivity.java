@@ -21,15 +21,11 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechError;
-import com.iflytek.cloud.SpeechSynthesizer;
 import com.palmap.exhibition.AndroidApplication;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.config.Config;
 import com.palmap.exhibition.exception.NetWorkTypeException;
 import com.palmap.exhibition.iflytek.IFlytekController;
-import com.palmap.exhibition.iflytek.SimpleSynthesizerListener;
 import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.listenetImpl.MapOnZoomListener;
 import com.palmap.exhibition.model.ExFloorModel;
@@ -66,10 +62,11 @@ import com.palmaplus.nagrand.view.layer.FeatureLayer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
-public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implements PalMapView, FloorDataProvides, View.OnClickListener {
+public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implements PalMapView, FloorDataProvides {
 
     private static final String KEY_LOCATION_ID = "key_location_id";
     private static final String KEY_LOCATION_TYPE = "key_location_type";
@@ -86,6 +83,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     PalMapViewPresenter presenter;
     @Inject
     BeaconPositioningManager beaconPositioningManager;
+    @Inject
+    ExecutorService mapViewDrawExecutor;
+
     MapView mapView;
     ListView facilitiesListView;
     ListView floorListView;
@@ -150,15 +150,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         );
     }
 
-    public static Intent getPoiSearchResultIntent(long locationModelId, long floorId, String searchText, LocationType.Type locationType) {
-        Intent intent = new Intent();
-        intent.putExtra(KEY_LOCATION_ID, locationModelId);
-        intent.putExtra(KEY_LOCATION_TYPE, locationType);
-        intent.putExtra(KEY_FLOOR_ID, floorId);
-        intent.putExtra(KEY_SEARCH_TEXT, searchText);
-        return intent;
-    }
-
     public static Intent getPoiSearchResultIntent(ArrayList<SearchResultModel> data) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
@@ -187,29 +178,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         } else {
             presenter.attachView(self);
         }
-
-        final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
-                .obtainSpeechSynthesizer(this, null);
-        speechSynthesizer.setParameter(SpeechConstant.VOICE_NAME, "xiaoqi");
-        speechSynthesizer.startSpeaking("图聚智能是国内领先的室内地图供应商，拥有庞大的室内地图数据库系统，拥有一套完整的、" +
-                "低成本的绘制和维护室内地图数据的平台。目前图聚智能已经拥有20000套室内地图，收录了3500000 个POI 数据，覆盖了全国350座城市， " +
-                "涵盖了79种建筑类型。开发者使用图聚的地图引擎，可以轻松实现室内地图的2D 2.5D 3D的效果展示。图聚智能绘制的地图为矢量地图，" +
-                "能够支持旋转、缩放、渲染、线路规划等功能。", new SimpleSynthesizerListener() {
-            @Override
-            public void onSpeakBegin() {
-                System.out.println(1);
-            }
-
-            @Override
-            public void onSpeakProgress(int i, int i1, int i2) {
-                super.onSpeakProgress(i, i1, i2);
-            }
-
-            @Override
-            public void onCompleted(SpeechError speechError) {
-                System.out.println(1);
-            }
-        });
     }
 
     private static int LAUNCHER_INDEX = 0;
@@ -238,8 +206,10 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         mapView.setOnChangePlanarGraph(presenter);
         mapView.setOnDoubleTapListener(presenter);
         mapView.setOnLongPressListener(presenter);
+        mapView.setOnLoadStatusListener(presenter);
 
         mapView.setOnZoomListener(new MapOnZoomListener(scale, compassView));
+
     }
 
     protected PalMapViewPresenter inject() {
@@ -277,13 +247,13 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     public void readMapData(final PlanarGraph planarGraph) {
         resetCompass();
         mapView.initRotate(Config.MAP_ANGLE);
-        new Thread(new Runnable() {
+        mapViewDrawExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 mapView.drawPlanarGraph(planarGraph);
                 mapView.setMaxScale(1500);
             }
-        }).start();
+        });
         scale.setMapView(mapView);
     }
 
@@ -515,7 +485,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     @Override
                     public void run() {
                         mapView.doCollisionDetection();
-                        hideLoading();
                     }
                 }, 500);
                 clearFacilityListSelect();
@@ -671,6 +640,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         resources.updateConfiguration(config, dm);
         // TODO: 2016/10/26 移除隐藏定位提示语的任务 防止内存泄漏
         handler.removeCallbacks(goneLocationMsgViewTask);
+        mapViewDrawExecutor.shutdown();
     }
 
     @Override

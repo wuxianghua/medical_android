@@ -4,6 +4,9 @@ package com.palmap.exhibition.di.module;
 import com.palmap.exhibition.di.ActivityScope;
 import com.palmap.library.base.BaseActivity;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -24,4 +27,10 @@ public class ActivityModule {
     BaseActivity activity() {
         return this.activity;
     }
+
+    @ActivityScope
+    @Provides ExecutorService providesMapViewDrawExecutor(){
+        return Executors.newSingleThreadExecutor();
+    }
+
 }

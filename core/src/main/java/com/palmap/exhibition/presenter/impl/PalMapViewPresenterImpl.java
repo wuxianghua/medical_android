@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.SensorEvent;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -804,7 +802,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 true,
                 300
         );
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+        IOUtils.postMainThreadDelayed(new Runnable() {
             @Override
             public void run() {
                 palMapView.getMapView().doCollisionDetection();
@@ -824,7 +822,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     }
                 });
             }
-        }, 300);
+        },300);
     }
 
     @Override
@@ -1150,29 +1148,25 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     /**************************************
      * ======listener====
      ********************************************************/
+
+    @Override
+    public void onLoadStatus(MapView mapView, int i, MapView.LoadStatus loadStatus) {
+        if (MapView.LoadStatus.LOAD_END == loadStatus) {
+            palMapView.hideLoading();
+        }
+    }
+
     @Override
     public void onSingleTap(MapView mapView, float x, float y) {
         if (null == palMapView) {
             return;
         }
+
         if (state.equals(PalmapViewState.Navigating) || state == PalmapViewState.RoutePlanning) {
             return;
         }
 
         Feature feature = mapView.selectFeature(x, y);
-
-//        Types.Point p = mapView.converToWorldCoordinate(x, y);
-//        LogUtil.e("点击坐标:" + p.x + ":" + p.y);
-//        fencingManager.eventLocationData(getCurrentFloorId(), new Coordinate(p.x, p.y));
-//        lightEventFencingManager.eventLocationData(getCurrentFloorId(), new Coordinate(p.x, p.y));
-
-//        if (feature != null) {
-//            Coordinate coordinate = feature.getCentroid();
-//            LogUtil.e("点击坐标:" + coordinate.x + ":" + coordinate.y);
-//            LogUtil.e("name:" + MapParam.getName(feature));
-//            LogUtil.e("featureCategoryId:" + MapParam.getCategoryId(feature));
-//            LogUtil.e("featureId:" + MapParam.getId(feature));
-//        }
 
         //恢复变色的feature
         resetFeature();
@@ -1211,7 +1205,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 if (!TextUtils.isEmpty(poiModel.getName())) {
                     palMapView.readFeatureColor(feature, 0xffFFB5B5);
                 }
-//                Coordinate featureCentroid = feature.getCentroid();
                 Coordinate featureCentroid = feature.getTextureCentroid();
                 poiModel.setX(featureCentroid.x);
                 poiModel.setY(featureCentroid.y);

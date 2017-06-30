@@ -21,7 +21,12 @@ import java.util.List;
 /**
  * Created by 王天明 on 2016/6/3.
  */
-public interface PalMapViewPresenter extends Presenter, OnSingleTapListener, OnDoubleTapListener, MapView.OnChangePlanarGraph,OnLongPressListener {
+public interface PalMapViewPresenter extends Presenter,
+        OnSingleTapListener,
+        OnDoubleTapListener,
+        MapView.OnChangePlanarGraph,
+        OnLongPressListener,
+        MapView.OnLoadStatusListener {
 
     void attachView(PalMapView view);
 
