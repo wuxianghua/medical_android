@@ -1,6 +1,7 @@
 package com.palmap.exhibition.widget;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -218,7 +219,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
     public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
         if (layout_navi_info.getVisibility() == VISIBLE) {
             tv_navi_length.setText(String.format("剩余约%d米", (int) mRemainingLength));
-            if (!canSound) {
+            if (!canSound && !TextUtils.isEmpty(mDynamicNaviExplain)) {
                 return;
             }
             // TODO: 2017/6/28 语言播报

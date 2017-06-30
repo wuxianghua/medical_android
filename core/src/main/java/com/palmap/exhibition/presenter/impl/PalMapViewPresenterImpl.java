@@ -30,7 +30,6 @@ import com.palmap.exhibition.other.MapAngleHelper;
 import com.palmap.exhibition.other.OverLayerManager;
 import com.palmap.exhibition.other.PMPDynamicNavigationManager;
 import com.palmap.exhibition.presenter.PalMapViewPresenter;
-import com.palmap.exhibition.repo.ActivityInfoRepo;
 import com.palmap.exhibition.repo.LocationListener;
 import com.palmap.exhibition.sensor.LocationSensorDelegate;
 import com.palmap.exhibition.service.LampSiteLocationService;
@@ -77,9 +76,7 @@ import com.palmaplus.nagrand.rtls.pdr.PDR;
 import com.palmaplus.nagrand.view.MapOptions;
 import com.palmaplus.nagrand.view.MapView;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -181,8 +178,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     @Inject
     DataSource dataSource;
     @Inject
-    ActivityInfoRepo activityInfoRepo;
-    @Inject
     ActivityInfoBusiness activityInfoBusiness;
     @Inject
     CoordinateBusiness coordinateBusiness;
@@ -191,15 +186,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     private GeoFencingManager<Api_PositionInfo.ObjBean> lightEventFencingManager;
 
-    private HashMap<Long, PlanarGraph> mapDataCache;
-
     private Disposable loadMapSubscribe;
 
     private Disposable loadMapWithBuildingIdSubscription;
 
     private Disposable mockDisposable;
-
-    private static boolean openMapCache = false;
 
     private int naviTotalLength;
 
@@ -220,17 +211,17 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     private AtomicBoolean isMockNavi = new AtomicBoolean(false);
 
+    /**
+     * 动态导航操作index
+     */
+    private int dynamicNaviIndex = -1;
+
     @Inject
     public PalMapViewPresenterImpl() {
         navigateManager = new NavigateManager();
         navigateManager.setOnNavigateComplete(new NavigateListener());
         floorSwitchManager = new FloorSwitchManager(3);
-
         lightEventFencingManager = new GeoFencingManager<>();
-
-        if (openMapCache) {
-            mapDataCache = new HashMap<>();
-        }
     }
 
     @Override
@@ -255,18 +246,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     }
 
     private Observable<PlanarGraph> loadPlanarGraph(final long floorId) {
-        if (openMapCache) {
-            if (mapDataCache.get(floorId) != null) {
-                return Observable.create(new ObservableOnSubscribe<PlanarGraph>() {
-                    @Override
-                    public void subscribe(@NonNull ObservableEmitter<PlanarGraph> e) throws Exception {
-                        e.onNext(mapDataCache.get(floorId));
-                        e.onComplete();
-                    }
-                });
-            }
-        }
-        LogUtil.e("load map with network");
         return RxDataSource.requestPlanarGraph(dataSource, floorId);
     }
 
@@ -386,10 +365,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 palMapView.hideRetry();
                 PalMapViewPresenterImpl.this.featureId = featureId;
                 getOverLayerManager().hideStartAndEnd();
-                if (openMapCache) {
-                    planarGraph.obtain();
-                    mapDataCache.put(nextFloorId, planarGraph);
-                }
                 palMapView.readMapData(planarGraph);
             }
         }, new Consumer<Throwable>() {
@@ -778,6 +753,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             navigateManager.clear();
             navigateManager.stop();
         }
+        dynamicNaviIndex = -1;
     }
 
     @Override
@@ -1032,6 +1008,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 //            }
 //        });
         palMapView.readNaviComplete();
+        if (isMockNavi.get()) {
+            mockDisposable.dispose();
+        }
     }
 
     /**
@@ -1083,13 +1062,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         if (navigateManager != null && !navigateManager.getPtr().isRelase()) {
             navigateManager.clear();
             navigateManager.drop();
-        }
-        if (mapDataCache != null) {
-            for (Map.Entry<Long, PlanarGraph> entry : mapDataCache.entrySet()) {
-                entry.getValue().drop();
-            }
-            mapDataCache.clear();
-            mapDataCache = null;
         }
         unRegisterLocationListener();
         IFlytekController.getInstance().destroyAllSpeechSynthesizer();
@@ -1384,19 +1356,21 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         /*
          * 显示剩余长度 以及 下一步的操作 (左转等)
          */
-        palMapView.readRemainingLength(wrapper.mDynamicNavigateOutput.mDynamicNaviExplain, mRemainingLength);
+        palMapView.readRemainingLength(
+                dynamicNaviIndex == wrapper.mDynamicNavigateOutput.mIndex ? null :
+                        wrapper.mDynamicNavigateOutput.mDynamicNaviExplain, mRemainingLength);
+        dynamicNaviIndex = wrapper.mDynamicNavigateOutput.mIndex;
         try {
             //显示路线信息
-
             StartMark startMark = getOverLayerManager().getStartMark();
             EndMark endMark = getOverLayerManager().getEndMark();
 
             StepInfo stepInfo = navigateManager.getAllStepInfo()[wrapper.mDynamicNavigateOutput.mIndex];
             palMapView.showRouteInfoDetails(String.format("直行%.2f米，%s", wrapper.mDynamicNavigateOutput.mLengthToNextStep,
-                    stepInfo.mActionName),stepInfo.mAction,
+                    stepInfo.mActionName), stepInfo.mAction,
                     startMark.getFloorName(),
                     endMark.getFloorName()
-                    );
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1465,7 +1439,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                             // TODO: 2016/9/12 获取路线长度
                             if (state != PalmapViewState.Navigating) {
                                 naviTotalLength = (int) navigateManager.getTotalLineLength() + 1;
-//                                palMapView.showRouteInfoDetails(naviTotalLength + "m");
                                 palMapView.showRouteLength(String.format("%s%s",
                                         startMark.getFloorId() - endMark.getFloorId() == 0 ? "在同楼层" : "跨楼层",
                                         naviTotalLength + "米"

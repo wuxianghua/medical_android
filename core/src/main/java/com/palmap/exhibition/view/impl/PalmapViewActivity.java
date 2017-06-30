@@ -559,7 +559,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         //layoutPoiMenu.readRemainingLength((int) mRemainingLength);
         poiMenuLayout.refreshView(presenter.getState());
         poiMenuLayout.readRemainingLength(mDynamicNaviExplain,mRemainingLength);
-
     }
 
     @Override
@@ -802,7 +801,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      */
     @Override
     public void showRouteInfoDetails(String msg, int mAction, String startFloorName, String endFloorName) {
-        showMessage(msg);
+//        showMessage(msg);
     }
 
     @Override

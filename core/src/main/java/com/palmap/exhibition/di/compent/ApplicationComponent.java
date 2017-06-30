@@ -6,7 +6,6 @@ import com.palmap.exhibition.dao.business.ActivityInfoBusiness;
 import com.palmap.exhibition.dao.business.CoordinateBusiness;
 import com.palmap.exhibition.di.module.ApplicationModule;
 import com.palmap.exhibition.navigator.Navigator;
-import com.palmap.exhibition.repo.ActivityInfoRepo;
 import com.palmap.library.executor.PostExecutionThread;
 import com.palmap.library.executor.ThreadExecutor;
 import com.palmaplus.nagrand.data.DataSource;
@@ -31,8 +30,6 @@ public interface ApplicationComponent {
     ThreadExecutor jobExecutor();
 
     Navigator navigator();
-
-    ActivityInfoRepo activityInfoRepo();
 
     DataSource dataSource();
 
