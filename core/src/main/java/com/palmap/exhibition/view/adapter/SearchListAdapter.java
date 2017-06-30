@@ -121,7 +121,7 @@ public class SearchListAdapter extends BaseAdapter {
             if (offset != null) {
                 spannable = Spannable.Factory.getInstance().newSpannable(name);
                 for (int j = 0; j < offset.length; j += 2) {
-                    spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.searchKeyWordColor)),
+                    spannable.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.ngr_searchKeyWordColor)),
                             offset[j], offset[j + 1], Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
             }

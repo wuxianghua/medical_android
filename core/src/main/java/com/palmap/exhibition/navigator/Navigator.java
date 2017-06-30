@@ -7,9 +7,6 @@ import com.palmap.exhibition.launcher.LauncherModel;
 import com.palmap.exhibition.model.ExFloorModel;
 import com.palmap.exhibition.view.impl.DestinationSearchActivity;
 import com.palmap.exhibition.view.impl.PalmapViewActivity;
-import com.palmap.exhibition.view.impl.PoiInfoViewActivity;
-import com.palmap.exhibition.view.impl.PoiInfoWebViewActivity;
-import com.palmap.exhibition.view.impl.PoiSearchViewActivity;
 
 import java.util.ArrayList;
 
@@ -36,18 +33,6 @@ public class Navigator {
 
     public void toPalMapView(Context that, long buildingId, long floorId, long featureId) {
         PalmapViewActivity.navigatorThis(that, buildingId, floorId, featureId);
-    }
-
-    public void toPoiInfoView(Activity activity, long poiId, String poiName) {
-        PoiInfoViewActivity.navigatorThis(activity, poiId, poiName);
-    }
-
-    public void toPoiInfoWebView(Activity activity, long poiId, String poiName) {
-        PoiInfoWebViewActivity.navigatorThis(activity, poiId, poiName);
-    }
-
-    public void toSearchViewForResult(Activity that, String searchTxt, long buildingId, ArrayList<ExFloorModel> floorListData, int requestCode) {
-        PoiSearchViewActivity.navigatorThisForResult(that, buildingId, searchTxt, floorListData, requestCode);
     }
 
     public void toSearchViewForResult(Activity that, long buildingId, ArrayList<ExFloorModel> floorListData, int requestCode) {

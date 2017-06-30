@@ -4,7 +4,6 @@
     android:layout_height="match_parent">
     
     <ImageView
-        android:src="@mipmap/icon_pub_toilet_select"
         android:id="@+id/img_icon"
         android:layout_width="wrap_content"
         android:layout_height="40dp" />

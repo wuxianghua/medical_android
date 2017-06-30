@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/all_title_bar_height"
-        android:background="@color/bg_destination_search_title_bar"
+        android:background="@color/ngr_destination_search_title_bar"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="8dp"

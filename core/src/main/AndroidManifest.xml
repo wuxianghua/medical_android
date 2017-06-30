@@ -28,39 +28,6 @@
         <service android:name="com.palmaplus.nagrand.position.ble.BeaconService" />
 
         <activity
-            android:name=".view.impl.PoiInfoViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FinishTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="expo.palmap.cn"
-                    android:pathPrefix="/launcher/openPoiInfo"
-                    android:scheme="exbt" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.impl.PoiInfoWebViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/FinishTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:host="expo.palmap.cn"
-                    android:pathPrefix="/launcher/openPoiInfoWeb"
-                    android:scheme="exbt" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".view.impl.PalmapViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ngr_AppTheme"
@@ -70,11 +37,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/ngr_AppTheme"
             android:windowSoftInputMode="adjustUnspecified|stateHidden" />
-        <activity
-            android:name=".view.impl.PoiSearchViewActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/YanTaiPoiSearchTheme"
-            android:windowSoftInputMode="adjustPan|stateVisible" />
         <service
             android:name=".service.LampSiteLocationService"
             android:exported="false"/>

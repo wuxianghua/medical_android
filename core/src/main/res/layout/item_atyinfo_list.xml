@@ -44,6 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:textColor="@color/txt9"
+        android:textColor="@color/ngr_txt9"
         android:textSize="12sp" />
 </RelativeLayout>

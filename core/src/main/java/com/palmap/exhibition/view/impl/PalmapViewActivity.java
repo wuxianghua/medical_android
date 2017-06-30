@@ -51,7 +51,6 @@ import com.palmap.exhibition.widget.Scale;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.utils.ActivityUtils;
 import com.palmap.library.utils.DeviceUtils;
-import com.palmap.library.utils.IOUtils;
 import com.palmap.library.utils.LogUtil;
 import com.palmaplus.nagrand.core.Types;
 import com.palmaplus.nagrand.core.Value;

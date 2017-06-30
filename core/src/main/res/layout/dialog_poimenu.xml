@@ -78,7 +78,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/line" />
+        android:background="@color/ngr_line" />
 
     <FrameLayout
         android:id="@+id/layout_botton"
@@ -124,7 +124,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/ngr_small"
                 android:layout_marginTop="@dimen/ngr_small"
-                android:background="@color/line" />
+                android:background="@color/ngr_line" />
 
             <LinearLayout
                 android:id="@+id/layout_end"
@@ -156,7 +156,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/ngr_small"
                 android:layout_marginTop="@dimen/ngr_small"
-                android:background="@color/line" />
+                android:background="@color/ngr_line" />
 
             <LinearLayout
                 android:id="@+id/layout_go"
@@ -265,7 +265,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/ngr_small"
                 android:layout_marginTop="@dimen/ngr_small"
-                android:background="@color/line" />
+                android:background="@color/ngr_line" />
 
             <LinearLayout
                 android:id="@+id/layout_cleanNav2"

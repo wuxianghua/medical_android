@@ -21,7 +21,6 @@
             android:layout_height="36dp"
             android:layout_margin="15dp"
             android:gravity="center"
-            android:src="@mipmap/btn_tab_camera"
             android:textColor="#565c60"
             android:textSize="18sp"/>
 
@@ -128,7 +127,7 @@
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_vertical"
-                android:background="@color/white"
+                android:background="@android:color/white"
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="请点击地图某个位置选择起点"
