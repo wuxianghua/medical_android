@@ -114,6 +114,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
     ViewGroup layout_zoom;
+    ViewGroup layout_floor;
     FeatureLayer navigateLayer;
     StartEndPoiChooseView startEndPoiChooseView;
     NavigationTipPanelView navigationTipPanelView;
@@ -461,6 +462,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             floorListView.setVisibility(View.GONE);
             return;
         }
+        layout_floor.setVisibility(View.VISIBLE);
         this.floorModelList = new ArrayList<>();
         for (int i = locationList.getSize() - 1; i >= 0; i--) {
             ExFloorModel temp = new ExFloorModel(locationList.getPOI(i));
@@ -504,7 +506,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 clearFacilityListSelect();
                 if (floorListAdapter != null) {
                     floorListAdapter.setSelectFloorId(newFloorId);
-                    floorListAdapter.notifyDataSetChanged();
+//                    floorListAdapter.notifyDataSetChanged();
+                    //floorListView.setSelection(floorListAdapter.getSelectIndex());
+                    floorListView.smoothScrollToPosition(floorListAdapter.getSelectIndex());
                 }
                 if (oldFloorId != newFloorId) {
                     isAttachNavigateLayer = false;
@@ -929,6 +933,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         tvLocationMessage = findView(R.id.tv_locationMessage);
         layout_mapView = findView(R.id.layout_mapView);
         layoutBack = findView(R.id.layout_back);
+        layout_floor = (ViewGroup) findViewById(R.id.layout_floor);
 
         map_location = findView(R.id.map_location);
         layout_zoom = findView(R.id.layout_zoom);

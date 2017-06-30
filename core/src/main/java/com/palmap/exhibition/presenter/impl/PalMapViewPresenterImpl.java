@@ -26,7 +26,6 @@ import com.palmap.exhibition.model.PoiModel;
 import com.palmap.exhibition.other.FloorSwitchManager;
 import com.palmap.exhibition.other.MapAngleHelper;
 import com.palmap.exhibition.other.OverLayerManager;
-import com.palmap.exhibition.other.PMPDynamicNavigationManager;
 import com.palmap.exhibition.presenter.PalMapViewPresenter;
 import com.palmap.exhibition.repo.LocationListener;
 import com.palmap.exhibition.sensor.LocationSensorDelegate;
@@ -197,7 +196,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     private Coordinate[] envelopeCoordinateArr;
 
-    private PMPDynamicNavigationManager pmpDynamicNavigationManager = new PMPDynamicNavigationManager();
+    //private PMPDynamicNavigationManager pmpDynamicNavigationManager = new PMPDynamicNavigationManager();
 
     /**
      * 定位惯导算法
@@ -822,7 +821,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     }
                 });
             }
-        },300);
+        }, 300);
     }
 
     @Override
@@ -1393,7 +1392,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             navigationOutOfBounds = 0;
             LogUtil.e("NavigateState:" + navigateState);
 
-            pmpDynamicNavigationManager.config(navigateManager, featureCollection);
+            //pmpDynamicNavigationManager.config(navigateManager, featureCollection);
 
             // TODO: 2016/6/21 如果请求导航线成功（包含切割）
             if (navigateState == NavigateManager.NavigateState.OK
@@ -1601,9 +1600,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             long locationFloorId = (long) locationInfoModel.getZ();
             Coordinate locationCoordinate = new Coordinate(locationInfoModel.getX(), locationInfoModel.getY());
             locationCoordinate.setZ(locationFloorId);
-            if (userCoordinate == null) {
-                userCoordinate = locationCoordinate;
-            }
+//            if (userCoordinate == null) {
+            userCoordinate = locationCoordinate;
+//            }
             onComplete(locationInfoModel, timeStamp);
         }
     }

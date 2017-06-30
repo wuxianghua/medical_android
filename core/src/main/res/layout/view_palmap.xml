@@ -115,8 +115,10 @@
         </com.palmap.exhibition.widget.ShadowLayout>
 
         <com.palmap.exhibition.widget.ShadowLayout
+            android:id="@+id/layout_floor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_above="@+id/layout_location"
             android:layout_alignLeft="@+id/layout_location"
             android:layout_alignRight="@+id/layout_location"
@@ -128,6 +130,7 @@
             shadow:shadowRadius="0.5dp">
 
             <ImageView
+                android:background="@android:color/white"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="16dp"
                 android:src="@mipmap/ic_list_arrow_up"/>
@@ -143,6 +146,7 @@
                 android:scrollbars="none"/>
 
             <ImageView
+                android:background="@android:color/white"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="16dp"
                 android:src="@mipmap/ic_list_arrow_down"/>
