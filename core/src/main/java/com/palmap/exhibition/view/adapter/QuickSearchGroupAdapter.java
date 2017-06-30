@@ -91,7 +91,7 @@ public class QuickSearchGroupAdapter extends BaseExpandableListAdapter {
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         ViewHolder holder;
         if (view == null) {
-            view = mInflater.inflate(R.layout.item_search_group_list, viewGroup, false);
+            view = mInflater.inflate(R.layout.item_quick_search_group, viewGroup, false);
             holder = new ViewHolder(view);
             view.setTag(holder);
         } else {

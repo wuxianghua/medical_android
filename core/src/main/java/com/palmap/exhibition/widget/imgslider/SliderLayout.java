@@ -178,7 +178,7 @@ public class SliderLayout extends RelativeLayout{
 
         mTransformerSpan = attributes.getInteger(R.styleable.SliderLayout_pager_animation_span, 1100);
         mTransformerId = attributes.getInt(R.styleable.SliderLayout_pager_animation, Transformer.Default.ordinal());
-        mAutoCycle = attributes.getBoolean(R.styleable.SliderLayout_auto_cycle,true);
+        mAutoCycle = attributes.getBoolean(R.styleable.SliderLayout_auto_cycle,false);
         int visibility = attributes.getInt(R.styleable.SliderLayout_indicator_visibility,0);
         for(PagerIndicator.IndicatorVisibility v: PagerIndicator.IndicatorVisibility.values()){
             if(v.ordinal() == visibility){

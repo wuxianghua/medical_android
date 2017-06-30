@@ -165,7 +165,6 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
                     new ManualSearchFragment.OnSearchSelectedListener() {
                         @Override
                         public void onSelectSearch(SearchResultModel model) {
-                            // TODO: 2017/6/28
                             presenter.savePoiSearchKeyWord(model.getName());
                             ArrayList<SearchResultModel> data = new ArrayList<>();
                             data.add(model);
@@ -243,27 +242,30 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
      * 显示快捷搜索的UI
      */
     @Override
-    public void readQuickSearchData(List<QuickSearchKeyWordModel> data) {
-        mQuickSearchFragment.addKeyWords(data);
+    public void readQuickSearchData(int index, List<QuickSearchKeyWordModel> data) {
+        if (index == 0) {
+            mQuickSearchFragment.addPanelKeyWords(data);
+        } else if (index == 1) {
+            mQuickSearchFragment.addGroupKeyWords(data);
+        } else {
+            //
+        }
     }
 
     public void onSearchClick(View view) {
-        if(mQuickSearchFragment.isVisible()){
+        String keyWord = mEdtTxtSearch.getText().toString();
+        if (keyWord.isEmpty()) {
+            showMessage(getString(R.string.ngr_please_input_search_key));
             return;
         }
-        ArrayList<SearchResultModel> models =new ArrayList<>();
+        ArrayList<SearchResultModel> models = new ArrayList<>();
         models.addAll(mManualSearchFragment.getSearchResultModels());
-        String keyWord =  mEdtTxtSearch.getText().toString();
         if (models.isEmpty()) {
-            if(keyWord.isEmpty()){
-                showMessage(getString(R.string.ngr_please_input_search_key));
-            }else {
                 mIsShowNoResultTip = true;
                 presenter.requestPoiData(keyWord);
                 presenter.savePoiSearchKeyWord(keyWord);
                 presenter.requestHistoryPOIData();
-            }
-        }else {
+        } else {
             presenter.savePoiSearchKeyWord(keyWord);
             PalmapViewActivity.getPoiSearchResultIntent(models);
             finish();

@@ -1,0 +1,69 @@
+[
+  {
+    "title": "",
+    "iconName": "",
+    "state": 0,
+    "child": [
+      {
+        "displayName": "挂号",
+        "searchKeyWord": "0000",
+        "iconName": "ic_search_hot_01"
+      },
+      {
+        "displayName": "去缴费",
+        "searchKeyWord": "0001",
+        "iconName": "ic_search_hot_02"
+      },
+      {
+        "displayName": "去取药",
+        "searchKeyWord": "0002",
+        "iconName": "ic_search_hot_03"
+      },
+      {
+        "displayName": "取报告",
+        "searchKeyWord": "0003",
+        "iconName": "ic_search_hot_04"
+      },
+      {
+        "displayName": "自助挂号",
+        "searchKeyWord": "0004",
+        "iconName": "ic_search_hot_05"
+      },
+      {
+        "displayName": "去抽血",
+        "searchKeyWord": "0005",
+        "iconName": "ic_search_hot_06"
+      },
+      {
+        "displayName": "去输液",
+        "searchKeyWord": "0006",
+        "iconName": "ic_search_hot_07"
+      },
+      {
+        "displayName": "卫生间",
+        "searchKeyWord": "0007",
+        "iconName": "ic_search_hot_08"
+      },
+      {
+        "displayName": "自助挂号",
+        "searchKeyWord": "0008",
+        "iconName": "ic_search_hot_05"
+      },
+      {
+        "displayName": "去抽血",
+        "searchKeyWord": "0009",
+        "iconName": "ic_search_hot_06"
+      },
+      {
+        "displayName": "去输液",
+        "searchKeyWord": "0010",
+        "iconName": "ic_search_hot_07"
+      },
+      {
+        "displayName": "卫生间",
+        "searchKeyWord": "0011",
+        "iconName": "ic_search_hot_08"
+      }
+    ]
+  }
+]

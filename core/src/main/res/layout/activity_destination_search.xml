@@ -15,7 +15,7 @@
 
         <ImageView
             android:layout_width="@dimen/all_go_back_size"
-            android:layout_height="@dimen/all_go_back_size"
+            android:layout_height="match_parent"
             android:layout_marginLeft="5.5dp"
             android:layout_marginRight="3.5dp"
             android:onClick="onGoBack"
