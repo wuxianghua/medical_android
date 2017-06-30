@@ -47,7 +47,6 @@ import com.palmap.exhibition.view.base.ExActivity;
 import com.palmap.exhibition.widget.CompassView;
 import com.palmap.exhibition.widget.IPoiMenu;
 import com.palmap.exhibition.widget.PoiMenuLayout;
-import com.palmap.exhibition.widget.RouteInfoView;
 import com.palmap.exhibition.widget.Scale;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.utils.ActivityUtils;
@@ -101,7 +100,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     TextView tvLocationMessage;
     ViewGroup layout_mapView;
     ViewGroup layoutBack;
-    RouteInfoView routeInfoView;
     View map_location;
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
@@ -190,12 +188,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         } else {
             presenter.attachView(self);
         }
-        IOUtils.postMainThreadDelayed(new Runnable() {
-            @Override
-            public void run() {
-                presenter.loadPushEventActivity();
-            }
-        }, 150);
 
         final SpeechSynthesizer speechSynthesizer = IFlytekController.getInstance()
                 .obtainSpeechSynthesizer(this, null);
@@ -409,7 +401,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         attachNavigateLayer();
         navigateLayer.clearFeatures();
         navigateLayer.addFeatures(featureCollection);
-        //layoutPoiMenu.showRouteInfo();
     }
 
     @Override
@@ -608,16 +599,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void readServiceFacility(List<ServiceFacilityModel> data) {
-    }
-
-    void floorClick() {
-        if (presenter.getState() == PalmapViewState.Navigating) {
-            return;
-        }
-//        if (floorListViewDelegate != null) {
-//            floorListViewDelegate.switchVisibilityOnAnim();
-//            floorListView.smoothScrollToPosition(floorListAdapter.getSelectIndex());
-//        }
     }
 
     void compassViewClick() {
@@ -827,28 +808,18 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void hideRouteInfoView() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                routeInfoView.setVisibility(View.GONE);
-                routeInfoView.clear();
-            }
-        });
     }
 
     @Override
     public void showRouteUpView() {
-        routeInfoView.showUpView();
     }
 
     @Override
     public void showRouteDownView() {
-        routeInfoView.showDownView();
     }
 
     @Override
     public void hideRouteArrowView() {
-        routeInfoView.hideArrowView();
     }
 
     @Override
@@ -899,7 +870,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         mapLocation = findView(R.id.map_location);
         facilitiesListView = findView(R.id.list_facilities);
-        routeInfoView = findView(R.id.routeInfoView);
         scale = findView(R.id.scale);
         toolBar = findView(R.id.toolBar);
         layout_overlay = findView(R.id.layout_overlay);

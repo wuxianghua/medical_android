@@ -733,9 +733,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             LogUtil.e("起始点距离:" + getOverLayerManager().measureStateEndDistance());
             getOverLayerManager().clearAllNotLocation();
             palMapView.hideRouteInfoView();
-            if (mFeature != null) {
-                palMapView.resetFeatureStyle(mFeature);
-            }
             resetState();
             return;
         }
@@ -864,16 +861,13 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     public void exitNavigate() {
 //        setPalmapViewState(PalmapViewState.RoutePlanning);
 //        palMapView.showRouteInfoDetails(naviTotalLength + "m");
-//        palMapView.readExitNavigate();
 //        navigateManager.stop();
+        palMapView.readExitNavigate();
         if (isMockNavi.compareAndSet(true, false)) {
             mockDisposable.dispose();
             userCoordinate = null;
             getOverLayerManager().hideLocation();
-            getOverLayerManager().hideLocation();
-            resetFeature();
         }
-
         resetState();
         if (envelopeCoordinateArr != null) {
             palMapView.getMapView().moveToRect(
