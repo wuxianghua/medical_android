@@ -27,16 +27,18 @@ public interface PoiSearchView extends LoadDataView {
 
     void readSearchMeetingData(Api_ActivityInfo info);
 
-    void readQuickSearchData(List<QuickSearchKeyWordModel> data);
+    void readQuickSearchData(int index, List<QuickSearchKeyWordModel> data);
 
     /**
      * 获取楼层名字
+     *
      * @param floorId
      */
     String obtainFloorNameById(long floorId);
 
     /**
      * 获取场馆名
+     *
      * @param floorId
      */
     String obtainVenueName(long floorId);

@@ -136,11 +136,16 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
     //ui层请求快捷搜索的数据
     @Override
     public void requestQuickSearchModel() {
+        readPanelConfig();
+        readGroupConfig();
+    }
+
+    private void readPanelConfig() {
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Exception {
                 String jsonString = FileUtils.readFileFromAssets(
-                        poiSearchView.getContext(), "json/QuickSearchConfig.json");
+                        poiSearchView.getContext(), "json/QuickSearchPanelConfig.json");
                 emitter.onNext(jsonString);
                 emitter.onComplete();
             }
@@ -156,12 +161,43 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                     @Override
                     public void accept(@NonNull List<QuickSearchKeyWordModel> keyWordModels)
                             throws Exception {
-                        poiSearchView.readQuickSearchData(keyWordModels);
+                        poiSearchView.readQuickSearchData(0, keyWordModels);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        poiSearchView.readQuickSearchData(null);
+                        poiSearchView.readQuickSearchData(0, null);
+                    }
+                });
+    }
+
+    private void readGroupConfig() {
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Exception {
+                String jsonString = FileUtils.readFileFromAssets(
+                        poiSearchView.getContext(), "json/QuickSearchGroupConfig.json");
+                emitter.onNext(jsonString);
+                emitter.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).map(new Function<String, List<QuickSearchKeyWordModel>>() {
+            @Override
+            public List<QuickSearchKeyWordModel> apply(@NonNull String s) throws Exception {
+                Type listType = new TypeToken<ArrayList<QuickSearchKeyWordModel>>() {
+                }.getType();
+                return gson.fromJson(s, listType);
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(
+                new Consumer<List<QuickSearchKeyWordModel>>() {
+                    @Override
+                    public void accept(@NonNull List<QuickSearchKeyWordModel> keyWordModels)
+                            throws Exception {
+                        poiSearchView.readQuickSearchData(1, keyWordModels);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        poiSearchView.readQuickSearchData(1, null);
                     }
                 });
     }
