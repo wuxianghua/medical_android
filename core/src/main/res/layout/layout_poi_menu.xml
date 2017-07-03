@@ -2,52 +2,23 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <RelativeLayout
+    <!--单地物点击结果-->
+    <include
         android:id="@+id/layout_poi_info"
+        layout="@layout/layout_poi_search_info"
+        android:visibility="gone"/>
+
+    <!--搜索结果-->
+    <com.palmap.exhibition.widget.PoiSearchResultLayout
+        android:id="@+id/layoutSearchResult"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/tv_poiName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="@dimen/ngr_normal"
-            android:text="自组服务区"/>
-
-        <TextView
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/tv_poiName"
-            android:layout_marginTop="@dimen/ngr_normal"
-            android:drawableLeft="@mipmap/ic_card_location"
-            android:drawablePadding="@dimen/ngr_small"
-            android:gravity="center_vertical"
-            android:text="1F 315"/>
-
-        <TextView
-            android:textSize="12sp"
-            android:id="@+id/btn_goHere"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/ngr_large"
-            android:drawableLeft="@mipmap/ic_card_go"
-            android:drawablePadding="@dimen/ngr_small"
-            android:gravity="center_vertical"
-            android:text="去这里"
-            android:textColor="#00A2F5"/>
-
-    </RelativeLayout>
-
+    <!--选择起点-->
     <RelativeLayout
         android:id="@+id/layout_select_start"
         android:layout_width="match_parent"
@@ -59,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="12dp"
-            android:text="选择起点"
+            android:text="@string/ngr_select_start_point"
             android:textColor="#6E768F"
             android:textSize="16sp"/>
 
@@ -71,23 +42,24 @@
             android:weightSum="2">
 
             <Button
-                android:enabled="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="模拟导航"/>
+                android:enabled="false"
+                android:text="@string/ngr_imitate_navigation"/>
 
             <Button
-                android:enabled="false"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="开始导航"/>
+                android:enabled="false"
+                android:text="@string/ngr_begin_navigation"/>
 
         </LinearLayout>
 
     </RelativeLayout>
 
+    <!--导航准备-->
     <RelativeLayout
         android:id="@+id/layout_navi_ready"
         android:layout_width="match_parent"
@@ -115,19 +87,20 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="模拟导航"/>
+                android:text="@string/ngr_imitate_navigation"/>
 
             <Button
                 android:id="@+id/btn_startNavi"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="开始导航"/>
+                android:text="@string/ngr_begin_navigation"/>
 
         </LinearLayout>
 
     </RelativeLayout>
 
+    <!--导航操作、信息提示-->
     <RelativeLayout
         android:id="@+id/layout_navi_info"
         android:layout_width="match_parent"
@@ -136,23 +109,23 @@
 
         <TextView
             android:id="@+id/tv_navi_length"
-            android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/image_sound"
             android:layout_toRightOf="@+id/image_closeNavi"
+            android:gravity="center"
             android:text="剩余约25米"
             android:textColor="#6E768F"
             android:textSize="16sp"/>
 
         <ImageView
-            android:clickable="true"
             android:id="@+id/image_closeNavi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="16dp"
+            android:clickable="true"
             android:src="@mipmap/ic_card_close"/>
 
         <ImageView
@@ -166,6 +139,7 @@
 
     </RelativeLayout>
 
+    <!--导航完成-->
     <RelativeLayout
         android:id="@+id/layout_navi_ok"
         android:layout_width="match_parent"
@@ -175,11 +149,10 @@
 
         <Button
             android:id="@+id/btn_navi_ok"
-            android:text="导航完成"
             android:layout_width="match_parent"
-            android:layout_height="44dp"/>
+            android:layout_height="44dp"
+            android:text="@string/ngr_navigation_finished"/>
 
     </RelativeLayout>
-
 
 </FrameLayout>

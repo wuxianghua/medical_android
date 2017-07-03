@@ -168,7 +168,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
                             presenter.savePoiSearchKeyWord(model.getName());
                             ArrayList<SearchResultModel> data = new ArrayList<>();
                             data.add(model);
-                            PalmapViewActivity.getPoiSearchResultIntent(data);
+                            setResult(RESULT_OK, PalmapViewActivity.getPoiSearchResultIntent(data));
                             finish();
                         }
                     });
@@ -199,7 +199,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
                 }
                 models.add(new SearchResultModel(model, null));
             }
-            PalmapViewActivity.getPoiSearchResultIntent(models);
+            setResult(RESULT_OK, PalmapViewActivity.getPoiSearchResultIntent(models));
             finish();
         } else {
             mManualSearchFragment.addSearchData(data);
@@ -267,7 +267,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
                 presenter.requestHistoryPOIData();
         } else {
             presenter.savePoiSearchKeyWord(keyWord);
-            PalmapViewActivity.getPoiSearchResultIntent(models);
+            setResult(RESULT_OK, PalmapViewActivity.getPoiSearchResultIntent(models));
             finish();
         }
     }

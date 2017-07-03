@@ -56,7 +56,7 @@ public interface PalMapViewPresenter extends Presenter,
      */
     void changeFloor(long floorId);
 
-    void changeFloorAddMark(long floorId, long featureId);
+    void changeFloorAddMark(long floorId, long featureId, boolean isEndSet);
 
     void changeFloor(long buildingId, long floorId);
 

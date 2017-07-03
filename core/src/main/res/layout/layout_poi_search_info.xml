@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/tv_poiName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="@dimen/ngr_normal"/>
+
+    <TextView
+        android:id="@+id/tvPoiDes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tv_poiName"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="@dimen/ngr_normal"
+        android:drawableLeft="@mipmap/ic_card_location"
+        android:drawablePadding="@dimen/ngr_small"
+        android:gravity="center_vertical"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/btn_goHere"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/ngr_large"
+        android:drawableLeft="@mipmap/ic_card_go"
+        android:drawablePadding="@dimen/ngr_small"
+        android:gravity="center_vertical"
+        android:text="@string/ngr_txt_goHere"
+        android:textColor="#00A2F5"
+        android:textSize="12sp"/>
+
+</RelativeLayout>

@@ -167,6 +167,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     private boolean requestNaviRoad = false;
 
+    /**
+     * 是否为设置终点
+     */
+    private boolean mIsEndSet = false;
+
     @Inject
     List<FacilityModel> facilityModels;
 
@@ -513,7 +518,8 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     }
 
     @Override
-    public void changeFloorAddMark(long floorId, long featureId) {
+    public void changeFloorAddMark(long floorId, long featureId, boolean isEndSet) {
+        mIsEndSet = isEndSet;
         this.featureId = featureId;
         if (currentFloorId == floorId) {
             // TODO: 2016/9/27 优化切换当前楼层
@@ -1263,22 +1269,37 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                         Runnable tempTask = new Runnable() {
                             @Override
                             public void run() {
-                                setPalmapViewState(PalmapViewState.Normal);
+                                //setPalmapViewState(PalmapViewState.Normal);
+//                                PoiModel poiModel = new PoiModel(mFeature);
+//                                poiModel.setZ(currentFloorId);
+//                                LogUtil.e("添加addPoiMark");
+//                                getOverLayerManager().addPoiMark(currentFloorId, featureId);
+//                                LogUtil.e("showPoiMenu:" + state);
+//                                palMapView.showPoiMenu(poiModel, state);
+//                                palMapView.readFeatureColor(mFeature, 0xffFFB5B5);
+//
+//                                palMapView.getMapView().moveToPoint(
+//                                        palMapView.getMapView().selectFeature(featureId).getCentroid(),
+//                                        true,
+//                                        300
+//                                );
+//                                getOverLayerManager().animRefreshOverlay(300);\
+                                //getOverLayerManager().addPoiMark(currentFloorId, featureId);
                                 PoiModel poiModel = new PoiModel(mFeature);
                                 poiModel.setZ(currentFloorId);
-                                LogUtil.e("添加addPoiMark");
-                                getOverLayerManager().addPoiMark(currentFloorId, featureId);
-                                LogUtil.e("showPoiMenu:" + state);
-                                palMapView.showPoiMenu(poiModel, state);
                                 palMapView.readFeatureColor(mFeature, 0xffFFB5B5);
-
+                                if(mIsEndSet){
+                                    endMark(poiModel);
+                                    setPalmapViewState(PalmapViewState.END_SET);
+                                }else{
+                                    getOverLayerManager().addPoiMark(currentFloorId, featureId);
+                                }
                                 palMapView.getMapView().moveToPoint(
                                         palMapView.getMapView().selectFeature(featureId).getCentroid(),
                                         true,
                                         300
                                 );
                                 getOverLayerManager().animRefreshOverlay(300);
-
                             }
                         };
                         if (oldFloorId == newFloorId) {

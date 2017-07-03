@@ -47,7 +47,6 @@ import com.palmap.exhibition.widget.PoiMenuLayout;
 import com.palmap.exhibition.widget.Scale;
 import com.palmap.exhibition.widget.ShadowLayout;
 import com.palmap.exhibition.widget.StartEndPoiChooseView;
-import com.palmap.library.model.LocationType;
 import com.palmap.library.utils.ActivityUtils;
 import com.palmap.library.utils.DeviceUtils;
 import com.palmap.library.utils.LogUtil;
@@ -622,22 +621,42 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_SEARCH_REQUEST && resultCode == RESULT_OK) {
-            // TODO: 2016/6/29 获取poi搜索结果
             try {
-                LocationType.Type locationType = (LocationType.Type) data.getExtras().getSerializable(KEY_LOCATION_TYPE);
-                if (null == locationType) return;
-                long locationId = data.getExtras().getLong(KEY_LOCATION_ID);
-                long floorId = data.getExtras().getLong(KEY_FLOOR_ID);
-                switch (locationType) {
-                    case FLOOR:
-                        presenter.setCanAutoChangeFloor(false);
-                        presenter.changeFloor(locationId);
-                        break;
-                    default:
-                        presenter.setCanAutoChangeFloor(false);
-                        presenter.changeFloorAddMark(floorId, locationId);
-                        break;
+                if (data == null) {
+                    return;
                 }
+                // TODO: 2017/6/30 有没有数据转换工具类
+                ArrayList<SearchResultModel> models =
+                        data.getParcelableArrayListExtra(KEY_SEARCH_LIST);
+                List<PoiModel> poiModels = new ArrayList<>();
+                for (SearchResultModel model : models) {
+                    if (model == null) {
+                        continue;
+                    }
+                    PoiModel poiModel = new PoiModel();
+                    poiModel.setDisPlay(model.getName());
+                    poiModel.setName(model.getName());
+                    poiModel.setId(model.getId());
+                    poiModel.setAddress(model.getAddress());
+                    poiModel.setZ(model.getFloorId());
+                    poiModel.setFloorName(getFloorNameById(model.getFloorId()));// TODO: 2017/6/30
+                    poiModels.add(poiModel);
+                }
+                poiMenu.refreshView(poiModels, PalmapViewState.Search);
+//                LocationType.Type locationType = (LocationType.Type) data.getExtras().getSerializable(KEY_LOCATION_TYPE);
+//                if (null == locationType) return;
+//                long locationId = data.getExtras().getLong(KEY_LOCATION_ID);
+//                long floorId = data.getExtras().getLong(KEY_FLOOR_ID);
+//                switch (locationType) {
+//                    case FLOOR:
+//                        presenter.setCanAutoChangeFloor(false);
+//                        presenter.changeFloor(locationId);
+//                        break;
+//                    default:
+//                        presenter.setCanAutoChangeFloor(false);
+//                        presenter.changeFloorAddMark(floorId, locationId);
+//                        break;
+//                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -838,17 +857,17 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         switch (mAction) {
             case ACTION_FRONT_LEFT:
             case ACTION_TURN_LEFT:
-            case ACTION_BACK_LEFT:{
+            case ACTION_BACK_LEFT: {
                 resId = R.mipmap.ic_nav_left;
                 break;
             }
             case ACTION_FRONT_RIGHT:
             case ACTION_TURN_RIGHT:
-            case ACTION_BACK_RIGHT:{
+            case ACTION_BACK_RIGHT: {
                 resId = R.mipmap.ic_nav_right;
                 break;
             }
-            case ACTION_ARRIVE:{
+            case ACTION_ARRIVE: {
                 resId = 0;
             }
             default:
@@ -1028,6 +1047,19 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     presenter.exitNavigate();
                 }
             }
+
+            @Override
+            public void onSearchGoHereClick() {
+                PoiModel poiModel = poiMenuLayout.getPoiModel();
+                presenter.changeFloorAddMark((long) poiModel.getZ(), poiModel.getId(), true);
+            }
+
+            @Override
+            public void onSearchItemClick() {
+                PoiModel poiModel = poiMenuLayout.getPoiModel();
+                presenter.changeFloorAddMark((long) poiModel.getZ(), poiModel.getId(), false);
+            }
+
         });
 
         /*layoutPoiMenu.setListener(new YanTaiPoiMenuLayout.Listener() {

@@ -20,6 +20,8 @@ import com.palmap.library.utils.LogUtil;
 import com.palmap.library.utils.ViewAnimUtils;
 import com.palmap.library.utils.ViewUtils;
 
+import java.util.List;
+
 /**
  * Created by 王天明 on 2017/6/28.
  */
@@ -31,16 +33,16 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
     private ViewGroup layout_navi_ready;
     private ViewGroup layout_navi_info;
     private ViewGroup layout_navi_ok;
+    private PoiSearchResultLayout layoutSearchResult;
 
+    private TextView tv_poiName;
+    private TextView tvPoiDes;
     private View btn_goHere;
     private View btn_mockNavi;
     private View btn_startNavi;
     private View image_closeNavi;
-
     private View image_sound;
-
     private View btn_navi_ok;
-
     private TextView tv_navi_length;
     private TextView tv_route_info;
 
@@ -51,7 +53,6 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
     private int height_navi_ok = 0;
 
     private PoiModel poiModel;
-
     private SpeechSynthesizer naviSpeech;
     /**
      * 是否可以播放语音
@@ -74,6 +75,14 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
 
             @Override
             public void onExitNaviClick() {
+            }
+
+            @Override
+            public void onSearchGoHereClick() {
+            }
+
+            @Override
+            public void onSearchItemClick() {
 
             }
         };
@@ -85,6 +94,11 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         void onStartNaviClick();
 
         void onExitNaviClick();
+
+        void onSearchGoHereClick();
+
+        void onSearchItemClick();
+
     }
 
     private ViewHandler viewHandler = ViewHandler.DEFAULE;
@@ -106,6 +120,10 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         layout_navi_ready = (ViewGroup) findViewById(R.id.layout_navi_ready);
         layout_navi_info = (ViewGroup) findViewById(R.id.layout_navi_info);
         layout_navi_ok = (ViewGroup) findViewById(R.id.layout_navi_ok);
+        layoutSearchResult = (PoiSearchResultLayout) findViewById(R.id.layoutSearchResult);
+
+        tv_poiName = (TextView) findViewById(R.id.tv_poiName);
+        tvPoiDes = (TextView) findViewById(R.id.tvPoiDes);
         btn_goHere = findViewById(R.id.btn_goHere);
         btn_startNavi = findViewById(R.id.btn_startNavi);
         btn_mockNavi = findViewById(R.id.btn_mockNavi);
@@ -126,6 +144,20 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
                 viewHandler.onGoHereClick();
             }
         });
+        layoutSearchResult.setOnResultClickListener(
+                new PoiSearchResultLayout.OnResultClickListener() {
+                    @Override
+                    public void goHere(PoiModel model) {
+                        poiModel = model;
+                        viewHandler.onSearchGoHereClick();
+                    }
+
+                    @Override
+                    public void showIcon(PoiModel model) {
+                        poiModel = model;
+                        viewHandler.onSearchItemClick();
+                    }
+                });
 
         btn_mockNavi.setOnClickListener(new OnClickListener() {
             @Override
@@ -154,7 +186,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
             public void onClick(View v) {
                 canSound = !canSound;
                 image_sound.setSelected(canSound);
-                if (!canSound && naviSpeech!= null) {
+                if (!canSound && naviSpeech != null) {
                     naviSpeech.stopSpeaking();
                     naviSpeech.destroy();
                     naviSpeech = null;
@@ -182,36 +214,40 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         layout_navi_ready.setVisibility(GONE);
         layout_navi_info.setVisibility(GONE);
         layout_navi_ok.setVisibility(GONE);
+        layoutSearchResult.setVisibility(GONE);
 
         int nextHeight = getHeight();
 
         switch (state) {
             case Normal:
                 layout_poi_info.setVisibility(VISIBLE);
+                String name = poiModel.getDisPlay();
+                tv_poiName.setText(name.isEmpty()
+                        ? getResources().getString(R.string.ngr_unknown_position) : name);
+                tvPoiDes.setText(poiModel.getFloorName() + " " + poiModel.getAddress());
                 nextHeight = height_poi_info;
+                break;
+            case Search:
+                layoutSearchResult.setVisibility(VISIBLE);
+                nextHeight = layoutSearchResult.getCurrentHeight();
                 break;
             case END_SET:
                 layout_select_start.setVisibility(VISIBLE);
                 nextHeight = height_select_start;
                 break;
-
             case RoutePlanning:
                 layout_navi_ready.setVisibility(VISIBLE);
                 nextHeight = height_navi_ready;
                 break;
-
             case Navigating:
                 layout_navi_info.setVisibility(VISIBLE);
                 nextHeight = height_navi_info;
                 break;
-
             case NaviComplete:
                 layout_navi_ok.setVisibility(VISIBLE);
                 nextHeight = height_navi_ok;
                 break;
-
             default:
-
                 break;
         }
         animShow(nextHeight);
@@ -219,7 +255,8 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
 
     public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
         if (layout_navi_info.getVisibility() == VISIBLE) {
-            tv_navi_length.setText(String.format("剩余约%d米", (int) mRemainingLength));
+            tv_navi_length.setText(String.format(
+                    getResources().getString(R.string.ngr_remian_meters), (int) mRemainingLength));
             if (!canSound && !TextUtils.isEmpty(mDynamicNaviExplain)) {
                 return;
             }
@@ -276,4 +313,11 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         this.poiModel = poiModel;
         refreshView(state);
     }
+
+    @Override
+    public void refreshView(List<PoiModel> poiModel, PalmapViewState state) {
+        layoutSearchResult.addData(poiModel);
+        refreshView(state);
+    }
+
 }

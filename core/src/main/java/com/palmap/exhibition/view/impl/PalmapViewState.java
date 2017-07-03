@@ -4,7 +4,10 @@ package com.palmap.exhibition.view.impl;
  * Created by 天明 on 2016/6/27.
  */
 public enum  PalmapViewState {
+
     Normal,//正常状态
+
+    Search,//搜索状态
 
     RoutePlanning, //路线规划
 

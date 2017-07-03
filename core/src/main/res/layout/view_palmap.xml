@@ -133,7 +133,7 @@
                 android:background="@android:color/white"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="16dp"
-                android:src="@mipmap/ic_list_arrow_up"/>
+                android:src="@mipmap/ic_map_floorup"/>
 
             <ListView
                 android:id="@+id/floorListView"
@@ -149,7 +149,7 @@
                 android:background="@android:color/white"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="16dp"
-                android:src="@mipmap/ic_list_arrow_down"/>
+                android:src="@mipmap/ic_map_floordown"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
@@ -223,12 +223,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"/>
-
-        <com.palmap.exhibition.widget.PoiSearchResultLayout
-            android:id="@+id/layoutSearchResult"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"/>
 
     </FrameLayout>
 

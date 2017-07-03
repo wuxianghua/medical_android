@@ -1,25 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
+              android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imgVExpand"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center">
-
-        <ImageView
-            android:id="@+id/imgVExpand"
-            android:layout_width="36dp"
-            android:layout_height="20dp"
-            android:src="@mipmap/ic_list_arrow_down"/>
-    </LinearLayout>
+        android:layout_height="30dp"
+        android:src="@mipmap/ic_map_floordown"/>
 
     <ListView
         android:id="@+id/lvSearchResult"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:visibility="visible"/>
+        android:layout_height="match_parent"
+        android:scrollbars="none"/>
 
 </LinearLayout>
