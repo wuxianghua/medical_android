@@ -519,7 +519,7 @@ end
 local function defaultStyle(styleType)
     loadStyleWithType(styleType);
     return {
-        back_image = "image/bg_grid.png",
+        back_image = "image/bg_point.png",
         layers = {
             Frame = {
                 --height_offset = 0.1,

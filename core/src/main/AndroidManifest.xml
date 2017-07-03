@@ -25,7 +25,10 @@
     <application
         android:allowBackup="true"
         android:supportsRtl="true">
-        <service android:name="com.palmaplus.nagrand.position.ble.BeaconService" />
+       <!-- <service android:name="com.palmaplus.nagrand.position.ble.BeaconService" />-->
+        <service android:name="org.altbeacon.beacon.service.BeaconService"/>
+        <service android:name="org.altbeacon.beacon.BeaconIntentProcessor"/>
+
 
         <activity
             android:name=".view.impl.PalmapViewActivity"

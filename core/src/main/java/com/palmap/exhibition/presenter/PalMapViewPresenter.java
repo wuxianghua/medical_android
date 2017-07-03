@@ -9,7 +9,7 @@ import com.palmap.exhibition.view.impl.PalmapViewState;
 import com.palmap.library.presenter.Presenter;
 import com.palmaplus.nagrand.data.Feature;
 import com.palmaplus.nagrand.geos.Coordinate;
-import com.palmaplus.nagrand.position.ble.BeaconPositioningManager;
+import com.palmaplus.nagrand.position.PositioningManager;
 import com.palmaplus.nagrand.view.MapOptions;
 import com.palmaplus.nagrand.view.MapView;
 import com.palmaplus.nagrand.view.gestures.OnDoubleTapListener;
@@ -84,7 +84,7 @@ public interface PalMapViewPresenter extends Presenter,
 
     void endMark(PoiModel poiModel);
 
-    void startLocation(BeaconPositioningManager positioningManager);
+    void startLocation(PositioningManager positioningManager);
 
     Coordinate getUserCoordinate();
 

@@ -58,7 +58,6 @@ import com.palmaplus.nagrand.data.LocationList;
 import com.palmaplus.nagrand.data.LocationModel;
 import com.palmaplus.nagrand.data.PlanarGraph;
 import com.palmaplus.nagrand.position.PositioningManager;
-import com.palmaplus.nagrand.position.ble.BeaconPositioningManager;
 import com.palmaplus.nagrand.view.MapView;
 import com.palmaplus.nagrand.view.layer.FeatureLayer;
 
@@ -92,7 +91,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Inject
     PalMapViewPresenter presenter;
     @Inject
-    BeaconPositioningManager beaconPositioningManager;
+    PositioningManager beaconPositioningManager;
     @Inject
     ExecutorService mapViewDrawExecutor;
 

@@ -66,8 +66,6 @@ import com.palmaplus.nagrand.navigate.OnDynamicNavigateListener;
 import com.palmaplus.nagrand.navigate.StepInfo;
 import com.palmaplus.nagrand.position.Location;
 import com.palmaplus.nagrand.position.PositioningManager;
-import com.palmaplus.nagrand.position.ble.BeaconPositioningManager;
-import com.palmaplus.nagrand.position.ble.utils.BleLocation;
 import com.palmaplus.nagrand.rtls.pdr.LocationPair;
 import com.palmaplus.nagrand.rtls.pdr.PDR;
 import com.palmaplus.nagrand.view.MapOptions;
@@ -123,7 +121,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     private MyLocationListener myLocationListener = new MyLocationListener();
 
-    private BeaconPositioningManager positioningManager;
+    private PositioningManager positioningManager;
 
     /**
      * 是否有户外图
@@ -938,7 +936,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     }
 
     @Override
-    public void startLocation(BeaconPositioningManager positioningManager) {
+    public void startLocation(PositioningManager positioningManager) {
         if (BuildConfig.useSVA) {
             registerLocationListener();
             palMapView.getContext().startService(new Intent(
@@ -946,32 +944,38 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     LampSiteLocationService.class
             ));
         } else {
-            if (this.positioningManager == null && positioningManager != null) {
-                this.positioningManager = positioningManager;
+            if (positioningManager == null) {
+                return;
+            }
+            if (this.positioningManager != null) {
                 this.positioningManager.start();
-                this.positioningManager.setOnLocationChangeListener(new PositioningManager.OnLocationChangeListener<BleLocation>() {
-                    @Override
-                    public void onLocationChange(PositioningManager.LocationStatus locationStatus, BleLocation bleLocation, BleLocation t1) {
-                        if (isMockNavi.get()) {
-                            return;
-                        }
-                        if (PositioningManager.LocationStatus.MOVE == locationStatus && t1 != null) {
-                            Coordinate coordinate = t1.getPoint().getCoordinate();
-                            long locationFloorId = Location.floorId.get(t1.getProperties());
-                            myLocationListener.onComplete(new LocationInfoModel(
-                                            coordinate.getX(),
-                                            coordinate.getY(),
-                                            locationFloorId
-                                    ),
-                                    System.currentTimeMillis());
-                        } else {
-                            if (PositioningManager.LocationStatus.START != locationStatus || PositioningManager.LocationStatus.STOP != locationStatus) {
-                                myLocationListener.onFailed(new IllegalArgumentException(), "定位失败");
-                            }
+                return;
+            }
+            this.positioningManager = positioningManager;
+            this.positioningManager.start();
+            this.positioningManager.setOnLocationChangeListener(new PositioningManager.OnLocationChangeListener<Location>() {
+                @Override
+                public void onLocationChange(PositioningManager.LocationStatus locationStatus, Location bleLocation, Location t1) {
+                    LogUtil.e("onLocationChange:" + locationStatus);
+                    if (isMockNavi.get()) {
+                        return;
+                    }
+                    if (PositioningManager.LocationStatus.MOVE == locationStatus && t1 != null) {
+                        Coordinate coordinate = t1.getPoint().getCoordinate();
+                        long locationFloorId = Location.floorId.get(t1.getProperties());
+                        myLocationListener.onComplete(new LocationInfoModel(
+                                        coordinate.getX(),
+                                        coordinate.getY(),
+                                        locationFloorId
+                                ),
+                                System.currentTimeMillis());
+                    } else {
+                        if (PositioningManager.LocationStatus.START != locationStatus || PositioningManager.LocationStatus.STOP != locationStatus) {
+                            myLocationListener.onFailed(new IllegalArgumentException(), "定位失败");
                         }
                     }
-                });
-            }
+                }
+            });
         }
     }
 
@@ -1288,10 +1292,10 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                                 PoiModel poiModel = new PoiModel(mFeature);
                                 poiModel.setZ(currentFloorId);
                                 palMapView.readFeatureColor(mFeature, 0xffFFB5B5);
-                                if(mIsEndSet){
+                                if (mIsEndSet) {
                                     endMark(poiModel);
                                     setPalmapViewState(PalmapViewState.END_SET);
-                                }else{
+                                } else {
                                     getOverLayerManager().addPoiMark(currentFloorId, featureId);
                                 }
                                 palMapView.getMapView().moveToPoint(
