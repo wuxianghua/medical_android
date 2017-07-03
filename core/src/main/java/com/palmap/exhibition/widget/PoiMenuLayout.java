@@ -103,7 +103,6 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
 
     private ViewHandler viewHandler = ViewHandler.DEFAULE;
 
-
     public PoiMenuLayout(Context context) {
         this(context, null);
     }
@@ -222,7 +221,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
             case Select:
                 layout_poi_info.setVisibility(VISIBLE);
                 String name = poiModel.getDisPlay();
-                tv_poiName.setText(name.isEmpty()
+                tv_poiName.setText(TextUtils.isEmpty(name)
                         ? getResources().getString(R.string.ngr_unknown_position) : name);
                 tvPoiDes.setText(poiModel.getFloorName() + " " + poiModel.getAddress());
                 nextHeight = height_poi_info;
@@ -319,5 +318,14 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         layoutSearchResult.addData(poiModel);
         refreshView(state);
     }
+
+//    public void reset(){
+//        layout_poi_info.setVisibility(GONE);
+//        tv_poiName.setText("");
+//        tvPoiDes.setText("");
+//
+//        poiModel = null;
+//
+//    }
 
 }

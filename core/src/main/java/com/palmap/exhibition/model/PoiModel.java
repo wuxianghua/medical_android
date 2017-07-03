@@ -12,14 +12,14 @@ import com.palmaplus.nagrand.data.Feature;
  */
 public class PoiModel {
 
-    private String name;
-    private String logo;
-    private String describe;
-    private String disPlay;
+    private String name = "";
+    private String logo = "";
+    private String describe = "";
+    private String disPlay = "";
     private long categoryId;
     private LocationType type;
-    private String address;
-    private String floorName;
+    private String address = "";
+    private String floorName = "";
 
     /**
      * 是不是设施

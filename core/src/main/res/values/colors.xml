@@ -14,4 +14,6 @@
     <color name="ngr_floor_item_text_normal">#9098B8</color>
     <color name="ngr_indicator_color_active">#00A2F5</color>
     <color name="ngr_indicator_color_normal">#DCE2EE</color>
+    <color name="ngr_bg_map_view_tool_bar">#ffffff</color>
+    <color name="ngr_color_title_text">#333333</color>
 </resources>

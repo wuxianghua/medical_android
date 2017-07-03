@@ -1,13 +1,8 @@
 <resources>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-
-
-    <dimen name="action_bar_height">55dp</dimen>
 
     <dimen name="ngr_big">30dp</dimen>
     <dimen name="ngr_Twenty">20dp</dimen>
-    <dimen name="ngr_large">15dp</dimen>
+    <dimen name="ngr_large">16dp</dimen>
     <dimen name="ngr_normal">10dp</dimen>
     <dimen name="ngr_small">5dp</dimen>
 
@@ -20,7 +15,7 @@
     <dimen name="poiInfoTextSize_big">17sp</dimen>
     <dimen name="poiInfoTextSize_normal">13sp</dimen>
 
-    <dimen name="shadow_width">0.5dp</dimen>
+    <dimen name="ngr_width_shadow">0.5dp</dimen>
 
     <dimen name="all_title_bar_height">48dp</dimen>
     <dimen name="all_go_back_size">15dp</dimen>
@@ -32,5 +27,8 @@
     <dimen name="text_size_17">17sp</dimen>
 
     <dimen name="height_search_list">40dp</dimen>
+    <dimen name="ngr_height_tool_bar">48dp</dimen>
+    <dimen name="ngr_title_text_size">17sp</dimen>
+    <dimen name="ngr_size_compass">40dp</dimen>
 
 </resources>

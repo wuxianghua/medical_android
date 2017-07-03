@@ -38,7 +38,6 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
     private static final String quickSearchPanelPath = "json/QuickSearchPanelConfig.json";
     private static final String quickSearchGroupPath = "json/QuickSearchGroupConfig.json";
 
-
     private PoiSearchView poiSearchView;
     //    @Inject
     DataSource dataSource;
@@ -177,7 +176,8 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                     poiSearchView.getContext(), quickSearchPanelPath);
             Type listType = new TypeToken<ArrayList<QuickSearchKeyWordModel>>() {
             }.getType();
-            poiSearchView.readQuickSearchData(0, (List<QuickSearchKeyWordModel>) gson.fromJson(jsonString, listType));
+            List<QuickSearchKeyWordModel> data =  gson.fromJson(jsonString, listType);
+            poiSearchView.readQuickSearchData(0, data);
         } catch (Exception e) {
             poiSearchView.readQuickSearchData(0, null);
         }

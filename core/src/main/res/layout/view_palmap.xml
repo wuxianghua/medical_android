@@ -28,38 +28,56 @@
         android:layout_height="match_parent"
         android:visibility="gone"/>
 
+    <!--地图操作-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/layout_bottom"
-        android:layout_below="@+id/layout_top">
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
+        <!--搜索-->
         <com.palmap.exhibition.widget.ShadowLayout
             android:id="@+id/layout_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ngr_large"
             android:layout_marginRight="@dimen/ngr_large"
-            android:layout_marginTop="@dimen/ngr_large"
+            android:layout_marginTop="64dp"
             android:orientation="vertical"
             shadow:hole="true"
-            shadow:offset="2dp"
-            shadow:shadowRadius="1dp"
+            shadow:offset="@dimen/ngr_width_shadow"
+            shadow:shadowRadius="0.5dp"
             shadow:type="roundRect">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_corner_white"
-                android:drawableLeft="@mipmap/ic_home_search"
-                android:drawablePadding="@dimen/ngr_normal"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:onClick="goToSearch"
-                android:paddingLeft="@dimen/ngr_large"
-                android:text="请输入目的地"/>
+                android:background="@android:color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginLeft="12dp"
+                    android:src="@mipmap/ngr_ic_home_search"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_corner_white"
+                    android:gravity="center_vertical"
+                    android:onClick="goToSearch"
+                    android:paddingLeft="16dp"
+                    android:text="@string/ngr_please_input_destination"
+                    android:textColor="#B7BBCD"/>
+
+            </LinearLayout>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
+        <!--定位信息-->
         <TextView
             android:id="@+id/tv_locationMessage"
             android:layout_width="wrap_content"
@@ -71,6 +89,7 @@
             android:textColor="#66000000"
             android:visibility="gone"/>
 
+        <!--指南针-->
         <com.palmap.exhibition.widget.ShadowLayout
             android:id="@+id/layout_compassView"
             android:layout_width="wrap_content"
@@ -80,18 +99,19 @@
             android:layout_marginTop="@dimen/ngr_large"
             android:orientation="vertical"
             shadow:hole="true"
-            shadow:offset="2dp"
-            shadow:shadowRadius="1dp"
+            shadow:offset="@dimen/ngr_width_shadow"
+            shadow:shadowRadius="0.5dp"
             shadow:type="circle">
 
             <com.palmap.exhibition.widget.CompassView
                 android:id="@+id/compassView"
-                android:layout_width="@dimen/uiSize"
-                android:layout_height="@dimen/uiSize"
-                compass:bitMapRes="@mipmap/ico_compass"/>
+                android:layout_width="@dimen/ngr_size_compass"
+                android:layout_height="@dimen/ngr_size_compass"
+                compass:bitMapRes="@mipmap/ngr_ic_map_compass"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
+        <!--定位-->
         <com.palmap.exhibition.widget.ShadowLayout
             android:id="@+id/layout_location"
             android:layout_width="wrap_content"
@@ -100,39 +120,40 @@
             android:layout_marginBottom="@dimen/ngr_large"
             android:layout_marginLeft="@dimen/ngr_large"
             android:orientation="vertical"
-            compass:type="roundRect"
             shadow:hole="true"
-            shadow:offset="@dimen/shadow_width"
-            shadow:shadowRadius="0.5dp">
+            shadow:offset="@dimen/ngr_width_shadow"
+            shadow:shadowRadius="0.5dp"
+            shadow:type="roundRect">
 
             <ImageView
                 android:id="@+id/map_location"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="@dimen/uiSize"
                 android:clickable="true"
-                android:src="@drawable/icon_location"/>
+                android:src="@drawable/ngr_bg_location_btn"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
+        <!--楼层-->
         <com.palmap.exhibition.widget.ShadowLayout
             android:id="@+id/layout_floor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_above="@+id/layout_location"
             android:layout_alignLeft="@+id/layout_location"
             android:layout_alignRight="@+id/layout_location"
             android:layout_marginBottom="@dimen/ngr_small"
             android:orientation="vertical"
-            compass:type="roundRect"
+            android:visibility="gone"
             shadow:hole="true"
-            shadow:offset="@dimen/shadow_width"
-            shadow:shadowRadius="0.5dp">
+            shadow:offset="@dimen/ngr_width_shadow"
+            shadow:shadowRadius="0.5dp"
+            shadow:type="roundRect">
 
             <ImageView
-                android:background="@android:color/white"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="16dp"
+                android:background="@android:color/white"
                 android:src="@mipmap/ic_map_floorup"/>
 
             <ListView
@@ -146,13 +167,14 @@
                 android:scrollbars="none"/>
 
             <ImageView
-                android:background="@android:color/white"
                 android:layout_width="@dimen/uiSize"
                 android:layout_height="16dp"
+                android:background="@android:color/white"
                 android:src="@mipmap/ic_map_floordown"/>
 
         </com.palmap.exhibition.widget.ShadowLayout>
 
+        <!--比例尺-->
         <com.palmap.exhibition.widget.Scale
             android:id="@+id/scale"
             android:layout_width="100dp"
@@ -160,9 +182,11 @@
             android:layout_alignBottom="@+id/layout_location"
             android:layout_marginLeft="@dimen/ngr_normal"
             android:layout_toRightOf="@+id/layout_location"
+            android:visibility="gone"
             scale:LineWidth="5"/>
 
-        <LinearLayout
+        <!--缩放-->
+        <com.palmap.exhibition.widget.ShadowLayout
             android:id="@+id/layout_zoom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -170,23 +194,33 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="@dimen/ngr_normal"
             android:layout_marginRight="@dimen/ngr_large"
-            android:orientation="vertical">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            shadow:hole="true"
+            shadow:offset="@dimen/ngr_width_shadow"
+            shadow:shadowRadius="0.5dp"
+            shadow:type="roundRect">
 
-            <TextView
-                android:id="@+id/map_zoom_in"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/btn_zoomin"
-                android:onClick="mapZoomInClick"/>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/white"
+                android:onClick="mapZoomInClick"
+                android:src="@mipmap/ngr_ic_map_zoomin"/>
 
-            <TextView
-                android:id="@+id/map_zoom_out"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/btn_zoomout"
-                android:onClick="mapZoomOutClick"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="0.5dp"
+                android:background="@color/ngr_separate_line"/>
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@android:color/white"
+                android:onClick="mapZoomOutClick"
+                android:src="@mipmap/ngr_ic_map_zoomout"/>
+
+        </com.palmap.exhibition.widget.ShadowLayout>
 
         <ListView
             android:id="@+id/list_facilities"
@@ -212,6 +246,7 @@
 
     </RelativeLayout>
 
+    <!--底部面板-->
     <FrameLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
@@ -226,13 +261,14 @@
 
     </FrameLayout>
 
+    <!--顶部面板-->
     <FrameLayout
         android:id="@+id/layout_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <include
-            layout="@layout/ngr_toolbar"/>
+            layout="@layout/ngr_map_view_toolbar"/>
 
         <com.palmap.exhibition.widget.StartEndPoiChooseView
             android:id="@+id/startEndPoiChooseView"

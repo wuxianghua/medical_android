@@ -43,26 +43,6 @@
         "displayName": "卫生间",
         "searchKeyWord": "0007",
         "iconName": "ic_search_hot_08"
-      },
-      {
-        "displayName": "自助挂号",
-        "searchKeyWord": "0008",
-        "iconName": "ic_search_hot_05"
-      },
-      {
-        "displayName": "去抽血",
-        "searchKeyWord": "0009",
-        "iconName": "ic_search_hot_06"
-      },
-      {
-        "displayName": "去输液",
-        "searchKeyWord": "0010",
-        "iconName": "ic_search_hot_07"
-      },
-      {
-        "displayName": "卫生间",
-        "searchKeyWord": "0011",
-        "iconName": "ic_search_hot_08"
       }
     ]
   }

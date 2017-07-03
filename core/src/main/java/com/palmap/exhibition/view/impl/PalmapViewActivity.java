@@ -9,8 +9,8 @@ import android.content.res.Resources;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -101,13 +101,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     CompassView compassView;
     ImageView mapLocation;
     Scale scale;
-    Toolbar toolBar;
     ViewGroup layout_overlay;
     TextView tvTitle;
     RelativeLayout containerRetry;
     TextView tvLocationMessage;
     ViewGroup layout_mapView;
-    ViewGroup layoutBack;
     View map_location;
     FloorListAdapter floorListAdapter;
     FacilitiesListAdapter facilitiesListAdapter;
@@ -618,10 +616,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         presenter.startLocation(beaconPositioningManager);//实用lampsite点位 传null
     }
 
-    void backClick() {
-        onBackPressed();
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -647,6 +641,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     poiModel.setFloorName(getFloorNameById(model.getFloorId()));// TODO: 2017/6/30
                     poiModels.add(poiModel);
                 }
+                presenter.setPalmapViewState(PalmapViewState.Search);
                 poiMenu.refreshView(poiModels, PalmapViewState.Search);
 //                LocationType.Type locationType = (LocationType.Type) data.getExtras().getSerializable(KEY_LOCATION_TYPE);
 //                if (null == locationType) return;
@@ -950,13 +945,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         mapLocation = findView(R.id.map_location);
         facilitiesListView = findView(R.id.list_facilities);
         scale = findView(R.id.scale);
-        toolBar = findView(R.id.toolBar);
         layout_overlay = findView(R.id.layout_overlay);
-        tvTitle = findView(R.id.tv_title);
+        tvTitle = findView(R.id.tvTitle);
         containerRetry = findView(R.id.container_retry);
         tvLocationMessage = findView(R.id.tv_locationMessage);
         layout_mapView = findView(R.id.layout_mapView);
-        layoutBack = findView(R.id.layout_back);
         layout_floor = (ViewGroup) findViewById(R.id.layout_floor);
 
         map_location = findView(R.id.map_location);
@@ -968,7 +961,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         compassView.setOnClickListener(this);
         mapLocation.setOnClickListener(this);
-        layoutBack.setOnClickListener(this);
 
         tvTitle.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -1086,7 +1078,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     return true;
                 } else {
                     //showMessage("当前没有定位点");
-                    presenter.setPalmapViewState(PalmapViewState.END_SET);
+                    presenter.setPalmapViewState(PalmapViewState.ENviD_SET);
                     presenter.endMark(layoutPoiMenu.getPoiModel());
                     return false;
                 }
@@ -1126,8 +1118,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         int i = v.getId();
         if (i == R.id.map_location) {
             locationClick();
-        } else if (i == R.id.layout_back) {
-            backClick();
         } else if (i == R.id.compassView) {
             compassViewClick();
         }
@@ -1209,6 +1199,41 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             StatusBarCompat.setStatusBarColor(this, Color.RED);
         }*/
 
+    }
+
+    //菜单栏返回按钮点击
+    public void onBackClick(View view) {
+        goBack();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            goBack();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    private void goBack() {
+        switch (presenter.getState()) {
+            case Search:
+            case RoutePlanning:
+            case END_SET:
+            case NaviComplete: {
+                poiMenuLayout.animHide();
+                break;
+            }
+            case Navigating: {
+                // TODO: 2017/7/3 弹对话框
+                break;
+            }
+            case Normal:
+            default:
+                onBackPressed();
+                break;
+        }
     }
 
 }
