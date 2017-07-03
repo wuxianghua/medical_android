@@ -110,7 +110,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     private Coordinate userCoordinate;
 
-    private PalmapViewState state = PalmapViewState.Normal;
+    private PalmapViewState state = PalmapViewState.Select;
 
     /**
      * 是否可以根据定位自动切换到当前楼层
@@ -556,7 +556,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         mFeature = null;
         LogUtil.e("buildingId:" + buildingId);
         getOverLayerManager().clearAll();
-        setPalmapViewState(PalmapViewState.Normal);
+        setPalmapViewState(PalmapViewState.Select);
         navigateManager.clear();
         setCanAutoChangeFloor(false);
         loadMapWithBuildingId(buildingId, ID_NONE, ID_NONE);
@@ -713,7 +713,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             return;
         }
         // TODO: 2016/6/27 设置为路劲规划状态
-        if (state == PalmapViewState.Normal || state == PalmapViewState.END_SET) {
+        if (state == PalmapViewState.Select || state == PalmapViewState.END_SET) {
             setPalmapViewState(PalmapViewState.RoutePlanning);
         }
         palMapView.showPoiMenu(null, state);
@@ -743,7 +743,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     @Override
     public void resetState() {
-        setPalmapViewState(PalmapViewState.Normal);
+        setPalmapViewState(PalmapViewState.Select);
         getOverLayerManager().clearAllNotLocation();
         palMapView.clearNavigateRoad();
         palMapView.hidePoiMenu();
@@ -1002,7 +1002,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 //                getOverLayerManager().clearAllNotLocation();
 //                palMapView.clearNavigateRoad();
 //                navigateManager.clear();
-//                setPalmapViewState(PalmapViewState.Normal);
+//                setPalmapViewState(PalmapViewState.Select);
 //                palMapView.hidePoiMenu();
 //                palMapView.showMapViewControl();
 //                dialog.dismiss();
@@ -1273,7 +1273,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                         Runnable tempTask = new Runnable() {
                             @Override
                             public void run() {
-                                //setPalmapViewState(PalmapViewState.Normal);
+                                //setPalmapViewState(PalmapViewState.Select);
 //                                PoiModel poiModel = new PoiModel(mFeature);
 //                                poiModel.setZ(currentFloorId);
 //                                LogUtil.e("添加addPoiMark");

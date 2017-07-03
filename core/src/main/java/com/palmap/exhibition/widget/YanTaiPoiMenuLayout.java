@@ -36,7 +36,7 @@ public class YanTaiPoiMenuLayout extends LinearLayout {
 
     private ClickHandler clickHandler = new ClickHandler();
 
-    private PalmapViewState state = PalmapViewState.Normal;
+    private PalmapViewState state = PalmapViewState.Select;
 
     private View btn_end;
     private View btn_start;

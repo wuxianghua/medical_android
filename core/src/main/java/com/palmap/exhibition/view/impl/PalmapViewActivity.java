@@ -348,7 +348,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 //        runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
-//                if (presenter.getState().equals(PalmapViewState.Normal)
+//                if (presenter.getState().equals(PalmapViewState.Select)
 //                        || presenter.getState().equals(PalmapViewState.END_SET)) {
 //                    layoutPoiMenu.animHide();
 //                } else {
@@ -1012,7 +1012,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     private void showPoiMark(long locationId) {
         presenter.refreshPoiMark(locationId);
-        showPoiMenu(new PoiModel(getMapView().selectFeature(locationId)), PalmapViewState.Normal);
+        showPoiMenu(new PoiModel(getMapView().selectFeature(locationId)), PalmapViewState.Select);
     }
 
     private void initLayoutPoiMenu() {

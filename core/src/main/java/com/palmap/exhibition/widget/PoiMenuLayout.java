@@ -219,7 +219,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         int nextHeight = getHeight();
 
         switch (state) {
-            case Normal:
+            case Select:
                 layout_poi_info.setVisibility(VISIBLE);
                 String name = poiModel.getDisPlay();
                 tv_poiName.setText(name.isEmpty()
