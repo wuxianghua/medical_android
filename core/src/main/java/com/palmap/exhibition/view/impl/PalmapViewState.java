@@ -11,7 +11,7 @@ public enum  PalmapViewState {
 
     RoutePlanning, //路线规划
 
-    NavigateReady, //导航准备状态
+    //NavigateReady, //导航准备状态
 
     Navigating, //导航中
 

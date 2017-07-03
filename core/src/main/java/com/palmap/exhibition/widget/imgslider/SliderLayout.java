@@ -237,6 +237,7 @@ public class SliderLayout extends RelativeLayout{
 
     public <T extends BaseSliderView> void addSlider(T imageContent){
         mSliderAdapter.addSlider(imageContent);
+        mViewPager.setCanScroll(!(mSliderAdapter.getCount() == 1));
     }
 
     private android.os.Handler mh = new android.os.Handler(){

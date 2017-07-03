@@ -143,13 +143,13 @@ public class YanTaiPoiMenuLayout extends LinearLayout {
                 poi_name.setText(this.poiModel.getDisPlay());
             }
             if (null != poi_address) {
-                if (poiModel.getZ() == Config.ID_FLOOR_F1) {
-                    poi_address.setText("F1");
-                } else if (poiModel.getZ() == Config.ID_FLOOR_F2) {
-                    poi_address.setText("F2");
-                } else {
+//                if (poiModel.getZ() == Config.ID_FLOOR_F1) {
+//                    poi_address.setText("F1");
+//                } else if (poiModel.getZ() == Config.ID_FLOOR_F2) {
+//                    poi_address.setText("F2");
+//                } else {
                     poi_address.setText(this.poiModel.getAddress());
-                }
+//                }
             }
             if (getContext().getString(R.string.ngr_theWay).equals(this.poiModel.getName())) {
                 poi_name.setText(this.poiModel.getName());

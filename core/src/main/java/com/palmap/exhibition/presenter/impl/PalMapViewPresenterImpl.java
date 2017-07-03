@@ -1480,7 +1480,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                                         endCoordinate = navigateManager.getCoordinateByFeature(endFeature, navigateManager.getFeatureLength(endFeature) - 1);
                                         getOverLayerManager().refreshLadderMark(startMark.getFloorId(), new double[]{endCoordinate.getX(), endCoordinate.getY()}
                                                 , connectInfoCategoryId,
-                                                currentFloorId == Config.ID_FLOOR_F1 ? "至F2" : "至F1"
+                                                "至" + palMapView.getCurrentFloorName()
                                         );
                                         break;
                                     }

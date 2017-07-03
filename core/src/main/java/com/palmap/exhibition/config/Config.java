@@ -119,31 +119,6 @@ public final class Config {
      */
     public static float MAP_ANGLE;
 
-    /**
-     * 推送活动的ID
-     */
-    public static final int ACTIVITY_ID_PUSH = -1;
-    /**
-     * 会议活动类型
-     */
-    public static final int ACTIVITY_TYPE_MEETING = 0;
-    /**
-     * 普通活动类型
-     */
-    public static final int ACTIVITY_TYPE_ATY = 1;
-    /**
-     * 推送活动类型
-     */
-    public static final int ACTIVITY_TYPE_LIGHTEVENT = 2;
 
-    //烟台楼层ID 写死
-    public static final int ID_FLOOR_F1 = 1864263;
-    public static final int ID_FLOOR_F2 = 1864381;
-    public static final int ID_FLOOR_B1 = 1903458;
-
-
-    //默认的退送距离
-    public static final int pushDiameter = 10;
-    public static final int lightDiameter = 10;
 
 }

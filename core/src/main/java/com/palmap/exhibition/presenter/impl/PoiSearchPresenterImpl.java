@@ -30,11 +30,14 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
-
 /**
  * Created by 天明 on 2016/6/28.
  */
 public class PoiSearchPresenterImpl implements PoiSearchPresenter {
+
+    private static final String quickSearchPanelPath = "json/QuickSearchPanelConfig.json";
+    private static final String quickSearchGroupPath = "json/QuickSearchGroupConfig.json";
+
 
     private PoiSearchView poiSearchView;
     //    @Inject
@@ -141,7 +144,7 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
     }
 
     private void readPanelConfig() {
-        Observable.create(new ObservableOnSubscribe<String>() {
+       /* Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Exception {
                 String jsonString = FileUtils.readFileFromAssets(
@@ -168,7 +171,16 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         poiSearchView.readQuickSearchData(0, null);
                     }
-                });
+                });*/
+        try {
+            String jsonString = FileUtils.readFileFromAssets(
+                    poiSearchView.getContext(), quickSearchPanelPath);
+            Type listType = new TypeToken<ArrayList<QuickSearchKeyWordModel>>() {
+            }.getType();
+            poiSearchView.readQuickSearchData(0, (List<QuickSearchKeyWordModel>) gson.fromJson(jsonString, listType));
+        } catch (Exception e) {
+            poiSearchView.readQuickSearchData(0, null);
+        }
     }
 
     private void readGroupConfig() {
@@ -176,7 +188,7 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> emitter) throws Exception {
                 String jsonString = FileUtils.readFileFromAssets(
-                        poiSearchView.getContext(), "json/QuickSearchGroupConfig.json");
+                        poiSearchView.getContext(), quickSearchGroupPath);
                 emitter.onNext(jsonString);
                 emitter.onComplete();
             }
