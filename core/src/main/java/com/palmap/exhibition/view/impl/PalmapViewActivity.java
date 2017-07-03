@@ -452,13 +452,19 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void readFloorData(LocationList locationList, long selectFloorId) {
-        if ((locationList == null || locationList.getSize() == 0) && selectFloorId == 0) {
+        if ((locationList == null || locationList.getSize() == 0)) {
             if (floorListAdapter != null) {
                 floorListAdapter.clear();
                 floorListAdapter = null;
             }
             floorListView.setVisibility(View.GONE);
             return;
+        }
+        if (locationList.getSize() < 3) {
+            ViewGroup.LayoutParams layoutParams = floorListView.getLayoutParams();
+            layoutParams.height = getResources().getDimensionPixelOffset(R.dimen.uiSize) *
+                    locationList.getSize();
+            floorListView.setLayoutParams(layoutParams);
         }
         layout_floor.setVisibility(View.VISIBLE);
         this.floorModelList = new ArrayList<>();
