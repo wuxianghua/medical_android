@@ -67,6 +67,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
+import static com.palmap.exhibition.view.impl.PalmapViewState.Normal;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_ARRIVE;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_BACK_LEFT;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_BACK_RIGHT;
@@ -328,11 +329,11 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         }
         if (poiModel == null) {
             poiMenu.refreshView(state);
-            return;
+        } else {
+            poiMenu.refreshView(poiModel, state);
         }
-        poiMenu.refreshView(poiModel, state);
+        changePalmapViewWidget(PalmapViewState.Select);
     }
-
 
     @Override
     public void hidePoiMenuAtFloorChange() {
@@ -499,12 +500,10 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mapView.doCollisionDetection();
-                    }
-                }, 500);
+                if (presenter.getState() == PalmapViewState.Select) {
+                    poiMenuLayout.refreshView(Normal);
+                    changePalmapViewWidget(Normal);
+                }
                 clearFacilityListSelect();
                 if (floorListAdapter != null) {
                     floorListAdapter.setSelectFloorId(newFloorId);
@@ -546,7 +545,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      */
     @Override
     public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
-        //layoutPoiMenu.readRemainingLength((int) mRemainingLength);
+        if (layout_floor.getVisibility() == View.VISIBLE) {
+            changePalmapViewWidget(presenter.getState());
+        }
         poiMenuLayout.refreshView(presenter.getState());
         poiMenuLayout.readRemainingLength(mDynamicNaviExplain, mRemainingLength);
     }
@@ -621,42 +622,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CODE_SEARCH_REQUEST && resultCode == RESULT_OK) {
             try {
-                if (data == null) {
-                    return;
-                }
-                // TODO: 2017/6/30 有没有数据转换工具类
                 ArrayList<SearchResultModel> models =
                         data.getParcelableArrayListExtra(KEY_SEARCH_LIST);
-                List<PoiModel> poiModels = new ArrayList<>();
-                for (SearchResultModel model : models) {
-                    if (model == null) {
-                        continue;
-                    }
-                    PoiModel poiModel = new PoiModel();
-                    poiModel.setDisPlay(model.getName());
-                    poiModel.setName(model.getName());
-                    poiModel.setId(model.getId());
-                    poiModel.setAddress(model.getAddress());
-                    poiModel.setZ(model.getFloorId());
-                    poiModel.setFloorName(getFloorNameById(model.getFloorId()));// TODO: 2017/6/30
-                    poiModels.add(poiModel);
-                }
-                presenter.setPalmapViewState(PalmapViewState.Search);
-                poiMenu.refreshView(poiModels, PalmapViewState.Search);
-//                LocationType.Type locationType = (LocationType.Type) data.getExtras().getSerializable(KEY_LOCATION_TYPE);
-//                if (null == locationType) return;
-//                long locationId = data.getExtras().getLong(KEY_LOCATION_ID);
-//                long floorId = data.getExtras().getLong(KEY_FLOOR_ID);
-//                switch (locationType) {
-//                    case FLOOR:
-//                        presenter.setCanAutoChangeFloor(false);
-//                        presenter.changeFloor(locationId);
-//                        break;
-//                    default:
-//                        presenter.setCanAutoChangeFloor(false);
-//                        presenter.changeFloorAddMark(floorId, locationId);
-//                        break;
-//                }
+                presenter.handlerSearchResult(models);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -799,10 +767,10 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      */
     @Override
     public void showRouteInfoEnd(String label, String msg) {
-        poiMenuLayout.refreshView(PalmapViewState.END_SET);
         startEndPoiChooseView.setEndPoiName(label);
         startEndPoiChooseView.setEndPoiDes(msg);
-        showStartEndPoiChoosePanel(true);
+        poiMenuLayout.refreshView(PalmapViewState.END_SET);
+        changePalmapViewWidget(PalmapViewState.END_SET);
     }
 
     private void showStartEndPoiChoosePanel(boolean isAnimated) {
@@ -813,7 +781,8 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         }
     }
 
-    private void hideStartEndPoiChoosePanel(boolean isAnimated) {
+    @Override
+    public void hideStartEndPoiChoosePanel(boolean isAnimated) {
         startEndPoiChooseView.setVisibility(View.GONE);
         startEndPoiChooseView.resetInfo();
         if (isAnimated) {
@@ -962,16 +931,23 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         compassView.setOnClickListener(this);
         mapLocation.setOnClickListener(this);
 
-        tvTitle.setOnLongClickListener(new View.OnLongClickListener() {
+//        tvTitle.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                usePDR = !usePDR;
+//                if (usePDR) {
+//                    showMessage("添加惯导");
+//                } else {
+//                    showMessage("取消惯导");
+//                }
+//                return true;
+//            }
+//        });
+
+        startEndPoiChooseView.setOnBackClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                usePDR = !usePDR;
-                if (usePDR) {
-                    showMessage("添加惯导");
-                } else {
-                    showMessage("取消惯导");
-                }
-                return true;
+            public void onClick(View view) {
+                goBack();
             }
         });
 
@@ -1018,7 +994,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     presenter.endMark(poiMenuLayout.getPoiModel());
                 } else {
                     //showMessage("当前没有定位点");
-                    presenter.setPalmapViewState(PalmapViewState.END_SET);
+                    //presenter.setPalmapViewState(PalmapViewState.END_SET);
                     presenter.endMark(poiMenuLayout.getPoiModel());
                 }
             }
@@ -1038,10 +1014,12 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             }
 
             @Override
-            public void onExitNaviClick() {
-                if (presenter.getState() == PalmapViewState.Navigating
-                        || presenter.getState() == PalmapViewState.NaviComplete) {
+            public void onExitNaviClick(boolean isInterrupt) {
+                if (isInterrupt) {
+                    showExitNavigationTipDilog();
+                }else {
                     presenter.exitNavigate();
+                    changePalmapViewWidget(Normal);
                 }
             }
 
@@ -1058,59 +1036,30 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             }
 
         });
-
-        /*layoutPoiMenu.setListener(new YanTaiPoiMenuLayout.Listener() {
-            @Override
-            public void onStartClick(View v) {
-                presenter.startMark(layoutPoiMenu.getPoiModel());
-            }
-
-            @Override
-            public void onEndClick(View v) {
-
-            }
-
-            @Override
-            public boolean onGoClick(View v) {
-                //去那里
-                if (presenter.startMarkFromLocation()) {
-                    presenter.endMark(layoutPoiMenu.getPoiModel());
-                    return true;
-                } else {
-                    //showMessage("当前没有定位点");
-                    presenter.setPalmapViewState(PalmapViewState.ENviD_SET);
-                    presenter.endMark(layoutPoiMenu.getPoiModel());
-                    return false;
-                }
-            }
-
-            @Override
-            public void onClearClick() {
-                presenter.resetState();
-            }
-
-            @Override
-            public void onStartNavigateClick(View v) {
-                if (presenter.getState() == PalmapViewState.Navigating) {
-                    presenter.exitNavigate();
-                } else {
-                    presenter.beginNavigate();
-                }
-            }
-
-        });*/
     }
 
     @Override
     public void readExitNavigate() {
         hideNavigationTipPanel(true);
-//        layoutPoiMenu.exitNavigate();
     }
 
     @Override
     public void readNaviComplete() {
         navigationTipPanelView.setNavigationTip(getString(R.string.ngr_arrive_destination));
         poiMenuLayout.refreshView(presenter.getState());
+        changePalmapViewWidget(presenter.getState());
+    }
+
+    @Override
+    public void showSearchResultView(List<PoiModel> poiModels) {
+        poiMenu.refreshView(poiModels, PalmapViewState.Search);
+        changePalmapViewWidget(PalmapViewState.Search);
+        if (!poiModels.isEmpty()) {
+            PoiModel poiModel = poiModels.get(0);
+            if (poiModel != null) {
+                presenter.changeFloorAddMark((long) poiModel.getZ(), poiModel.getId(), false);
+            }
+        }
     }
 
     @Override
@@ -1121,13 +1070,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         } else if (i == R.id.compassView) {
             compassViewClick();
         }
-    }
-
-    private void toYanTaiSearchView() {
-        presenter.resetState();
-        presenter.clearFacilityMarks();
-        clearFacilityListSelect();
-        getNavigator().toSearchViewForResult(this, presenter.getBuildingId(), floorModelList, CODE_SEARCH_REQUEST);
     }
 
     private void changeFloor(int floorId) {
@@ -1190,15 +1132,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             delayedDoCollisionDetection();
             refreshScaleView();
         }
-       /* View v2 = findViewById(R.id.testLayout);
-        if (v2.getHeight() != 0) {
-            ViewAnimUtils.animHeight(v2,0,500,null);
-            initStatusBar(R.color.ngr_colorPrimary);
-        }else{
-            ViewAnimUtils.animHeight(v2,500,500,null);
-            StatusBarCompat.setStatusBarColor(this, Color.RED);
-        }*/
-
     }
 
     //菜单栏返回按钮点击
@@ -1219,21 +1152,83 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     private void goBack() {
         switch (presenter.getState()) {
             case Search:
-            case RoutePlanning:
             case END_SET:
+            case RoutePlanning:
             case NaviComplete: {
-                poiMenuLayout.animHide();
+                presenter.resetState();
+                changePalmapViewWidget(Normal);
                 break;
             }
             case Navigating: {
-                // TODO: 2017/7/3 弹对话框
+                showExitNavigationTipDilog();
                 break;
             }
             case Normal:
+            case Select:
             default:
                 onBackPressed();
                 break;
         }
     }
+
+    private void changePalmapViewWidget(PalmapViewState state) {
+        switch (state) {
+            case Normal: {
+                searchPanel.setVisibility(View.VISIBLE);
+                layout_floor.setVisibility(View.VISIBLE);
+                hideNavigationTipPanel(true);
+                break;
+            }
+            case Select: {
+                // TODO: 2017/7/3 是否需要隐藏
+//                searchPanel.setVisibility(View.GONE);
+                break;
+            }
+            case Search: {
+                searchPanel.setVisibility(View.GONE);
+                layout_floor.setVisibility(View.GONE);
+                break;
+            }
+            case END_SET: {
+                showStartEndPoiChoosePanel(true);
+                layout_floor.setVisibility(View.VISIBLE);
+                break;
+            }
+            case RoutePlanning: {
+                break;
+            }
+            case Navigating: {
+                layout_floor.setVisibility(View.GONE);
+                break;
+            }
+            case NaviComplete: {
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    private void showExitNavigationTipDilog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("tips")
+                .setMessage("是否结束导航")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        presenter.exitNavigate();
+                        changePalmapViewWidget(Normal);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
 
 }

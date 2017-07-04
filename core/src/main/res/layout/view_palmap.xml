@@ -32,9 +32,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_above="@+id/layout_bottom"
+        android:layout_below="@+id/layout_top">
 
         <!--搜索-->
         <com.palmap.exhibition.widget.ShadowLayout
@@ -43,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/ngr_large"
             android:layout_marginRight="@dimen/ngr_large"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="18dp"
             android:orientation="vertical"
             shadow:hole="true"
             shadow:offset="@dimen/ngr_width_shadow"

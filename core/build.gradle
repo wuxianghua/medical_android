@@ -17,8 +17,8 @@ android {
         targetSdkVersion globalConfiguration.getAt("androidTargetSdkVersion")
         multiDexEnabled true
         buildConfigField "boolean", "useSVA", "false"//是否使用SVA定位
-        //buildConfigField "String", "NAG_KEY", "\"6617d492627540a293237ccb70b85af1\""
-        buildConfigField "String", "NAG_KEY", "\"9029c2632a4040389cfb547c8e567edc\""
+        buildConfigField "String", "NAG_KEY", "\"6617d492627540a293237ccb70b85af1\""
+//        buildConfigField "String", "NAG_KEY", "\"9029c2632a4040389cfb547c8e567edc\""
     }
 
     packagingOptions {

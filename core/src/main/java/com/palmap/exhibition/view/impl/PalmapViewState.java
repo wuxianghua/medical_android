@@ -5,9 +5,9 @@ package com.palmap.exhibition.view.impl;
  */
 public enum PalmapViewState {
 
-    Select,//选中POI状态
-
     Normal,//正常状态
+
+    Select,//选中POI状态
 
     Search,//搜索状态
 

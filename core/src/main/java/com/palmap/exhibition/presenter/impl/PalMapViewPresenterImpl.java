@@ -23,6 +23,7 @@ import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.LocationInfoModel;
 import com.palmap.exhibition.model.NavigationPointModel;
 import com.palmap.exhibition.model.PoiModel;
+import com.palmap.exhibition.model.SearchResultModel;
 import com.palmap.exhibition.other.FloorSwitchManager;
 import com.palmap.exhibition.other.MapAngleHelper;
 import com.palmap.exhibition.other.OverLayerManager;
@@ -71,6 +72,7 @@ import com.palmaplus.nagrand.rtls.pdr.PDR;
 import com.palmaplus.nagrand.view.MapOptions;
 import com.palmaplus.nagrand.view.MapView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -110,7 +112,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     private Coordinate userCoordinate;
 
-    private PalmapViewState state = PalmapViewState.Select;
+    private PalmapViewState state = PalmapViewState.Normal;
 
     /**
      * 是否可以根据定位自动切换到当前楼层
@@ -594,8 +596,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         loadMap(poiModel.getId());
     }
 
-    @Override
-    public void setPalmapViewState(PalmapViewState state) {
+    private void setPalmapViewState(PalmapViewState state) {
         this.state = state;
     }
 
@@ -660,6 +661,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         palMapView.showRouteInfoEnd(poiModel.getDisPlay(), getCurrentFloorName() + " " + poiModel.getAddress());
         getOverLayerManager().removePoiMark();
         getOverLayerManager().addEndMark(createNavigationPointModelWithPoiModel(poiModel), poiModel.getX(), poiModel.getY());
+        if (getOverLayerManager().getStartMark() == null) {
+            setPalmapViewState(PalmapViewState.END_SET);
+        }
     }
 
     private NavigationPointModel createNavigationPointModelWithPoiModel(PoiModel poiModel) {
@@ -730,7 +734,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 getCurrentFloorId()
         );
         requestNaviRoad = true;
-        endNavigationDialogCanShow = true;
     }
 
     /**
@@ -743,13 +746,13 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     @Override
     public void resetState() {
-        setPalmapViewState(PalmapViewState.Select);
+        setPalmapViewState(PalmapViewState.Normal);
         getOverLayerManager().clearAllNotLocation();
         palMapView.clearNavigateRoad();
         palMapView.hidePoiMenu();
         resetFeature();
+        palMapView.hideStartEndPoiChoosePanel(true);
         palMapView.hideRouteInfoView();
-        endNavigationDialogCanShow = true;
         if (navigateManager != null) {
             navigateManager.clear();
             navigateManager.stop();
@@ -836,9 +839,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     //退出导航
     @Override
     public void exitNavigate() {
-//        setPalmapViewState(PalmapViewState.RoutePlanning);
-//        palMapView.showRouteInfoDetails(naviTotalLength + "m");
-//        navigateManager.stop();
         palMapView.readExitNavigate();
         if (isMockNavi.compareAndSet(true, false)) {
             mockDisposable.dispose();
@@ -861,7 +861,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     @Override
     public void beginNavigate() {
-        if (navigateManager == null || null == userCoordinate || PalmapViewState.Navigating == getState()) {
+        if (navigateManager == null
+                || null == userCoordinate
+                || PalmapViewState.Navigating == getState()
+                || PalmapViewState.NaviComplete == getState()
+                ) {
             return;
         }
         palMapView.getMapView().zoom(2.0f);
@@ -892,6 +896,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             }
         }, 50);
         navigateManager.start(userCoordinate, currentFloorId, 0);
+
     }
 
     @Override
@@ -922,6 +927,25 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 });
     }
 
+    @Override
+    public void handlerSearchResult(ArrayList<SearchResultModel> models) {
+        setPalmapViewState(PalmapViewState.Search);
+        List<PoiModel> poiModels = new ArrayList<>();
+        for (SearchResultModel model : models) {
+            if (model == null) {
+                continue;
+            }
+            PoiModel poiModel = new PoiModel();
+            poiModel.setDisPlay(model.getName());
+            poiModel.setName(model.getName());
+            poiModel.setId(model.getId());
+            poiModel.setAddress(model.getAddress());
+            poiModel.setZ(model.getFloorId());
+            poiModel.setFloorName(palMapView.getFloorNameById(model.getFloorId()));
+            poiModels.add(poiModel);
+        }
+        palMapView.showSearchResultView(poiModels);
+    }
 
     @Override
     public void startSpeaking(final View v, String msg) {
@@ -979,45 +1003,17 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         }
     }
 
-    private boolean endNavigationDialogCanShow = true;
-
     /**
      * 导航结束 用户到达终点附近
      */
     private void onNavigationEnd() {
-//        if (!endNavigationDialogCanShow) {
-//            return;
-//        }
-
         IFlytekController.getInstance().obtainSpeechSynthesizer(palMapView.getContext(), null)
                 .startSpeaking("您已到达目的地,导航结束", null);
-
-        //endNavigationDialogCanShow = false;
-
-        setPalmapViewState(PalmapViewState.NaviComplete);
-//        palMapView.showNavigationEndView(new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                endNavigationDialogCanShow = true;
-//                getOverLayerManager().clearAllNotLocation();
-//                palMapView.clearNavigateRoad();
-//                navigateManager.clear();
-//                setPalmapViewState(PalmapViewState.Select);
-//                palMapView.hidePoiMenu();
-//                palMapView.showMapViewControl();
-//                dialog.dismiss();
-//                isMockNavi.set(false);
-//            }
-//        }, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//            }
-//        });
-        palMapView.readNaviComplete();
         if (isMockNavi.get()) {
             mockDisposable.dispose();
         }
+        setPalmapViewState(PalmapViewState.NaviComplete);
+        palMapView.readNaviComplete();
     }
 
     /**
@@ -1171,7 +1167,8 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             return;
         }
 
-        if (state.equals(PalmapViewState.Navigating) || state == PalmapViewState.RoutePlanning) {
+        if (state == PalmapViewState.Search || state == PalmapViewState.Navigating
+                || state == PalmapViewState.RoutePlanning || state == PalmapViewState.NaviComplete) {
             return;
         }
 
@@ -1190,16 +1187,8 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 removeTapAndPoiMark();
                 return;
             }
-
             getOverLayerManager().animRefreshOverlay(300);
             PoiModel poiModel;
-            // TODO: 2016/6/23 如果点击的是中空区域
-            if (MapParam.getCategoryId(feature) == 23062000) {
-                //中空区域
-                palMapView.hidePoiMenu();
-                return;
-            }
-
             if (MapParam.getId(feature) == currentFloorId) {
                 //点击在楼道
                 poiModel = new PoiModel();
@@ -1225,10 +1214,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     poiModel.getX(), poiModel.getY()
             });
             palMapView.getMapView().moveToPoint(new Coordinate(poiModel.getX(), poiModel.getY()), true, 300);
-
+            if (state == PalmapViewState.Normal) {
+                setPalmapViewState(PalmapViewState.Select);
+            }
             //判断当前处于什么状态
             palMapView.showPoiMenu(poiModel, state);
-
             mFeature = feature;
         } else {
             palMapView.hidePoiMenu();

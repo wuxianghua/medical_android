@@ -115,7 +115,6 @@
             android:layout_toLeftOf="@+id/image_sound"
             android:layout_toRightOf="@+id/image_closeNavi"
             android:gravity="center"
-            android:text="剩余约25米"
             android:textColor="#6E768F"
             android:textSize="16sp"/>
 

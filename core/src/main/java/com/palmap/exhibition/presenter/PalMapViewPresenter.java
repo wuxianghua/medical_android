@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.palmap.exhibition.model.Api_ActivityInfo;
 import com.palmap.exhibition.model.PoiModel;
+import com.palmap.exhibition.model.SearchResultModel;
 import com.palmap.exhibition.view.PalMapView;
 import com.palmap.exhibition.view.impl.PalmapViewState;
 import com.palmap.library.presenter.Presenter;
@@ -16,6 +17,7 @@ import com.palmaplus.nagrand.view.gestures.OnDoubleTapListener;
 import com.palmaplus.nagrand.view.gestures.OnLongPressListener;
 import com.palmaplus.nagrand.view.gestures.OnSingleTapListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -136,7 +138,7 @@ public interface PalMapViewPresenter extends Presenter,
 
     void refreshData();
 
-    void setPalmapViewState(PalmapViewState state);
+    //void setPalmapViewState(PalmapViewState state);
 
     void animRefreshOverlay(int time);
 
@@ -153,4 +155,5 @@ public interface PalMapViewPresenter extends Presenter,
      */
     void beginMockNavigate();
 
+    void handlerSearchResult(ArrayList<SearchResultModel> models);
 }

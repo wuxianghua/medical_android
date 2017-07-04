@@ -198,6 +198,11 @@ public interface PalMapView extends LoadDataView {
     void hideRouteInfoView();
 
     /**
+     * 隐藏起点终点显示面板
+     */
+    void hideStartEndPoiChoosePanel(boolean isAnimated);
+
+    /**
      * 控制路线指示上下行提示view
      */
     void showRouteUpView();
@@ -230,4 +235,6 @@ public interface PalMapView extends LoadDataView {
      * 导航完成了
      */
     void readNaviComplete();
+
+    void showSearchResultView(List<PoiModel> poiModels);
 }

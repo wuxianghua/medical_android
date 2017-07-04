@@ -74,7 +74,8 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
             }
 
             @Override
-            public void onExitNaviClick() {
+            public void onExitNaviClick(boolean isInterrupt) {
+
             }
 
             @Override
@@ -93,7 +94,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
 
         void onStartNaviClick();
 
-        void onExitNaviClick();
+        void onExitNaviClick(boolean isInterrupt);
 
         void onSearchGoHereClick();
 
@@ -175,7 +176,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         image_closeNavi.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHandler.onExitNaviClick();
+                viewHandler.onExitNaviClick(true);
             }
         });
 
@@ -196,7 +197,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         btn_navi_ok.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewHandler.onExitNaviClick();
+                viewHandler.onExitNaviClick(false);
             }
         });
     }
@@ -208,16 +209,13 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
     @Override
     public void refreshView(PalmapViewState state) {
         LogUtil.e("state :" + state);
-        layout_poi_info.setVisibility(GONE);
-        layout_select_start.setVisibility(GONE);
-        layout_navi_ready.setVisibility(GONE);
-        layout_navi_info.setVisibility(GONE);
-        layout_navi_ok.setVisibility(GONE);
-        layoutSearchResult.setVisibility(GONE);
-
+        reset();
         int nextHeight = getHeight();
-
         switch (state) {
+            case Normal:{
+                nextHeight = 0;
+                break;
+            }
             case Select:
                 layout_poi_info.setVisibility(VISIBLE);
                 String name = poiModel.getDisPlay();
@@ -319,13 +317,16 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
         refreshView(state);
     }
 
-//    public void reset(){
-//        layout_poi_info.setVisibility(GONE);
-//        tv_poiName.setText("");
-//        tvPoiDes.setText("");
-//
-//        poiModel = null;
-//
-//    }
+    public void reset(){
+        layout_poi_info.setVisibility(GONE);
+        tv_poiName.setText("");
+        tvPoiDes.setText("");
+        layoutSearchResult.setVisibility(GONE);
+        layout_select_start.setVisibility(GONE);
+        layout_navi_ready.setVisibility(GONE);
+        layout_navi_info.setVisibility(GONE);
+        tv_navi_length.setText("");
+        layout_navi_ok.setVisibility(GONE);
+    }
 
 }
