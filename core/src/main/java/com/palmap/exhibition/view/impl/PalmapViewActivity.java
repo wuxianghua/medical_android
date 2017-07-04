@@ -67,6 +67,7 @@ import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
+import static com.palmap.exhibition.view.impl.PalmapViewState.END_SET;
 import static com.palmap.exhibition.view.impl.PalmapViewState.Normal;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_ARRIVE;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_BACK_LEFT;
@@ -356,12 +357,14 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 //                }
 //            }
 //        });
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                poiMenuLayout.animHide();
-            }
-        });
+        if (presenter.getState() != END_SET) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    poiMenuLayout.animHide();
+                }
+            });
+        }
     }
 
     @Override

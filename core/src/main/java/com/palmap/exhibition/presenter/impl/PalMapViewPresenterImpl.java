@@ -746,6 +746,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      */
     @Override
     public void resetState() {
+        if (isMockNavi.compareAndSet(true, false)) {
+            mockDisposable.dispose();
+            userCoordinate = null;
+            getOverLayerManager().hideLocation();
+        }
         setPalmapViewState(PalmapViewState.Normal);
         getOverLayerManager().clearAllNotLocation();
         palMapView.clearNavigateRoad();
@@ -840,11 +845,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     @Override
     public void exitNavigate() {
         palMapView.readExitNavigate();
-        if (isMockNavi.compareAndSet(true, false)) {
-            mockDisposable.dispose();
-            userCoordinate = null;
-            getOverLayerManager().hideLocation();
-        }
         resetState();
         if (envelopeCoordinateArr != null) {
             palMapView.getMapView().moveToRect(
@@ -1167,8 +1167,10 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             return;
         }
 
-        if (state == PalmapViewState.Search || state == PalmapViewState.Navigating
-                || state == PalmapViewState.RoutePlanning || state == PalmapViewState.NaviComplete) {
+        if (state == PalmapViewState.Search
+                || state == PalmapViewState.Navigating
+                || state == PalmapViewState.RoutePlanning
+                || state == PalmapViewState.NaviComplete) {
             return;
         }
 
