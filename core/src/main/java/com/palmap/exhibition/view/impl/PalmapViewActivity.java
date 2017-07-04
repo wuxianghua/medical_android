@@ -535,12 +535,17 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param mRemainingLength
      */
     @Override
-    public void readRemainingLength(String mDynamicNaviExplain, float mRemainingLength) {
-        if (layout_floor.getVisibility() == View.VISIBLE) {
-            changePalmapViewWidget(presenter.getState());
-        }
-        poiMenuLayout.refreshView(presenter.getState());
-        poiMenuLayout.readRemainingLength(mDynamicNaviExplain, mRemainingLength);
+    public void readRemainingLength(final String mDynamicNaviExplain,final float mRemainingLength) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (layout_floor.getVisibility() == View.VISIBLE) {
+                    changePalmapViewWidget(presenter.getState());
+                }
+                poiMenuLayout.refreshView(presenter.getState());
+                poiMenuLayout.readRemainingLength(mDynamicNaviExplain, mRemainingLength);
+            }
+        });
     }
 
     @Override
@@ -809,34 +814,40 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param endFloorName   终点的楼层名
      */
     @Override
-    public void showRouteInfoDetails(String msg, int mAction, String startFloorName, String endFloorName) {
-        if (navigationTipPanelView.getVisibility() == View.GONE) {
-            showNavigationTipPanel(true);
-        }
-        int resId = R.mipmap.ic_nav_straight;
-        switch (mAction) {
-            case ACTION_FRONT_LEFT:
-            case ACTION_TURN_LEFT:
-            case ACTION_BACK_LEFT: {
-                resId = R.mipmap.ic_nav_left;
-                break;
+    public void showRouteInfoDetails(
+            final String msg,final int mAction,final String startFloorName,final String endFloorName) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (navigationTipPanelView.getVisibility() == View.GONE) {
+                    showNavigationTipPanel(true);
+                }
+                int resId = R.mipmap.ic_nav_straight;
+                switch (mAction) {
+                    case ACTION_FRONT_LEFT:
+                    case ACTION_TURN_LEFT:
+                    case ACTION_BACK_LEFT: {
+                        resId = R.mipmap.ic_nav_left;
+                        break;
+                    }
+                    case ACTION_FRONT_RIGHT:
+                    case ACTION_TURN_RIGHT:
+                    case ACTION_BACK_RIGHT: {
+                        resId = R.mipmap.ic_nav_right;
+                        break;
+                    }
+                    case ACTION_ARRIVE: {
+                        resId = 0;
+                    }
+                    default:
+                        break;
+                }
+                navigationTipPanelView.setSignIcon(resId);
+                navigationTipPanelView.setNavigationTip(msg);
+                navigationTipPanelView.setTvCurrentPosition(getCurrentFloorName());
+                navigationTipPanelView.setTargetPosition(endFloorName);
             }
-            case ACTION_FRONT_RIGHT:
-            case ACTION_TURN_RIGHT:
-            case ACTION_BACK_RIGHT: {
-                resId = R.mipmap.ic_nav_right;
-                break;
-            }
-            case ACTION_ARRIVE: {
-                resId = 0;
-            }
-            default:
-                break;
-        }
-        navigationTipPanelView.setSignIcon(resId);
-        navigationTipPanelView.setNavigationTip(msg);
-        navigationTipPanelView.setTvCurrentPosition(getCurrentFloorName());
-        navigationTipPanelView.setTargetPosition(endFloorName);
+        });
     }
 
     @Override
