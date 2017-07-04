@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.palmap.exhibition.widget.ShadowLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:shadow="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_search"
     android:layout_width="match_parent"
     android:layout_height="@dimen/ngr_height_tool_bar"
     android:background="@color/ngr_bg_map_view_tool_bar"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    shadow:offset="0.5dp"
+    shadow:shadowRadius="1dp"
+    shadow:type="bottom">
 
     <ImageView
         android:layout_width="24dp"
@@ -30,4 +35,4 @@
         android:layout_height="24dp"
         android:layout_marginRight="7.5dp"/>
 
-</LinearLayout>
+</com.palmap.exhibition.widget.ShadowLayout>

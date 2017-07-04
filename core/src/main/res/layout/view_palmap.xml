@@ -52,8 +52,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:background="@android:color/white"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -81,8 +81,8 @@
             android:id="@+id/tv_locationMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_below="@+id/layout_search"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:background="@android:color/transparent"
             android:padding="10dp"

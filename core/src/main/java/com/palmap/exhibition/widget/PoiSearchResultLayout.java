@@ -70,6 +70,8 @@ public class PoiSearchResultLayout extends LinearLayout
             mPoiModels.clear();
         }
         mPoiModels.addAll(models);
+        mImgVExpand.setImageResource(R.mipmap.ic_map_floordown);
+        mIsExpand = true;
         mImgVExpand.setVisibility(mPoiModels.size() > 1 ? VISIBLE : GONE);
         LinearLayout.LayoutParams listViewLp = new LinearLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT,
@@ -81,6 +83,7 @@ public class PoiSearchResultLayout extends LinearLayout
             listViewLp.height = listItemHeight * size;
         }
         mLvSearchResult.setLayoutParams(listViewLp);
+        mLvSearchResult.setVisibility(VISIBLE);
         mAdapter.notifyDataSetChanged();
         currentMaxHeight = listViewLp.height + topHeight;
         currentHeight = listViewLp.height + (mImgVExpand.getVisibility() == VISIBLE ? topHeight : 0);
