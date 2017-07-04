@@ -305,19 +305,18 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void showPoiMenu(final PoiModel poiModel, PalmapViewState state) {
-//        layoutPoiMenu.setHaveLocationPoint(!(null == presenter.getUserCoordinate()));
         if (state == PalmapViewState.END_SET) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("tips")
-                    .setMessage("是否设为起点")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            builder.setTitle(getString(R.string.ngr_progressDialogTitle))
+                    .setMessage(getString(R.string.ngr_set_poi_as_start_or_not))
+                    .setPositiveButton(R.string.ngr_dlg_ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             presenter.startMark(poiModel);
                             dialog.dismiss();
                         }
                     })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.ngr_dlg_cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             presenter.removeTapAndPoiMark();
@@ -1009,7 +1008,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             @Override
             public void onStartNaviClick() {
                 if (presenter.getUserCoordinate() == null) {
-                    showMessage("没有定位点,请尝试模拟定位");
+                    showMessage(getString(R.string.ngr_cannot_find_location_tip));
                 } else {
                     presenter.beginNavigate();
                 }
@@ -1213,9 +1212,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     private void showExitNavigationTipDilog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("tips")
-                .setMessage("是否结束导航")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.ngr_progressDialogTitle))
+                .setMessage(getString(R.string.ngr_exit_navigation_or_not))
+                .setPositiveButton(R.string.ngr_dlg_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         presenter.exitNavigate();
@@ -1223,7 +1222,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.ngr_dlg_cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

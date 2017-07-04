@@ -56,4 +56,9 @@
     <string name="ngr_begin_navigation">开始导航</string>
     <string name="ngr_navigation_finished">导航完成</string>
     <string name="ngr_remian_meters">剩余约%d米</string>
+    <string name="ngr_dlg_ok">确定</string>
+    <string name="ngr_dlg_cancel">取消</string>
+    <string name="ngr_set_poi_as_start_or_not">是否将该点设置为起点？</string>
+    <string name="ngr_cannot_find_location_tip">没有定位点,请尝试模拟定位</string>
+    <string name="ngr_exit_navigation_or_not">是否结束当前导航？</string>
 </resources>
