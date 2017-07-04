@@ -51,7 +51,7 @@
     <string name="ngr_target_position">目标位置：</string>
     <string name="ngr_unknown_position">未知地点</string>
     <string name="ngr_arrive_destination">您已到达目的地</string>
-    <string name="ngr_select_start_point">选择起点</string>
+    <string name="ngr_select_start_point">请选择起点</string>
     <string name="ngr_imitate_navigation">模拟导航</string>
     <string name="ngr_begin_navigation">开始导航</string>
     <string name="ngr_navigation_finished">导航完成</string>

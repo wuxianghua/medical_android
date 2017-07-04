@@ -16,4 +16,9 @@
     <color name="ngr_indicator_color_normal">#DCE2EE</color>
     <color name="ngr_bg_map_view_tool_bar">#ffffff</color>
     <color name="ngr_color_title_text">#333333</color>
+    <color name="ngr_navi_btn_enable_true">#00A3F8</color>
+    <color name="ngr_navi_btn_enable_false">#CAE8F9</color>
+    <color name="ngr_mock_navi_btn_enable_true">#6E7690</color>
+    <color name="ngr_mock_navi_btn_enable_false">#DCE2EE</color>
+
 </resources>

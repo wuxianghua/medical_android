@@ -10,7 +10,7 @@
         android:layout_height="17dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:src="@mipmap/ic_list_location"/>
+        android:src="@mipmap/ngr_ic_list_location"/>
 
     <TextView
         android:id="@+id/tvHistoryRecord"

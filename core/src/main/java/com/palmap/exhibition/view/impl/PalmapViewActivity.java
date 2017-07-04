@@ -345,18 +345,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void hidePoiMenu() {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (presenter.getState().equals(PalmapViewState.Select)
-//                        || presenter.getState().equals(PalmapViewState.END_SET)) {
-//                    layoutPoiMenu.animHide();
-//                } else {
-//                    showPoiMenu(null, presenter.getState());
-//                    hidePoiMenuTop();
-//                }
-//            }
-//        });
         if (presenter.getState() != END_SET) {
             runOnUiThread(new Runnable() {
                 @Override

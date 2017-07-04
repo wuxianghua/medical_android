@@ -33,12 +33,14 @@ public class ManualSearchFragment extends Fragment {
     private LinearLayout mLinearLayHistory = null;
     private ListView mLvAssociation = null;
     private List<String> mHistoryData = new ArrayList<>();
+    private View separateLine = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_manual_search, container, false);
+        separateLine = view.findViewById(R.id.separateLine);
         initHistoryList(view);
         initAssociationList(view);
         return view;
@@ -48,6 +50,7 @@ public class ManualSearchFragment extends Fragment {
         mLinearLayHistory = (LinearLayout) view.findViewById(R.id.linearLayHistory);
         ListView mLvHistory = (ListView) view.findViewById(R.id.lvHistory);
         mHistoryAdapter = new HistoryListAdapter(getContext(), mHistoryData);
+        setSeparateLineState();
         mHistoryAdapter.setOnDeleteClickListener(new HistoryListAdapter.OnDeleteClickListener() {
             @Override
             public void onDeleteClick(String keyword) {
@@ -94,6 +97,7 @@ public class ManualSearchFragment extends Fragment {
     public void refreshHistory() {
         if (mHistoryAdapter != null) {
             mHistoryAdapter.notifyDataSetChanged();
+            setSeparateLineState();
         }
     }
 
@@ -122,6 +126,14 @@ public class ManualSearchFragment extends Fragment {
 
     public List<SearchResultModel> getSearchResultModels(){
         return mSearchAdapter.getLocationModel();
+    }
+
+    private void setSeparateLineState(){
+        if(mHistoryData != null && !mHistoryData.isEmpty()){
+            separateLine.setVisibility(View.VISIBLE);
+        }else{
+            separateLine.setVisibility(View.GONE);
+        }
     }
 
     public interface OnHistoryOperateListener {

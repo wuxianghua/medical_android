@@ -23,13 +23,16 @@
         android:id="@+id/layout_select_start"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
+        android:paddingRight="12dp"
+        android:paddingLeft="12dp"
         android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
             android:text="@string/ngr_select_start_point"
             android:textColor="#6E768F"
             android:textSize="16sp"/>
@@ -37,23 +40,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="6dp"
                 android:layout_weight="1"
+                android:background="@drawable/ngr_bg_btn_mock_navigation"
                 android:enabled="false"
-                android:text="@string/ngr_imitate_navigation"/>
+                android:text="@string/ngr_imitate_navigation"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_16"/>
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@drawable/ngr_bg_btn_start_navigation"
                 android:enabled="false"
-                android:text="@string/ngr_begin_navigation"/>
+                android:text="@string/ngr_begin_navigation"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_16"/>
 
         </LinearLayout>
 
@@ -64,6 +74,10 @@
         android:id="@+id/layout_navi_ready"
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
+        android:paddingRight="12dp"
+        android:paddingLeft="12dp"
         android:visibility="gone">
 
         <TextView
@@ -71,14 +85,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
+            android:text="@string/ngr_select_start_point"
             android:textColor="#6E768F"
             android:textSize="16sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="32dp"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -86,15 +100,22 @@
                 android:id="@+id/btn_mockNavi"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="6dp"
                 android:layout_weight="1"
-                android:text="@string/ngr_imitate_navigation"/>
+                android:background="@drawable/ngr_bg_btn_mock_navigation"
+                android:text="@string/ngr_imitate_navigation"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_16"/>
 
             <Button
                 android:id="@+id/btn_startNavi"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/ngr_begin_navigation"/>
+                android:background="@drawable/ngr_bg_btn_start_navigation"
+                android:text="@string/ngr_begin_navigation"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_size_16"/>
 
         </LinearLayout>
 
@@ -143,13 +164,16 @@
         android:id="@+id/layout_navi_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/ngr_small"
+        android:padding="12dp"
         android:visibility="gone">
 
         <Button
             android:id="@+id/btn_navi_ok"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ngr_bg_btn_start_navigation"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_16"
             android:text="@string/ngr_navigation_finished"/>
 
     </RelativeLayout>
