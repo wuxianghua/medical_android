@@ -83,7 +83,7 @@ public class PoiSearchResultLayout extends LinearLayout
         mLvSearchResult.setLayoutParams(listViewLp);
         mAdapter.notifyDataSetChanged();
         currentMaxHeight = listViewLp.height + topHeight;
-        currentHeight = listViewLp.height + mImgVExpand.getVisibility() == VISIBLE ? topHeight : 0;
+        currentHeight = listViewLp.height + (mImgVExpand.getVisibility() == VISIBLE ? topHeight : 0);
     }
 
     public void setOnResultClickListener(OnResultClickListener listener) {

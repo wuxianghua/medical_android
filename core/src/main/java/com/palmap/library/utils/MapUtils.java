@@ -2,10 +2,13 @@ package com.palmap.library.utils;
 
 import com.palmaplus.nagrand.core.Value;
 import com.palmaplus.nagrand.data.DataList;
+import com.palmaplus.nagrand.data.Feature;
+import com.palmaplus.nagrand.data.FeatureCollection;
 import com.palmaplus.nagrand.data.LocationList;
 import com.palmaplus.nagrand.data.LocationModel;
 import com.palmaplus.nagrand.data.MapModel;
 import com.palmaplus.nagrand.data.Param;
+import com.palmaplus.nagrand.data.PlanarGraph;
 import com.palmaplus.nagrand.geos.Coordinate;
 import com.palmaplus.nagrand.position.ble.Point3D;
 import com.palmaplus.nagrand.view.MapView;
@@ -137,6 +140,19 @@ public class MapUtils {
 
     public static Coordinate convertCoordinate(Point3D point3D, long floorid) {
         return new Coordinate(point3D.getX(), point3D.getY(), floorid);
+    }
+
+    public long getPlanarGraphId(PlanarGraph planarGraph) {
+        if (planarGraph == null || PlanarGraph.getPtrAddress(planarGraph) == 0) {
+            return 0;
+        }
+        for (int i = 0; i < planarGraph.getLayerCount(); i++) {
+            FeatureCollection features = planarGraph.getFeatures(i);
+            if ("Frame".equals(features.getName())) {
+                return Feature.planar_graph.get(features.getFirstFeature());
+            }
+        }
+        return 0;
     }
 
 }

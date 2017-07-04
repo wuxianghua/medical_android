@@ -291,7 +291,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
 
     private void animShow(int height) {
         ViewAnimUtils.animHeight(
-                this,
+                this.getChildAt(0),
                 this.getHeight(),
                 height,
                 300, null);
