@@ -534,7 +534,7 @@ local function defaultStyle(styleType)
                         outline = {
                             --color = '0xff000000',
                             color = '0xffab893e',--外部边框
-                            width = 1,
+                            width = 0.1,
                             enable_alpha = false,
 
                             alignment = 'AlignLeft', -- 多边形外框线对齐方式设置, 取值为:'AlignLeft'、'AlignCenter'、'AlignRight',沿顺时针方向分别表示居左(外)、居中、居右(内)对齐

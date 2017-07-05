@@ -182,7 +182,6 @@
             android:layout_alignBottom="@+id/layout_location"
             android:layout_marginLeft="@dimen/ngr_normal"
             android:layout_toRightOf="@+id/layout_location"
-            android:visibility="gone"
             scale:LineWidth="5"/>
 
         <!--缩放-->

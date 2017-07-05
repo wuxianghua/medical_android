@@ -258,7 +258,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             @Override
             public void run() {
                 mapView.drawPlanarGraph(planarGraph);
-                mapView.setMaxScale(1500);
             }
         });
         scale.setMapView(mapView);
