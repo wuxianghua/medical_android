@@ -254,7 +254,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
 
     public void onSearchClick(View view) {
         String keyWord = mEdtTxtSearch.getText().toString();
-        if (keyWord.isEmpty()) {
+        if (TextUtils.isEmpty(keyWord.trim())) {
             showMessage(getString(R.string.ngr_please_input_search_key));
             return;
         }
@@ -295,6 +295,7 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
     public void finish() {
         presenter.destroy();
         super.finish();
+//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override

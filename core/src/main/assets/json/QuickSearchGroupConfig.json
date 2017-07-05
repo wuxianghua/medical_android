@@ -1,80 +1,103 @@
 [
   {
-    "title": "出入口",
-    "iconName": "ic_list_exit",
+    "title": "公共服务",
+    "iconName": "ic_list_service",
     "state": 1,
     "child": [
       {
-        "displayName": "抢救门厅",
-        "searchKeyWord": "0000",
+        "displayName": "自助服务机",
+        "searchKeyWord": "自助服务终端",
         "iconName": ""
       },
       {
-        "displayName": "急症大门",
-        "searchKeyWord": "0001",
+        "displayName": "自助缴费",
+        "searchKeyWord": "自助缴费处",
         "iconName": ""
       },
       {
-        "displayName": "南一厅（门诊大厅）",
-        "searchKeyWord": "0002",
+        "displayName": "自动取号机",
+        "searchKeyWord": "自动取号机",
         "iconName": ""
       },
       {
-        "displayName": "北一厅（门诊大厅）",
-        "searchKeyWord": "0003",
+        "displayName": "护士台",
+        "searchKeyWord": "护士台",
+        "iconName": ""
+      },
+      {
+        "displayName": "出入口",
+        "searchKeyWord": "出入口",
         "iconName": ""
       }
     ]
   },
   {
-    "title": "门诊",
-    "iconName": "ic_list_menzhen",
-    "state": 0,
+    "title": "门诊科室",
+    "iconName": "ic_list_clinic",
+    "state": 1,
     "child": [
       {
-        "displayName": "发热门诊",
-        "searchKeyWord": "0100",
+        "displayName": "内科",
+        "searchKeyWord": "内科",
         "iconName": ""
       },
       {
-        "displayName": "儿童内科",
-        "searchKeyWord": "0101",
+        "displayName": "外科",
+        "searchKeyWord": "外科",
         "iconName": ""
       },
       {
-        "displayName": "儿童内科",
-        "searchKeyWord": "0102",
-        "iconName": ""
-      },
-      {
-        "displayName": "口腔科",
-        "searchKeyWord": "0103",
-        "iconName": ""
-      },
-      {
-        "displayName": "产科",
-        "searchKeyWord": "0104",
+        "displayName": "儿科",
+        "searchKeyWord": "儿科",
         "iconName": ""
       },
       {
         "displayName": "妇科",
-        "searchKeyWord": "0105",
+        "searchKeyWord": "妇科",
+        "iconName": ""
+      },
+      {
+        "displayName": "心血管科",
+        "searchKeyWord": "心血管",
+        "iconName": ""
+      },
+      {
+        "displayName": "耳鼻喉科",
+        "searchKeyWord": "耳鼻",
+        "iconName": ""
+      },
+      {
+        "displayName": "肝病科",
+        "searchKeyWord": "肝病",
+        "iconName": ""
+      },
+      {
+        "displayName": "皮肤科",
+        "searchKeyWord": "皮肤",
+        "iconName": ""
+      },
+      {
+        "displayName": "肿瘤科",
+        "searchKeyWord": "肿瘤",
         "iconName": ""
       }
     ]
   },
   {
     "title": "医学影像",
-    "iconName": "ic_list_yingxiang",
+    "iconName": "ic_list_portrait",
     "state": 0,
     "child": [
-    ]
-  },
-  {
-    "title": "住院部",
-    "iconName": "ic_list_bingfang",
-    "state": 0,
-    "child": [
+      {
+        "displayName": "B超",
+        "searchKeyWord": "B超",
+        "iconName": ""
+      },
+      {
+        "displayName": "CT",
+        "searchKeyWord": "CT",
+        "iconName": ""
+      }
     ]
   }
 ]

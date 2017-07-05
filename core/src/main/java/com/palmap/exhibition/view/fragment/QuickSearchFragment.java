@@ -13,6 +13,7 @@ import com.palmap.exhibition.R;
 import com.palmap.exhibition.model.QuickSearchKeyWordModel;
 import com.palmap.exhibition.view.adapter.QuickSearchGroupAdapter;
 import com.palmap.exhibition.widget.QuickSearchPanelView;
+import com.palmap.exhibition.widget.imgslider.Indicators.PagerIndicator;
 import com.palmap.exhibition.widget.imgslider.SliderLayout;
 import com.palmap.library.utils.DeviceUtils;
 
@@ -86,6 +87,9 @@ public class QuickSearchFragment extends Fragment {
             });
             mSliderView.addSlider(view);
         }
+        mSliderView.setIndicatorVisibility(pageCount > 1
+                ? PagerIndicator.IndicatorVisibility.Visible
+                : PagerIndicator.IndicatorVisibility.Invisible);
     }
 
     public void addGroupKeyWords(List<QuickSearchKeyWordModel> keyWordModels) {

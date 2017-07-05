@@ -6,42 +6,42 @@
     "child": [
       {
         "displayName": "挂号",
-        "searchKeyWord": "0000",
+        "searchKeyWord": "挂号",
         "iconName": "ic_search_hot_01"
       },
       {
-        "displayName": "去缴费",
-        "searchKeyWord": "0001",
+        "displayName": "缴费",
+        "searchKeyWord": "收费",
         "iconName": "ic_search_hot_02"
       },
       {
-        "displayName": "去取药",
-        "searchKeyWord": "0002",
+        "displayName": "取药",
+        "searchKeyWord": "药房",
         "iconName": "ic_search_hot_03"
       },
       {
-        "displayName": "取报告",
-        "searchKeyWord": "0003",
+        "displayName": "分诊",
+        "searchKeyWord": "分诊",
         "iconName": "ic_search_hot_04"
       },
       {
-        "displayName": "自助挂号",
-        "searchKeyWord": "0004",
+        "displayName": "抽血",
+        "searchKeyWord": "抽血",
         "iconName": "ic_search_hot_05"
       },
       {
-        "displayName": "去抽血",
-        "searchKeyWord": "0005",
+        "displayName": "注射",
+        "searchKeyWord": "注射",
         "iconName": "ic_search_hot_06"
       },
       {
-        "displayName": "去输液",
-        "searchKeyWord": "0006",
+        "displayName": "ATM",
+        "searchKeyWord": "ATM",
         "iconName": "ic_search_hot_07"
       },
       {
         "displayName": "卫生间",
-        "searchKeyWord": "0007",
+        "searchKeyWord": "浴厕",
         "iconName": "ic_search_hot_08"
       }
     ]

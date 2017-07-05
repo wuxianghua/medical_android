@@ -15,6 +15,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launcherMap(View view) {
-        SdkLauncher.launcher(this,null,"测试医疗产品");
+        SdkLauncher.launcher(this,null,"广东省中医院");
     }
 }
