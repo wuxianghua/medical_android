@@ -180,7 +180,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         setContentView(R.layout.view_palmap);
         self = this;
         initView();
-        initStatusBar(R.color.ngr_colorPrimary);
+        //initStatusBar(R.color.ngr_colorPrimary);
         initMapView();
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {

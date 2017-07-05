@@ -426,8 +426,11 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                         oldMapRotate = currentMapRotate;
                     }
                     float rotate = (float) (angle - currentMapRotate);
-                    getOverLayerManager().rotateLocation(rotate);
-
+                    if (isMockNavi.get()) {
+                        getOverLayerManager().rotateLocation(0);
+                    }else{
+                        getOverLayerManager().rotateLocation(rotate);
+                    }
                     timestamp = System.currentTimeMillis();
                 }
             });
