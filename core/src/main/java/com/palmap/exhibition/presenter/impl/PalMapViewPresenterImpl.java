@@ -846,16 +846,20 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
     public void exitNavigate() {
         palMapView.readExitNavigate();
         resetState();
-        if (envelopeCoordinateArr != null) {
-            palMapView.getMapView().moveToRect(
-                    envelopeCoordinateArr[0].getX(),
-                    envelopeCoordinateArr[0].getY(),
-                    envelopeCoordinateArr[1].getX(),
-                    envelopeCoordinateArr[1].getY(),
-                    true,
-                    200
-            );
-            getOverLayerManager().refreshOverlayDelayed(200);
+        if (BuildConfig.moveEnvelope && envelopeCoordinateArr != null) {
+            try {
+                palMapView.getMapView().moveToRect(
+                        envelopeCoordinateArr[0].getX(),
+                        envelopeCoordinateArr[0].getY(),
+                        envelopeCoordinateArr[1].getX(),
+                        envelopeCoordinateArr[1].getY(),
+                        true,
+                        200
+                );
+                getOverLayerManager().refreshOverlayDelayed(200);
+            } catch (Exception e) {
+                LogUtil.e(e.toString());
+            }
         }
     }
 
@@ -1161,72 +1165,91 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         }
     }
 
+    /**
+     * 过滤feature的点击事件
+     *
+     * @param feature
+     * @return
+     */
+    private boolean checkFeatureClick(Feature feature) {
+        if (feature == null) {
+            return false;
+        }
+        long categoryId = MapParam.getCategoryId(feature);
+        return !(categoryId == 37000000 //室外道路不可点击
+                || categoryId == 23062000 //中空区域不可点击
+                || categoryId == 23999000);
+    }
+
     @Override
     public void onSingleTap(MapView mapView, float x, float y) {
         if (null == palMapView) {
             return;
         }
-
         if (state == PalmapViewState.Search
                 || state == PalmapViewState.Navigating
                 || state == PalmapViewState.RoutePlanning
                 || state == PalmapViewState.NaviComplete) {
             return;
         }
-
-        Feature feature = mapView.selectFeature(x, y);
-
-        //恢复变色的feature
         resetFeature();
-        if (feature != null) {
-
-            long categoryId = MapParam.getCategoryId(feature);
-            if (categoryId == 37000000 //室外道路不可点击
-                    || categoryId == 23062000 //中空区域不可点击
-                    || categoryId == 23999000) {//不可到达区域不可点击
-                palMapView.hidePoiMenu();
-                featureId = ID_NONE;
-                removeTapAndPoiMark();
-                return;
-            }
-            getOverLayerManager().animRefreshOverlay(300);
-            PoiModel poiModel;
-            if (MapParam.getId(feature) == currentFloorId) {
-                //点击在楼道
-                poiModel = new PoiModel();
-                poiModel.setName(palMapView.getContext().getString(R.string.ngr_theWay));
-
-                Types.Point wordPoint = mapView.converToWorldCoordinate(x, y);
-                poiModel.setX(wordPoint.x);
-                poiModel.setY(wordPoint.y);
-            } else {
-                poiModel = new PoiModel(feature);
-                // TODO: 2016/6/22 检查当前feature是不是一个设施
-                if (!TextUtils.isEmpty(poiModel.getName())) {
-                    palMapView.readFeatureColor(feature, 0xffFFB5B5);
-                }
-                Coordinate featureCentroid = feature.getTextureCentroid();
-                poiModel.setX(featureCentroid.x);
-                poiModel.setY(featureCentroid.y);
-            }
-            poiModel.setZ(currentFloorId);
-            poiModel.setFloorName(palMapView.getCurrentFloorName());
-            // TODO: 2016/7/13 地址加上场馆名
-            getOverLayerManager().refreshTapMark(currentFloorId, new double[]{
-                    poiModel.getX(), poiModel.getY()
-            });
-            palMapView.getMapView().moveToPoint(new Coordinate(poiModel.getX(), poiModel.getY()), true, 300);
-            if (state == PalmapViewState.Normal) {
-                setPalmapViewState(PalmapViewState.Select);
-            }
-            //判断当前处于什么状态
-            palMapView.showPoiMenu(poiModel, state);
-            mFeature = feature;
-        } else {
+        Feature feature = mapView.selectFeature(x, y);
+        if (!checkFeatureClick(feature)) {
             palMapView.hidePoiMenu();
             featureId = ID_NONE;
             removeTapAndPoiMark();
+            return;
         }
+        PoiModel poiModel;
+        if (MapParam.getId(feature) == currentFloorId) {
+            //点击在楼道
+            poiModel = new PoiModel();
+            poiModel.setName(palMapView.getContext().getString(R.string.ngr_theWay));
+            Types.Point wordPoint = mapView.converToWorldCoordinate(x, y);
+            poiModel.setX(wordPoint.x);
+            poiModel.setY(wordPoint.y);
+        } else {
+            poiModel = new PoiModel(feature);
+            // TODO: 2016/6/22 检查当前feature是不是一个设施
+            if (!TextUtils.isEmpty(poiModel.getName())) {
+                palMapView.readFeatureColor(feature, 0xffFFB5B5);
+            }
+            Coordinate featureCentroid = feature.getTextureCentroid();
+            poiModel.setX(featureCentroid.x);
+            poiModel.setY(featureCentroid.y);
+        }
+        poiModel.setZ(currentFloorId);
+        poiModel.setFloorName(palMapView.getCurrentFloorName());
+        try {
+            EndMark endMark = getOverLayerManager().getEndMark();
+            if (getState() == PalmapViewState.END_SET
+                    && !MapUtils.checkRoutePlanning(
+                    currentFloorId,
+                    poiModel.getId(),
+                    poiModel.getX(),
+                    poiModel.getY(),
+                    endMark.getFloorId(),
+                    endMark.getId(),
+                    endMark.getWorldX(),
+                    endMark.getWorldY())) {
+                palMapView.showErrorMessage("距离太近");
+                return;
+            } else {
+                getOverLayerManager().animRefreshOverlay(300);
+                getOverLayerManager().refreshTapMark(currentFloorId, new double[]{
+                        poiModel.getX(), poiModel.getY()
+                });
+                palMapView.getMapView().moveToPoint(new Coordinate(poiModel.getX(), poiModel.getY()), true, 300);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (state == PalmapViewState.Normal) {
+            setPalmapViewState(PalmapViewState.Select);
+        }
+        //判断当前处于什么状态
+        palMapView.showPoiMenu(poiModel, state);
+        mFeature = feature;
     }
 
     @Override
@@ -1429,18 +1452,22 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                                 if (getCurrentFloorId() - startMark.getFloorId() != 0) {
                                     changeFloor(startMark.getFloorId());
                                 }
-                                envelopeCoordinateArr = featureCollection.getFeature(0).getEnvelope();
-                                palMapView.getMapView().moveToRect(
-                                        envelopeCoordinateArr[0].getX(),
-                                        envelopeCoordinateArr[0].getY(),
-                                        envelopeCoordinateArr[1].getX(),
-                                        envelopeCoordinateArr[1].getY(),
-                                        true,
-                                        200
-                                );
-//                                getOverLayerManager().refreshOverlayDelayed(200);
-                                getOverLayerManager().animRefreshOverlay(300);
-
+                                if (BuildConfig.moveEnvelope) {
+                                    envelopeCoordinateArr = featureCollection.getFeature(0).getEnvelope();
+                                    try {
+                                        palMapView.getMapView().moveToRect(
+                                                envelopeCoordinateArr[0].getX(),
+                                                envelopeCoordinateArr[0].getY(),
+                                                envelopeCoordinateArr[1].getX(),
+                                                envelopeCoordinateArr[1].getY(),
+                                                true,
+                                                200
+                                        );
+                                        getOverLayerManager().animRefreshOverlay(300);
+                                    } catch (Exception e) {
+                                        LogUtil.e(e.toString());
+                                    }
+                                }
                             }
                             requestNaviRoad = false;
                         }

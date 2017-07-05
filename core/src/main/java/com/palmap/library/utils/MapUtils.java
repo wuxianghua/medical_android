@@ -1,5 +1,6 @@
 package com.palmap.library.utils;
 
+import com.palmap.exhibition.config.Config;
 import com.palmaplus.nagrand.core.Value;
 import com.palmaplus.nagrand.data.DataList;
 import com.palmaplus.nagrand.data.Feature;
@@ -142,7 +143,7 @@ public class MapUtils {
         return new Coordinate(point3D.getX(), point3D.getY(), floorid);
     }
 
-    public long getPlanarGraphId(PlanarGraph planarGraph) {
+    public static long getPlanarGraphId(PlanarGraph planarGraph) {
         if (planarGraph == null || PlanarGraph.getPtrAddress(planarGraph) == 0) {
             return 0;
         }
@@ -153,6 +154,35 @@ public class MapUtils {
             }
         }
         return 0;
+    }
+
+    /**
+     * 校验是否可以将2个点路线规划
+     */
+    public static boolean checkRoutePlanning(
+            long startFloorId,
+            long startFeatureId,
+            double startX,
+            double startY,
+            long endFloorId,
+            long endFeatureId,
+            double endX,
+            double endY) {
+        //不同楼层 可以随便路线规划 不存在过近
+        if (startFloorId != endFloorId) {
+            return true;
+        }
+        //在同一楼层
+        //如果选择的是同一个feature
+        if (startFeatureId == endFeatureId) {
+            if (startFeatureId == 0 || startFeatureId == startFloorId) { //道路
+                return MapUtils.pointDistance(startX, startY, endX, endY) > Config.MIN_DISTANCE;
+            } else {//这个feature不是道路 那么不可以规划路线
+                return false;
+            }
+        } else {//不同的feature 距离太近 也不可以规划路线
+            return MapUtils.pointDistance(startX, startY, endX, endY) > Config.MIN_DISTANCE;
+        }
     }
 
 }

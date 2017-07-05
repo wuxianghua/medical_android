@@ -131,6 +131,8 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     private PalmapViewActivity self;
 
+    private static int LAUNCHER_INDEX = 0;
+
     public static void navigatorThis(Context that) {
         Intent intent = new Intent(that, PalmapViewActivity.class);
         that.startActivity(intent);
@@ -193,20 +195,12 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         }
     }
 
-    private static int LAUNCHER_INDEX = 0;
-
     private void initMapView() {
         LogUtil.e("LAUNCHER_INDEX :" + LAUNCHER_INDEX);
         mapView = new MapView("default" + LAUNCHER_INDEX % 7, getContext());
         mapView.start();
         layout_mapView.addView(mapView);
-//        mapView.setBackgroundColor(0xfffafafa);
         mapView.setMinAngle(45);
-
-        mapView.initRatio(1.1f);
-
-        mapView.setMaxScale(1500);
-
         registerLister();
         LAUNCHER_INDEX++;
     }
@@ -449,13 +443,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             floorListView.setVisibility(View.GONE);
             return;
         }
-        if (locationList.getSize() < 3) {
-            ViewGroup.LayoutParams layoutParams = floorListView.getLayoutParams();
-            layoutParams.height = getResources().getDimensionPixelOffset(R.dimen.uiSize) *
-                    locationList.getSize();
-            floorListView.setLayoutParams(layoutParams);
-        }
-        layout_floor.setVisibility(View.VISIBLE);
         this.floorModelList = new ArrayList<>();
         for (int i = locationList.getSize() - 1; i >= 0; i--) {
             ExFloorModel temp = new ExFloorModel(locationList.getPOI(i));
@@ -463,26 +450,35 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 floorModelList.add(temp);
             }
         }
-        floorListAdapter = new FloorListAdapter(this, floorModelList, selectFloorId);
-        floorListView.setAdapter(floorListAdapter);
-
-        floorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                //  LocationModel locationModel = floorListAdapter.getItem(position);
-                ExFloorModel floorModel = floorListAdapter.getItem(position);
-                long nextFloorId = floorModel.getId();
-                if (nextFloorId == presenter.getCurrentFloorId()) {
-                    return;
-                }
-                //TODO 准备切换楼层 先去除所有覆盖层
-                mapView.removeAllOverlay();
-                //TODO 自动手动切换了楼层 就取消自动切换楼层的支持了
-                presenter.setCanAutoChangeFloor(false);
-                LogUtil.d("changeFloor:" + nextFloorId);
-                presenter.changeFloor(nextFloorId);
+        if (floorListAdapter == null) {
+            floorListAdapter = new FloorListAdapter(this, floorModelList, selectFloorId);
+            if (locationList.getSize() < 3) {
+                ViewGroup.LayoutParams layoutParams = floorListView.getLayoutParams();
+                layoutParams.height = getResources().getDimensionPixelOffset(R.dimen.uiSize) *
+                        locationList.getSize();
+                floorListView.setLayoutParams(layoutParams);
             }
-        });
+            layout_floor.setVisibility(View.VISIBLE);
+            floorListView.setAdapter(floorListAdapter);
+            floorListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                    ExFloorModel floorModel = floorListAdapter.getItem(position);
+                    long nextFloorId = floorModel.getId();
+                    if (nextFloorId == presenter.getCurrentFloorId()) {
+                        return;
+                    }
+                    //TODO 准备切换楼层 先去除所有覆盖层
+                    mapView.removeAllOverlay();
+                    //TODO 自动手动切换了楼层 就取消自动切换楼层的支持了
+                    presenter.setCanAutoChangeFloor(false);
+                    LogUtil.d("changeFloor:" + nextFloorId);
+                    presenter.changeFloor(nextFloorId);
+                }
+            });
+        }else{
+            floorListAdapter.replaceData(floorModelList,selectFloorId);
+        }
     }
 
     @Override
@@ -497,8 +493,6 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 clearFacilityListSelect();
                 if (floorListAdapter != null) {
                     floorListAdapter.setSelectFloorId(newFloorId);
-//                    floorListAdapter.notifyDataSetChanged();
-                    //floorListView.setSelection(floorListAdapter.getSelectIndex());
                     floorListView.smoothScrollToPosition(floorListAdapter.getSelectIndex());
                 }
                 if (oldFloorId != newFloorId) {
@@ -534,7 +528,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param mRemainingLength
      */
     @Override
-    public void readRemainingLength(final String mDynamicNaviExplain,final float mRemainingLength) {
+    public void readRemainingLength(final String mDynamicNaviExplain, final float mRemainingLength) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -814,7 +808,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      */
     @Override
     public void showRouteInfoDetails(
-            final String msg,final int mAction,final String startFloorName,final String endFloorName) {
+            final String msg, final int mAction, final String startFloorName, final String endFloorName) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -1017,8 +1011,8 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
             @Override
             public void onExitNaviClick(boolean isInterrupt) {
                 if (isInterrupt) {
-                    showExitNavigationTipDilog();
-                }else {
+                    showExitNavigationTipDialog();
+                } else {
                     presenter.exitNavigate();
                     changePalmapViewWidget(Normal);
                 }
@@ -1161,7 +1155,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 break;
             }
             case Navigating: {
-                showExitNavigationTipDilog();
+                showExitNavigationTipDialog();
                 break;
             }
             case Normal:
@@ -1210,7 +1204,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         }
     }
 
-    private void showExitNavigationTipDilog(){
+    private void showExitNavigationTipDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.ngr_progressDialogTitle))
                 .setMessage(getString(R.string.ngr_exit_navigation_or_not))

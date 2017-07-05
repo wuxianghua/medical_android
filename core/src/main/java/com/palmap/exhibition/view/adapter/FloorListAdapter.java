@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class FloorListAdapter extends BaseAdapter {
 
-    private ArrayList<ExFloorModel> data;
+    private ArrayList<ExFloorModel> data = new ArrayList<>();
 
     private Context context;
 
@@ -29,7 +29,9 @@ public class FloorListAdapter extends BaseAdapter {
     private int selectIndex = 0;
 
     public FloorListAdapter(Context context, ArrayList<ExFloorModel> locationList, long selectFloorId) {
-        this.data = locationList;
+        if (locationList != null) {
+            this.data.addAll(locationList);
+        }
         this.context = context;
         this.selectFloorId = selectFloorId;
         inflater = LayoutInflater.from(context);
@@ -83,7 +85,14 @@ public class FloorListAdapter extends BaseAdapter {
     }
 
     public int getSelectIndex() {
-        return selectIndex;
+//        return selectIndex;
+        for (int i = 0; i < getCount(); i++) {
+            long floorId = getItem(i).getId();
+            if (floorId == selectFloorId) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     public long getSelectFloorId() {
@@ -94,7 +103,16 @@ public class FloorListAdapter extends BaseAdapter {
         this.selectFloorId = selectFloorId;
     }
 
-    static class ViewHolder {
+    public void replaceData(ArrayList<ExFloorModel> floorModelList, long selectFloorId) {
+        this.selectFloorId = selectFloorId;
+        this.data.clear();
+        if (floorModelList != null) {
+            this.data.addAll(floorModelList);
+        }
+        notifyDataSetChanged();
+    }
+
+    private static class ViewHolder {
         TextView tvFloorName;
         ViewHolder(View view) {
             tvFloorName = (TextView) view.findViewById(R.id.tv_floorName);
