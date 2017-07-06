@@ -86,7 +86,7 @@
   {
     "title": "医学影像",
     "iconName": "ic_list_portrait",
-    "state": 0,
+    "state": 1,
     "child": [
       {
         "displayName": "B超",
