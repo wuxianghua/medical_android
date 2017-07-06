@@ -20,6 +20,10 @@ public class PoiModel {
     private LocationType type;
     private String address = "";
     private String floorName = "";
+    /**
+     * 区域名称
+     */
+    private String areaName = "";
 
     /**
      * 是不是设施
@@ -137,6 +141,14 @@ public class PoiModel {
     public String getAddress() {
         if (address == null || "null".equals(address.toLowerCase().toLowerCase())) return "";
         return address;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
     }
 
     public void setAddress(String address) {

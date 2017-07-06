@@ -221,7 +221,7 @@ public class PoiMenuLayout extends LinearLayout implements IPoiMenu {
                 String name = poiModel.getDisPlay();
                 tv_poiName.setText(TextUtils.isEmpty(name)
                         ? getResources().getString(R.string.ngr_unknown_position) : name);
-                tvPoiDes.setText(poiModel.getFloorName() + " " + poiModel.getAddress());
+                tvPoiDes.setText(poiModel.getAreaName() + poiModel.getFloorName() + " " + poiModel.getAddress());
                 nextHeight = height_poi_info;
                 break;
             case Search:

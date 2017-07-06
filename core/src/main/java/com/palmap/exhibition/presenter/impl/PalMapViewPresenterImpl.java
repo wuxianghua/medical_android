@@ -17,7 +17,7 @@ import com.palmap.exhibition.dao.business.ActivityInfoBusiness;
 import com.palmap.exhibition.dao.business.CoordinateBusiness;
 import com.palmap.exhibition.iflytek.IFlytekController;
 import com.palmap.exhibition.model.Api_ActivityInfo;
-import com.palmap.exhibition.model.Api_PositionInfo;
+import com.palmap.exhibition.model.AreaModel;
 import com.palmap.exhibition.model.ExBuildingModel;
 import com.palmap.exhibition.model.FacilityModel;
 import com.palmap.exhibition.model.LocationInfoModel;
@@ -37,7 +37,6 @@ import com.palmap.exhibition.widget.overlayer.EndMark;
 import com.palmap.exhibition.widget.overlayer.PubFacilityMark;
 import com.palmap.exhibition.widget.overlayer.StartMark;
 import com.palmap.library.geoFencing.GeoFencing;
-import com.palmap.library.geoFencing.GeoFencingListener;
 import com.palmap.library.geoFencing.GeoFencingManager;
 import com.palmap.library.model.LocationType;
 import com.palmap.library.rx.dataSource.RxDataSource;
@@ -186,8 +185,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
 
     private LocationBroadcastReceiver locationBroadcastReceiver;
 
-    private GeoFencingManager<Api_PositionInfo.ObjBean> lightEventFencingManager;
-
     private Disposable loadMapSubscribe;
 
     private Disposable loadMapWithBuildingIdSubscription;
@@ -200,8 +197,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      * 导航线外包盒
      */
     private Coordinate[] envelopeCoordinateArr;
-
-    //private PMPDynamicNavigationManager pmpDynamicNavigationManager = new PMPDynamicNavigationManager();
 
     /**
      * 定位惯导算法
@@ -217,13 +212,14 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      * 动态导航操作index
      */
     private int dynamicNaviIndex = -1;
+    @Inject
+    GeoFencingManager<AreaModel> areaModelGeoFencingManager;
 
     @Inject
     public PalMapViewPresenterImpl() {
         navigateManager = new NavigateManager();
         navigateManager.setOnNavigateComplete(new NavigateListener());
         floorSwitchManager = new FloorSwitchManager(3);
-        lightEventFencingManager = new GeoFencingManager<>();
     }
 
     @Override
@@ -237,6 +233,9 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         registerGeoFencingListener();
         registerLocationSensorListener();
         pdr = new PDR(palMapView.getContext());
+
+
+        areaModelGeoFencingManager.initGeoFencing();
     }
 
     @Override
@@ -334,7 +333,12 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                         return Observable.create(new ObservableOnSubscribe<LocationList>() {
                             @Override
                             public void subscribe(@NonNull ObservableEmitter<LocationList> e) throws Exception {
-                                e.onNext(null);
+                                e.onNext(new LocationList(0, false) {
+                                    @Override
+                                    protected int getPOIType() {
+                                        return 0;
+                                    }
+                                });
                             }
                         });
                     default:
@@ -344,7 +348,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         }).flatMap(new Function<LocationList, Observable<PlanarGraph>>() {
             @Override
             public Observable<PlanarGraph> apply(LocationList locationList) {
-                if (locationList == null) {
+                if (LocationList.getPtrAddress(locationList) == 0) {
                     palMapView.readFloorData(null, 0);
                     return loadPlanarGraph(buildingId);
                 }
@@ -428,7 +432,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     float rotate = (float) (angle - currentMapRotate);
                     if (isMockNavi.get()) {
                         getOverLayerManager().rotateLocation(0);
-                    }else{
+                    } else {
                         getOverLayerManager().rotateLocation(rotate);
                     }
                     timestamp = System.currentTimeMillis();
@@ -441,19 +445,19 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
      * 注册地理围栏回调
      */
     private void registerGeoFencingListener() {
-        lightEventFencingManager.setGeoFencingListener(new GeoFencingListener<Api_PositionInfo.ObjBean>() {
-            @Override
-            public void onFencingEvent(GeoFencing<Api_PositionInfo.ObjBean> geoFencing) {
-                LogUtil.e("定位在活动:" + geoFencing.obtainGeoData().getActivityId() + "区域中");
-                // TODO: 2016/10/20 选中到过的点
-                getOverLayerManager().selectLightEventMark(geoFencing.obtainGeoData().getId());
-            }
-
-            @Override
-            public void onNullFencingEvent(long floorId, Coordinate event) {
-                LogUtil.e("不在任何的点亮活动点区域内");
-            }
-        });
+//        lightEventFencingManager.setGeoFencingListener(new GeoFencingListener<Api_PositionInfo.ObjBean>() {
+//            @Override
+//            public void onFencingEvent(GeoFencing<Api_PositionInfo.ObjBean> geoFencing) {
+//                LogUtil.e("定位在活动:" + geoFencing.obtainGeoData().getActivityId() + "区域中");
+//                // TODO: 2016/10/20 选中到过的点
+//                getOverLayerManager().selectLightEventMark(geoFencing.obtainGeoData().getId());
+//            }
+//
+//            @Override
+//            public void onNullFencingEvent(long floorId, Coordinate event) {
+//                LogUtil.e("不在任何的点亮活动点区域内");
+//            }
+//        });
     }
 
     @Override
@@ -1223,6 +1227,15 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         }
         poiModel.setZ(currentFloorId);
         poiModel.setFloorName(palMapView.getCurrentFloorName());
+
+        Coordinate coordinate = new Coordinate(
+                poiModel.getX(),
+                poiModel.getY()
+        );
+        GeoFencing<AreaModel> areaModelGeoFencing = areaModelGeoFencingManager.eventLocationData(coordinate, getCurrentFloorId());
+        if (areaModelGeoFencing != null) {
+            poiModel.setAreaName(areaModelGeoFencing.obtainGeoData().getName());
+        }
         try {
             EndMark endMark = getOverLayerManager().getEndMark();
             if (getState() == PalmapViewState.END_SET
@@ -1415,12 +1428,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
         getOverLayerManager().animRefreshOverlay(1000);
     }
 
-    private void eventFencing(Coordinate userCoordinate, long locationFloorId) {
-        if (lightEventFencingManager != null) {
-            lightEventFencingManager.eventLocationData(locationFloorId, userCoordinate);
-        }
-    }
-
     private void initPDR(double x, double y) {
         if (userCoordinate == null) {
             pdr.initLocation(new LocationPair(x, y,
@@ -1568,8 +1575,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 pdr.stop();
             }
             locationCoordinate.setZ(locationFloorId);
-
-            eventFencing(locationCoordinate, locationFloorId);
 
             // TODO: 2016/6/22 如果下一个楼层id和当前楼层Id不一致 说明正在处于切换楼层动作中
             if (palMapView.isRetry() || nextFloorId != ID_NONE && getCurrentFloorId() != nextFloorId) {

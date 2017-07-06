@@ -32,16 +32,24 @@ public class GeoFencingManager<O> {
     }
 
     public void eventLocationData(long floorId, Coordinate event) {
-        if (event == null) return;
-        if (geoFencings.size() == 0) return;
         if (geoFencingListener == null) return;
+        GeoFencing<O> geoFencing = eventLocationData(event, floorId);
+        if (null == geoFencing) {
+            geoFencingListener.onNullFencingEvent(floorId,event);
+        }else{
+            geoFencingListener.onFencingEvent(geoFencing);
+        }
+    }
+
+    public GeoFencing<O> eventLocationData(Coordinate event,long floorId) {
+        if (event == null) return null;
+        if (geoFencings.size() == 0) return null;
         for (GeoFencing<O> geoFencing : geoFencings) {
             if (geoFencing.eventLocation(floorId, event)) {
-                geoFencingListener.onFencingEvent(geoFencing);
-                return;
+                return geoFencing;
             }
         }
-        geoFencingListener.onNullFencingEvent(floorId,event);
+        return null;
     }
 
     public void eventLocationData(LocationEvent locationEvent) {

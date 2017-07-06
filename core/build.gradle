@@ -18,9 +18,8 @@ android {
         multiDexEnabled true
         buildConfigField "boolean", "useSVA", "false"//是否使用SVA定位
         buildConfigField "boolean", "moveEnvelope", "false"
-//        buildConfigField "String", "NAG_KEY", "\"6617d492627540a293237ccb70b85af1\""
-//        buildConfigField "String", "NAG_KEY", "\"9029c2632a4040389cfb547c8e567edc\""
         buildConfigField "String", "NAG_KEY", "\" 42cec98e8c064c48bd4b0d6c4511376a\""
+//        buildConfigField "String", "NAG_KEY", "\" 2c23ade9d8f14387877755b4dd31e98c\""
     }
 
     packagingOptions {

@@ -742,9 +742,14 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param msg   楼层 + 地址
      */
     @Override
-    public void showRouteInfoStart(String lable, String msg) {
-        startEndPoiChooseView.setStartPoiName(lable);
-        startEndPoiChooseView.setStartPoiDes(msg);
+    public void showRouteInfoStart(final String lable,final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startEndPoiChooseView.setStartPoiName(lable);
+                startEndPoiChooseView.setStartPoiDes(msg);
+            }
+        });
     }
 
     /**
@@ -754,47 +759,72 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param msg   楼层 + 地址
      */
     @Override
-    public void showRouteInfoEnd(String label, String msg) {
-        startEndPoiChooseView.setEndPoiName(label);
-        startEndPoiChooseView.setEndPoiDes(msg);
-        poiMenuLayout.refreshView(PalmapViewState.END_SET);
-        changePalmapViewWidget(PalmapViewState.END_SET);
+    public void showRouteInfoEnd(final String label,final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startEndPoiChooseView.setEndPoiName(label);
+                startEndPoiChooseView.setEndPoiDes(msg);
+                poiMenuLayout.refreshView(PalmapViewState.END_SET);
+                changePalmapViewWidget(PalmapViewState.END_SET);
+            }
+        });
     }
 
-    private void showStartEndPoiChoosePanel(boolean isAnimated) {
-        searchPanel.setVisibility(View.GONE);
-        startEndPoiChooseView.setVisibility(View.VISIBLE);
-        if (isAnimated) {
-            startEndPoiChooseView.showDropAnimation();
-        }
+    private void showStartEndPoiChoosePanel(final boolean isAnimated) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                searchPanel.setVisibility(View.GONE);
+                startEndPoiChooseView.setVisibility(View.VISIBLE);
+                if (isAnimated) {
+                    startEndPoiChooseView.showDropAnimation();
+                }
+            }
+        });
     }
 
     @Override
-    public void hideStartEndPoiChoosePanel(boolean isAnimated) {
-        startEndPoiChooseView.setVisibility(View.GONE);
-        startEndPoiChooseView.resetInfo();
-        if (isAnimated) {
-            startEndPoiChooseView.showRiseAnimation();
-        }
-        searchPanel.setVisibility(View.VISIBLE);
+    public void hideStartEndPoiChoosePanel(final boolean isAnimated) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startEndPoiChooseView.setVisibility(View.GONE);
+                startEndPoiChooseView.resetInfo();
+                if (isAnimated) {
+                    startEndPoiChooseView.showRiseAnimation();
+                }
+                searchPanel.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
-    private void showNavigationTipPanel(boolean isAnimated) {
-        startEndPoiChooseView.setVisibility(View.GONE);
-        startEndPoiChooseView.resetInfo();
-        navigationTipPanelView.setVisibility(View.VISIBLE);
-        if (isAnimated) {
-            navigationTipPanelView.showDropAnimation();
-        }
+    private void showNavigationTipPanel(final boolean isAnimated) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                startEndPoiChooseView.setVisibility(View.GONE);
+                startEndPoiChooseView.resetInfo();
+                navigationTipPanelView.setVisibility(View.VISIBLE);
+                if (isAnimated) {
+                    navigationTipPanelView.showDropAnimation();
+                }
+            }
+        });
     }
 
-    private void hideNavigationTipPanel(boolean isAnimated) {
-        navigationTipPanelView.setVisibility(View.GONE);
-        if (isAnimated) {
-            navigationTipPanelView.showRiseAnimation();
-        }
-        navigationTipPanelView.resetInfo();
-        searchPanel.setVisibility(View.VISIBLE);
+    private void hideNavigationTipPanel(final boolean isAnimated) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                navigationTipPanelView.setVisibility(View.GONE);
+                if (isAnimated) {
+                    navigationTipPanelView.showRiseAnimation();
+                }
+                navigationTipPanelView.resetInfo();
+                searchPanel.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     /**
