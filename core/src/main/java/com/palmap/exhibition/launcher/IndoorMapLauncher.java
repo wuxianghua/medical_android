@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * 3.无参数启动,则启动 [app_key] 内默认的第一张地图的默认楼层
  * 4.该sdk中英文切换在内部完成,对外面主体接入app的语言环境没有影响
  */
-public final class SdkLauncher {
+public final class IndoorMapLauncher {
 
     private static boolean engineInit = false;
     private static String KEY_CACHE = "key_cache";

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.palmap.exhibition.launcher.SdkLauncher;
+import com.palmap.exhibition.launcher.IndoorMapLauncher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +15,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launcherMap(View view) {
-        SdkLauncher.launcher(this,null,"广东省中医院");
+        IndoorMapLauncher.launcher(this,null,"广东省中医院");
     }
 }
