@@ -68,6 +68,7 @@ import java.util.concurrent.ExecutorService;
 import javax.inject.Inject;
 
 import static com.palmap.exhibition.view.impl.PalmapViewState.END_SET;
+import static com.palmap.exhibition.view.impl.PalmapViewState.Navigating;
 import static com.palmap.exhibition.view.impl.PalmapViewState.Normal;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_ARRIVE;
 import static com.palmaplus.nagrand.navigate.DynamicNavigateAction.ACTION_BACK_LEFT;
@@ -102,7 +103,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     ListView floorListView;
     CompassView compassView;
     ImageView mapLocation;
-    Scale scale;
+    Scale scaleView;
     ViewGroup layout_overlay;
     TextView tvTitle;
     RelativeLayout containerRetry;
@@ -215,7 +216,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         mapView.setOnLongPressListener(presenter);
         mapView.setOnLoadStatusListener(presenter);
 
-        mapView.setOnZoomListener(new MapOnZoomListener(scale, compassView));
+        mapView.setOnZoomListener(new MapOnZoomListener(scaleView, compassView));
 
     }
 
@@ -250,17 +251,20 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
         tvTitle.setText(title);
     }
 
+    private float oldScale = 0;
+
     @Override
     public void readMapData(final PlanarGraph planarGraph) {
         resetCompass();
         mapView.initRotate(Config.MAP_ANGLE);
+        oldScale = mapView.getCurrentScale();
         mapViewDrawExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 mapView.drawPlanarGraph(planarGraph);
             }
         });
-        scale.setMapView(mapView);
+        scaleView.setMapView(mapView);
     }
 
     @Override
@@ -270,7 +274,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
     @Override
     public void refreshScaleView() {
-        if (scale != null) scale.postInvalidate();
+        if (scaleView != null) scaleView.postInvalidate();
 
     }
 
@@ -475,8 +479,8 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                     presenter.changeFloor(nextFloorId);
                 }
             });
-        }else{
-            floorListAdapter.replaceData(floorModelList,selectFloorId);
+        } else {
+            floorListAdapter.replaceData(floorModelList, selectFloorId);
         }
     }
 
@@ -488,6 +492,9 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
                 if (presenter.getState() == PalmapViewState.Select) {
                     poiMenuLayout.refreshView(Normal);
                     changePalmapViewWidget(Normal);
+                }
+                if (presenter.getState() == Navigating) {
+                    mapView.zoom(oldScale);
                 }
                 clearFacilityListSelect();
                 if (floorListAdapter != null) {
@@ -720,7 +727,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void hideMapViewControl() {
         floorListView.setVisibility(View.INVISIBLE);
-        scale.setVisibility(View.INVISIBLE);
+        scaleView.setVisibility(View.INVISIBLE);
         map_location.setVisibility(View.INVISIBLE);
         layout_zoom.setVisibility(View.INVISIBLE);
         facilitiesListView.setVisibility(View.INVISIBLE);
@@ -729,7 +736,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     @Override
     public void showMapViewControl() {
         floorListView.setVisibility(View.VISIBLE);
-        scale.setVisibility(View.VISIBLE);
+        scaleView.setVisibility(View.VISIBLE);
         map_location.setVisibility(View.VISIBLE);
         layout_zoom.setVisibility(View.VISIBLE);
         facilitiesListView.setVisibility(View.VISIBLE);
@@ -742,7 +749,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param msg   楼层 + 地址
      */
     @Override
-    public void showRouteInfoStart(final String lable,final String msg) {
+    public void showRouteInfoStart(final String lable, final String msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -759,7 +766,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
      * @param msg   楼层 + 地址
      */
     @Override
-    public void showRouteInfoEnd(final String label,final String msg) {
+    public void showRouteInfoEnd(final String label, final String msg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -937,7 +944,7 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
 
         mapLocation = findView(R.id.map_location);
         facilitiesListView = findView(R.id.list_facilities);
-        scale = findView(R.id.scale);
+        scaleView = findView(R.id.scale);
         layout_overlay = findView(R.id.layout_overlay);
         tvTitle = findView(R.id.tvTitle);
         containerRetry = findView(R.id.container_retry);
@@ -1118,7 +1125,12 @@ public class PalmapViewActivity extends ExActivity<PalMapViewPresenter> implemen
     }
 
     public void showAlertMsg(final String msg, final String subMsg) {
-        toastDelegate.get().showMsg(msg);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                toastDelegate.get().showMsg(msg);
+            }
+        });
     }
 
     @Override

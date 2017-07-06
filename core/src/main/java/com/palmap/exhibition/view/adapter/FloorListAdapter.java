@@ -70,8 +70,8 @@ public class FloorListAdapter extends BaseAdapter {
 
         if (this.selectFloorId == curId) {
             selectIndex = position;
-            viewHolder.tvFloorName.setSelected(true);
         }
+        viewHolder.tvFloorName.setSelected(this.selectFloorId == curId);
         return convertView;
     }
 

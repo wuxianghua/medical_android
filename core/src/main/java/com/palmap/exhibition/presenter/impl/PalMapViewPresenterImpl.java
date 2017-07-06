@@ -926,8 +926,6 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                 .subscribe(new Consumer<Long>() {
                     @Override
                     public void accept(@NonNull Long aLong) throws Exception {
-                        boolean b = IOUtils.checkMainThread();
-                        LogUtil.e("checkUI :" + b);
                         CoordinateInfo coordinate = coordinates[aLong.intValue()];
                         myLocationListener.onMockLocation(
                                 new LocationInfoModel(coordinate.x, coordinate.y, coordinate.floorId),
@@ -1617,7 +1615,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
             }
 
             // TODO 如果当前楼层ID和终点楼层ID一致 并且当前定位点和终点的距离小于临界值 则导航成功
-            if (userCoordinate.getZ() - getOverLayerManager().getEndMark().getFloorId() == 0 &&
+           /* if (userCoordinate.getZ() - getOverLayerManager().getEndMark().getFloorId() == 0 &&
                     MapUtils.pointDistance(
                             locationCoordinate.getX(),
                             locationCoordinate.getY(),
@@ -1626,7 +1624,7 @@ public class PalMapViewPresenterImpl implements PalMapViewPresenter, OverLayerMa
                     ) < Config.END_NAVI_DISTANCE) {
                 onNavigationEnd();
                 return;
-            }
+            }*/
             // TODO: 2016/7/11 路网吸附
             final Coordinate pointOfIntersectioan = navigateManager.getPointOfIntersectioanByPoint(locationCoordinate);
             userCoordinate.setX(pointOfIntersectioan.getX());
