@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly'
 
 android {
     compileSdkVersion 25
@@ -23,6 +24,12 @@ android {
     }
 }
 
+bugly {
+    appId = "619c37cec0"
+    appKey = "0bb39fcd-59c1-4bb6-9392-26b42c31c69c"
+}
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -41,8 +48,8 @@ dependencies {
     compile dependencies.rxAndroid
     compile dependencies.nineoldandroids
 
-    compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
 
     compile dependencies.gson
     //compile dependencies.dagger2

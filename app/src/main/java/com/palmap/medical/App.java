@@ -21,7 +21,7 @@ public class App extends MultiDexApplication {
     public void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         AndroidApplication.attachContext(base);
-        CrashReport.initCrashReport(this, "692c141bdb", true);
+        CrashReport.initCrashReport(this, "619c37cec0", true);
     }
 
 }
