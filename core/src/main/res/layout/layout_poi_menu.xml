@@ -5,6 +5,11 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
+    <ImageView
+    android:layout_width="match_parent"
+    android:layout_height="3dp"
+    android:background="@mipmap/ngr_bottom_shadow"/>
+
     <!--单地物点击结果-->
     <include
         android:id="@+id/layout_poi_info"

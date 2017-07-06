@@ -74,7 +74,7 @@ public class ShadowLayout extends LinearLayout {
      */
     private int shadowColor = DefaultValue.SHADOWCOLOR;
     /**
-     * 阴影类型 0--圆角矩形  1--圆形 2--底边
+     * 阴影类型 0--圆角矩形  1--圆形
      */
     private int type = DefaultValue.TYPE;
     /**
@@ -153,11 +153,6 @@ public class ShadowLayout extends LinearLayout {
                 shadowPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
                 canvas.drawCircle(width / 2, height / 2, (maxLine - offset - offset) / 2, shadowPaint);
             }
-        } else if (2 == type) {
-            canvas.drawRoundRect(
-                    new RectF(0, height, width, height + offset),
-                    rx, ry,
-                    shadowPaint);
         } else {
             canvas.drawRoundRect(
                     new RectF(offset, offset, width - offset, height - offset),

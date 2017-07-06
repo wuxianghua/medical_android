@@ -1,38 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.palmap.exhibition.widget.ShadowLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:shadow="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_search"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/ngr_height_tool_bar"
-    android:background="@color/ngr_bg_map_view_tool_bar"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    shadow:offset="0.5dp"
-    shadow:shadowRadius="1dp"
-    shadow:type="bottom">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ngr_height_tool_bar"
+        android:background="@color/ngr_bg_map_view_tool_bar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginLeft="7.5dp"
+            android:background="@mipmap/ngr_ic_action_back"
+            android:onClick="onBackClick"/>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxEms="10"
+            android:maxLines="1"
+            android:textColor="@color/ngr_color_title_text"
+            android:textSize="@dimen/ngr_title_text_size"/>
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginRight="7.5dp"/>
+
+    </LinearLayout>
+
 
     <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginLeft="7.5dp"
-        android:background="@mipmap/ngr_ic_action_back"
-        android:onClick="onBackClick"/>
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@mipmap/ngr_top_shadow"/>
 
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:maxEms="10"
-        android:maxLines="1"
-        android:textColor="@color/ngr_color_title_text"
-        android:textSize="@dimen/ngr_title_text_size"/>
-
-    <View
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginRight="7.5dp"/>
-
-</com.palmap.exhibition.widget.ShadowLayout>
+</LinearLayout>

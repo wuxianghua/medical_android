@@ -89,7 +89,7 @@ public class QuickSearchFragment extends Fragment {
         }
         mSliderView.setIndicatorVisibility(pageCount > 1
                 ? PagerIndicator.IndicatorVisibility.Visible
-                : PagerIndicator.IndicatorVisibility.Invisible);
+                : PagerIndicator.IndicatorVisibility.Gone);
     }
 
     public void addGroupKeyWords(List<QuickSearchKeyWordModel> keyWordModels) {

@@ -261,10 +261,10 @@ public class DestinationSearchActivity extends ExActivity<PoiSearchPresenter> im
         ArrayList<SearchResultModel> models = new ArrayList<>();
         models.addAll(mManualSearchFragment.getSearchResultModels());
         if (models.isEmpty()) {
-                mIsShowNoResultTip = true;
-                presenter.requestPoiData(keyWord);
-                presenter.savePoiSearchKeyWord(keyWord);
-                presenter.requestHistoryPOIData();
+            mIsShowNoResultTip = true;
+            presenter.requestPoiData(keyWord);
+            presenter.savePoiSearchKeyWord(keyWord);
+            presenter.requestHistoryPOIData();
         } else {
             presenter.savePoiSearchKeyWord(keyWord);
             setResult(RESULT_OK, PalmapViewActivity.getPoiSearchResultIntent(models));

@@ -13,6 +13,7 @@ import com.palmap.exhibition.R;
 import com.palmap.exhibition.model.QuickSearchKeyWordModel;
 import com.palmap.exhibition.widget.flowtag.FlowTagLayout;
 import com.palmap.exhibition.widget.flowtag.OnTagClickListener;
+import com.palmap.library.utils.DeviceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,11 +34,15 @@ public class QuickSearchGroupAdapter extends BaseExpandableListAdapter {
     private Map<String, TagAdapter> mTagAdaptMap = new HashMap<>();
     private LayoutInflater mInflater = null;
     private OnItemClickListener mOnItemClickListener = null;
+    private int mSeparateViewHeight;
+    private int mSeparateViewColor;
 
     public QuickSearchGroupAdapter(Context context, List<QuickSearchKeyWordModel> dataList) {
         mContext = context;
         mKeyWordList = dataList == null ? new ArrayList<QuickSearchKeyWordModel>() : dataList;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mSeparateViewHeight = DeviceUtils.dip2px(mContext, 1F);
+        mSeparateViewColor = mContext.getResources().getColor(R.color.ngr_separate_line);
     }
 
     public void addAll(List<QuickSearchKeyWordModel> dataList) {
@@ -59,7 +64,7 @@ public class QuickSearchGroupAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -113,31 +118,45 @@ public class QuickSearchGroupAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int i, int i1, boolean b, View view, ViewGroup viewGroup) {
-        FlowTagLayout flowTagLayout;
-        if (view == null) {
-            flowTagLayout = new FlowTagLayout(mContext);
-        } else {
-            flowTagLayout = (FlowTagLayout) view;
-        }
-        final QuickSearchKeyWordModel groupModel = mKeyWordList.get(i);
-        if (groupModel != null) {
-            TagAdapter tagAdapter = mTagAdaptMap.get(groupModel.getTitle());
-            if (tagAdapter == null) {
-                tagAdapter = new TagAdapter(groupModel.getChild());
-                mTagAdaptMap.put(groupModel.getTitle(), tagAdapter);
+        if (i1 == 0) {
+            FlowTagLayout flowTagLayout;
+            if (view != null && view instanceof FlowTagLayout) {
+                flowTagLayout = (FlowTagLayout) view;
+            } else {
+                flowTagLayout = new FlowTagLayout(mContext);
             }
-            flowTagLayout.setAdapter(tagAdapter);
-            flowTagLayout.setOnTagClickListener(new OnTagClickListener() {
-                @Override
-                public void onItemClick(FlowTagLayout parent, View view, int position) {
-                    if (mOnItemClickListener != null) {
-                        mOnItemClickListener.onClick(groupModel.getChild().get(position));
-                    }
+            final QuickSearchKeyWordModel groupModel = mKeyWordList.get(i);
+            if (groupModel != null) {
+                TagAdapter tagAdapter = mTagAdaptMap.get(groupModel.getTitle());
+                if (tagAdapter == null) {
+                    tagAdapter = new TagAdapter(groupModel.getChild());
+                    mTagAdaptMap.put(groupModel.getTitle(), tagAdapter);
                 }
-            });
-            tagAdapter.notifyDataSetChanged();
+                flowTagLayout.setAdapter(tagAdapter);
+                flowTagLayout.setOnTagClickListener(new OnTagClickListener() {
+                    @Override
+                    public void onItemClick(FlowTagLayout parent, View view, int position) {
+                        if (mOnItemClickListener != null) {
+                            mOnItemClickListener.onClick(groupModel.getChild().get(position));
+                        }
+                    }
+                });
+                tagAdapter.notifyDataSetChanged();
+            }
+            return flowTagLayout;
+        } else {
+            ImageView mSeparateView;
+            if (view != null && view instanceof ImageView) {
+                mSeparateView = (ImageView) view;
+            } else {
+                mSeparateView = new ImageView(mContext);
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, mSeparateViewHeight);
+                mSeparateView.setLayoutParams(layoutParams);
+                mSeparateView.setBackgroundColor(mSeparateViewColor);
+            }
+            return mSeparateView;
         }
-        return flowTagLayout;
     }
 
     @Override

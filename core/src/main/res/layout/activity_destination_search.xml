@@ -27,7 +27,7 @@
             android:layout_gravity="center_vertical"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:background="@drawable/bg_round_white">
+            android:background="@drawable/bg_search">
 
             <ImageView
                 android:layout_width="16dp"
@@ -42,8 +42,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="42dp"
-                android:layout_toLeftOf="@+id/img_clear"
-                android:layout_toRightOf="@+id/img_ico_search"
                 android:background="@null"
                 android:completionThreshold="1"
                 android:hint="@string/ngr_please_input_destination"

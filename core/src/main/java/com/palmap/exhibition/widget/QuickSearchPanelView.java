@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.palmap.exhibition.R;
 import com.palmap.exhibition.model.QuickSearchKeyWordModel;
 import com.palmap.exhibition.widget.imgslider.SliderTypes.BaseSliderView;
+import com.palmap.library.utils.DeviceUtils;
 
 import java.util.List;
 
@@ -28,17 +29,20 @@ public class QuickSearchPanelView extends BaseSliderView {
     private Context mContext = null;
     private List<QuickSearchKeyWordModel.ChildBean> mData = null;
     private ItemViewClickListener mItemViewClickListener = null;
+    private int mVerticalSpacing;
 
     public QuickSearchPanelView(Context context, List<QuickSearchKeyWordModel.ChildBean> data) {
         super(context);
         mContext = context;
         mData = data;
+        mVerticalSpacing = DeviceUtils.dip2px(context, 5);
     }
 
     @Override
     public View getView() {
         GridView view = new GridView(mContext);
         view.setNumColumns(4);
+        view.setVerticalSpacing(mVerticalSpacing);
         view.setAdapter(new CustomAdapter());
         view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

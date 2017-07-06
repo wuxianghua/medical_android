@@ -1,9 +1,12 @@
 package com.palmap.exhibition.presenter.impl;
 
+import android.text.TextUtils;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.palmap.exhibition.BuildConfig;
 import com.palmap.exhibition.config.Config;
+import com.palmap.exhibition.config.MapParam;
 import com.palmap.exhibition.dao.business.HistoryPoiSearchBusiness;
 import com.palmap.exhibition.exception.NotFoundDataException;
 import com.palmap.exhibition.model.QuickSearchKeyWordModel;
@@ -17,6 +20,7 @@ import com.palmaplus.nagrand.data.LocationPagingList;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -90,7 +94,14 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                         }
                         List<LocationModel> result = new ArrayList<>();
                         for (int i = 0; i < locationPagingList.getSize(); i++) {
-                            result.add(locationPagingList.getPOI(i));
+                            LocationModel locationModel = locationPagingList.getPOI(i);
+                            if (locationModel == null) {
+                                continue;
+                            }
+                            String name = MapParam.getName(locationModel);
+                            if(!TextUtils.isEmpty(name) && name.contains(keyWord)) {
+                                result.add(locationModel);
+                            }
                         }
                         poiSearchView.readPoiData(result);
                     }
@@ -176,7 +187,7 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                     poiSearchView.getContext(), quickSearchPanelPath);
             Type listType = new TypeToken<ArrayList<QuickSearchKeyWordModel>>() {
             }.getType();
-            List<QuickSearchKeyWordModel> data =  gson.fromJson(jsonString, listType);
+            List<QuickSearchKeyWordModel> data = gson.fromJson(jsonString, listType);
             poiSearchView.readQuickSearchData(0, data);
         } catch (Exception e) {
             poiSearchView.readQuickSearchData(0, null);
@@ -223,6 +234,7 @@ public class PoiSearchPresenterImpl implements PoiSearchPresenter {
                 new Consumer<List<String>>() {
                     @Override
                     public void accept(List<String> historyPoiSearches) {
+                        Collections.reverse(historyPoiSearches);//倒序
                         poiSearchView.readHistorySearch(historyPoiSearches);
                     }
                 }, new Consumer<Throwable>() {

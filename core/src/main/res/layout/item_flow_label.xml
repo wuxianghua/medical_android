@@ -7,15 +7,16 @@
         android:id="@+id/tvTag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
+        android:gravity="center"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
-        android:background="@drawable/bg_flow_label_item"
-        android:paddingBottom="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="5dp"
-        android:textSize="@dimen/text_size_14"
-        android:textColor="@color/color_flow_label_item" />
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:background="#f2f2f2"
+        android:textColor="#6E768F" />
 
 </LinearLayout>
