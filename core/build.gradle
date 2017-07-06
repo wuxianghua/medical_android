@@ -51,8 +51,8 @@ android {
         }
         release {
             //buildConfigField "Boolean", "DEBUG", "false"
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             //release 使用展图的key
             buildConfigField "boolean", "isOpenLightActivity", "false"//是否使用点亮活动
             buildConfigField "boolean", "isOpenPushActivity", "false"//是否使用推送活动

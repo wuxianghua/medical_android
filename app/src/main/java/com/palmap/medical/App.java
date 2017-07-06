@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
 import com.palmap.exhibition.AndroidApplication;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.bugly.Bugly;
 
 /**
  * Created by 王天明 on 2017/6/22.
@@ -21,7 +21,7 @@ public class App extends MultiDexApplication {
     public void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         AndroidApplication.attachContext(base);
-        CrashReport.initCrashReport(this, "619c37cec0", true);
+        Bugly.init(getApplicationContext(), "619c37cec0", false);
     }
 
 }
